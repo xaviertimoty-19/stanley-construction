@@ -27,3 +27,5 @@ Thumbs.db
 # Test captures & assistant artifacts
 artifacts/
 .antigravity/
+
+.vercel
