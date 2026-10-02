@@ -31,7 +31,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ isOpen, onClose }) => {
       role="dialog"
       aria-modal="true"
       aria-labelledby="legal-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/80 backdrop-blur-md animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stanley-black/80 backdrop-blur-md animate-fade-in"
       onClick={onClose}
     >
       <div
@@ -80,7 +80,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ isOpen, onClose }) => {
 
           {/* Section 2: Données Fiscales & Statistiques */}
           <div className="bg-stanley-black/60 rounded-xl p-4 border border-stanley-steel space-y-3">
-            <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs uppercase tracking-wider">
+            <div className="flex items-center gap-2 text-stanley-yellow font-bold text-xs uppercase tracking-wider">
               <FileText className="w-4 h-4" />
               <span>Immatriculations Fiscales Officielles (Madagascar)</span>
             </div>
@@ -102,7 +102,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({ isOpen, onClose }) => {
 
           {/* Section 3: Siège Social */}
           <div className="bg-stanley-black/60 rounded-xl p-4 border border-stanley-steel space-y-2">
-            <div className="flex items-center gap-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
+            <div className="flex items-center gap-2 text-stanley-yellow font-bold text-xs uppercase tracking-wider">
               <MapPin className="w-4 h-4" />
               <span>Siège Social & Rayon d'Intervention</span>
             </div>
@@ -149,10 +149,10 @@ export const LegalModal: React.FC<LegalModalProps> = ({ isOpen, onClose }) => {
           </div>
 
           {/* Section 5: Règle de Sécurité & Confidentialité */}
-          <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-200/90 flex items-start gap-3">
-            <Lock className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+          <div className="p-3.5 rounded-xl bg-stanley-yellow/10 border border-stanley-yellow/20 text-xs text-slate-300 flex items-start gap-3">
+            <Lock className="w-4 h-4 text-stanley-yellow shrink-0 mt-0.5" />
             <div className="text-[11px] leading-relaxed">
-              <strong>Engagement de Sécurité & Confidentialité :</strong> Conformément aux règles de protection de l'identité et de lutte contre la fraude documentaire, les numéros de Carte d'Identité Nationale (CIN) et copies scannées ne sont jamais publiés en ligne. Les formalités contractuelles font l'objet d'échanges directs sous protocole sécurisé.
+              <strong className="text-stanley-yellow">Engagement de Sécurité & Confidentialité :</strong> Conformément aux règles de protection de l'identité et de lutte contre la fraude documentaire, les numéros de Carte d'Identité Nationale (CIN) et copies scannées ne sont jamais publiés en ligne. Les formalités contractuelles font l'objet d'échanges directs sous protocole sécurisé.
             </div>
           </div>
         </div>

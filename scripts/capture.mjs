@@ -18,24 +18,32 @@ async function capture() {
   await new Promise(r => setTimeout(r, 1500));
 
   const workspaceArtifacts = path.resolve('artifacts');
-  const brainArtifacts = 'C:\\Users\\Dev\\.gemini\\antigravity\\brain\\6ed065af-7045-483e-a80b-e3de5029aa14';
+  const brainArtifacts = process.env.BRAIN_ARTIFACTS_DIR || null;
 
   if (!fs.existsSync(workspaceArtifacts)) {
     fs.mkdirSync(workspaceArtifacts, { recursive: true });
   }
 
+  const copyToBrain = (src, destFileName) => {
+    if (brainArtifacts && fs.existsSync(brainArtifacts)) {
+      try {
+        fs.copyFileSync(src, path.join(brainArtifacts, destFileName));
+      } catch (e) {
+        console.warn('Could not copy to brain artifacts:', e.message);
+      }
+    }
+  };
+
   // 1. Hero viewport screenshot
   const heroPath1 = path.join(workspaceArtifacts, 'stanley_hero.png');
-  const heroPath2 = path.join(brainArtifacts, 'stanley_hero.png');
   await page.screenshot({ path: heroPath1 });
-  fs.copyFileSync(heroPath1, heroPath2);
+  copyToBrain(heroPath1, 'stanley_hero.png');
   console.log('Hero screenshot saved:', heroPath1);
 
   // 2. Full page screenshot
   const fullPath1 = path.join(workspaceArtifacts, 'stanley_full_page.png');
-  const fullPath2 = path.join(brainArtifacts, 'stanley_full_page.png');
   await page.screenshot({ path: fullPath1, fullPage: true });
-  fs.copyFileSync(fullPath1, fullPath2);
+  copyToBrain(fullPath1, 'stanley_full_page.png');
   console.log('Full page screenshot saved:', fullPath1);
 
   await browser.close();

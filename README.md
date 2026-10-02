@@ -1,6 +1,6 @@
 # Stanley Construction 🏗️
 
-> Entreprise Générale du Bâtiment — Rénovation de Prestige & Construction RE2020.
+> Entreprise Générale du Bâtiment — Gros Œuvre, Murs de Soutènement & Construction à Antananarivo (Madagascar).
 
 Plateforme web vitrine moderne et interactive pour **Stanley Construction**, développée avec Vite, React 18, TypeScript et Tailwind CSS.
 
@@ -14,22 +14,26 @@ stanley-construction/
 │   ├── rules.md              # Contraintes de design, charte et stack
 │   └── tasks.json            # Définition des sous-tâches agentiques
 ├── public/
-│   ├── assets/               # Logos, maquettes de chantiers, icônes
+│   ├── assets/               # Logos, photos réelles de chantiers (Atsimondrano)
 │   └── favicon.ico           # Favicon du site
 ├── src/
-│   ├── components/           # Navbar, Hero, Services, Portfolio, Contact, Footer
-│   │   ├── Navbar.tsx        # Navigation fixe avec menu responsive
+│   ├── components/           # Navbar, Hero, Values, Services, Portfolio, Contact, Footer
+│   │   ├── Navbar.tsx        # Navigation fixe avec menu responsive & WhatsApp
 │   │   ├── Hero.tsx          # En-tête interactif, métriques clés et CTA
-│   │   ├── Services.tsx      # Cartes des pôles de savoir-faire
-│   │   ├── Portfolio.tsx     # Galerie filtrable des réalisations
-│   │   ├── Contact.tsx       # Formulaire de devis avec estimation de surface
-│   │   └── Footer.tsx        # Réassurance, décennale SMA BTP et mentions
+│   │   ├── Values.tsx        # Piliers techniques (Sols en pente, Reporting diaspora, Dosages)
+│   │   ├── Services.tsx      # Cartes des pôles de savoir-faire Tout Corps d'État
+│   │   ├── Portfolio.tsx     # Galerie filtrable et lightbox des réalisations à Tana
+│   │   ├── Contact.tsx       # Formulaire interactif de devis avec profil demandeur
+│   │   ├── LegalModal.tsx    # Fiche de transparence et immatriculations fiscales
+│   │   ├── CertifiedBadge.tsx# Badge d'entreprise agréée & immatriculée (NIF/STAT)
+│   │   └── Footer.tsx        # Réassurance, mentions légales et navigation
 │   ├── styles/
 │   │   └── index.css         # Feuille de styles globale, glassmorphism et Tailwind
+│   ├── utils/
+│   │   └── cn.ts             # Utilitaire de fusion conditionnelle de classes CSS
 │   ├── App.tsx               # Point d'assemblage principal
 │   └── main.tsx              # Point d'entrée React
-├── artifacts/                # Dossier pour les captures et rendus des agents
-├── index.html                # Document HTML racine avec Google Fonts (Outfit & Plus Jakarta)
+├── index.html                # Document HTML racine avec Google Fonts (Inter & Montserrat) & Schema.org
 ├── package.json              # Dépendances et scripts de build
 └── README.md                 # Documentation du projet
 ```
@@ -41,8 +45,8 @@ stanley-construction/
 - **Framework & Bundler** : [Vite](https://vitejs.dev/) + [React 18](https://react.dev/)
 - **Langage** : [TypeScript](https://www.typescriptlang.org/) (Strict Mode)
 - **Styling & Design System** : [Tailwind CSS](https://tailwindcss.com/)
-- **Iconographie** : [Lucide React](https://lucide.dev/)
-- **Typographie** : Google Fonts *Outfit* & *Plus Jakarta Sans*
+- **Iconographie** : [Lucide React](https://lucide.dev/) (100% vectoriel, zéro dépendance externe)
+- **Typographie** : Google Fonts *Inter* & *Montserrat*
 
 ---
 
@@ -72,7 +76,8 @@ npm run preview
 
 ---
 
-## 🛡️ Engagements & Labels
-- **Garantie Décennale** : SMA BTP
-- **Certification** : RGE Qualibat
-- **Réglementation** : Norme environnementale RE2020
+## 🛡️ Engagements & Cadre Réglementaire (Madagascar)
+- **Immatriculation Fiscale** : NIF 5019315595 • STAT 41001 11 2025 0 05583 (Centre Fiscal Itaosy)
+- **Garantie Contractuelle** : Décennale et parfait achèvement sur ouvrages de gros œuvre
+- **Normes Matériaux** : Aciers FeE500, dosage ciment 350 kg/m³, béton vibré et briques cuites de premier choix
+- **Transparence Diaspora** : Comptes-rendus hebdomadaires WhatsApp avec photos & vidéos HD à chaque coulage

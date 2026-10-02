@@ -29,7 +29,7 @@ export const Navbar: React.FC = () => {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-navy-950/95 backdrop-blur-md border-b border-slate-800/80 py-3 shadow-xl'
+          ? 'bg-stanley-black/95 backdrop-blur-md border-b border-stanley-steel py-3 shadow-xl'
           : 'bg-transparent py-5'
       }`}
     >
@@ -51,7 +51,7 @@ export const Navbar: React.FC = () => {
               <a
                 key={link.name}
                 href={link.href}
-                className="text-xs font-semibold text-slate-300 hover:text-amber-400 transition-colors cursor-pointer relative py-1 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-amber-500 after:scale-x-0 hover:after:scale-x-100 after:transition-transform uppercase tracking-wider"
+                className="text-xs font-semibold text-slate-300 hover:text-stanley-yellow transition-colors cursor-pointer relative py-1 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-stanley-yellow after:scale-x-0 hover:after:scale-x-100 after:transition-transform uppercase tracking-wider"
               >
                 {link.name}
               </a>
@@ -65,7 +65,7 @@ export const Navbar: React.FC = () => {
               className="flex items-center gap-2 text-xs font-semibold text-slate-300 hover:text-white transition-colors"
               title="Appel direct: +261 34 81 107 15"
             >
-              <div className="w-8 h-8 rounded-full bg-navy-900 border border-slate-700 flex items-center justify-center text-amber-400">
+              <div className="w-8 h-8 rounded-full bg-stanley-charcoal border border-stanley-steel flex items-center justify-center text-stanley-yellow">
                 <Phone className="w-3.5 h-3.5" />
               </div>
               <div className="flex flex-col text-left">
@@ -78,17 +78,17 @@ export const Navbar: React.FC = () => {
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500 hover:text-slate-950 font-semibold text-xs transition-all cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-stanley-charcoal border border-stanley-steel hover:border-stanley-yellow text-stanley-yellow font-bold text-xs transition-all cursor-pointer"
               title="Discuter sur WhatsApp: +261 37 51 359 64"
             >
-              <MessageCircle className="w-3.5 h-3.5" />
+              <MessageCircle className="w-3.5 h-3.5 stroke-[2.2]" />
               <span>WhatsApp</span>
               <span className="hidden xl:inline text-[11px] font-normal opacity-90">(+261 37 51 359 64)</span>
             </a>
 
             <a
               href="#contact"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-navy-950 font-bold text-xs transition-all shadow-md shadow-amber-500/20 hover:shadow-amber-500/40 hover:-translate-y-0.5 cursor-pointer uppercase tracking-wider"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-stanley-yellow hover:bg-stanley-gold text-stanley-black font-extrabold text-xs transition-all shadow-md shadow-amber-500/20 hover:shadow-amber-500/40 hover:-translate-y-0.5 cursor-pointer uppercase tracking-wider"
             >
               <span>Devis Rapide</span>
               <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
@@ -98,7 +98,7 @@ export const Navbar: React.FC = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-lg bg-navy-900 border border-slate-800 text-slate-300 hover:text-white focus:outline-none cursor-pointer"
+            className="lg:hidden p-2 rounded-lg bg-stanley-charcoal border border-stanley-steel text-slate-300 hover:text-white focus:outline-none cursor-pointer"
             aria-label="Ouvrir le menu mobile"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -108,14 +108,14 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-navy-950/98 backdrop-blur-xl border-b border-slate-800 px-6 py-6 transition-all">
+        <div className="lg:hidden bg-stanley-black/98 backdrop-blur-xl border-b border-stanley-steel px-6 py-6 transition-all">
           <div className="flex flex-col gap-3">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-sm font-semibold text-slate-200 hover:text-amber-400 py-2 border-b border-slate-900"
+                className="text-sm font-semibold text-slate-200 hover:text-stanley-yellow py-2 border-b border-stanley-steel/50"
               >
                 {link.name}
               </a>
@@ -125,22 +125,22 @@ export const Navbar: React.FC = () => {
                 href="tel:+261348110715"
                 className="flex items-center gap-3 text-xs text-slate-300 py-2"
               >
-                <Phone className="w-4 h-4 text-amber-500" />
+                <Phone className="w-4 h-4 text-stanley-yellow" />
                 <span>+261 34 81 107 15 (Lundi - Samedi)</span>
               </a>
               <a
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full text-center py-2.5 rounded-lg bg-emerald-600 text-white font-bold text-xs flex items-center justify-center gap-2"
+                className="w-full text-center py-2.5 rounded-lg bg-stanley-charcoal border border-stanley-steel text-stanley-yellow font-bold text-xs flex items-center justify-center gap-2 hover:border-stanley-yellow"
               >
-                <MessageCircle className="w-4 h-4" />
+                <MessageCircle className="w-4 h-4 stroke-[2.2]" />
                 <span>Discuter sur WhatsApp (+261 37 51 359 64)</span>
               </a>
               <a
                 href="#contact"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-2.5 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 text-navy-950 font-bold text-xs shadow-lg shadow-amber-500/20"
+                className="w-full text-center py-2.5 rounded-lg bg-stanley-yellow text-stanley-black font-extrabold text-xs shadow-lg shadow-amber-500/20 uppercase tracking-wider"
               >
                 Demander un devis détaillé
               </a>

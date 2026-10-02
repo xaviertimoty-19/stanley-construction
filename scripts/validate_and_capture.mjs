@@ -4,11 +4,21 @@ import fs from 'fs';
 
 async function validateAndCapture() {
   const workspaceArtifacts = path.resolve('artifacts');
-  const brainArtifacts = 'C:\\Users\\Dev\\.gemini\\antigravity\\brain\\6ed065af-7045-483e-a80b-e3de5029aa14';
+  const brainArtifacts = process.env.BRAIN_ARTIFACTS_DIR || null;
 
   if (!fs.existsSync(workspaceArtifacts)) {
     fs.mkdirSync(workspaceArtifacts, { recursive: true });
   }
+
+  const copyToBrain = (src, destFileName) => {
+    if (brainArtifacts && fs.existsSync(brainArtifacts)) {
+      try {
+        fs.copyFileSync(src, path.join(brainArtifacts, destFileName));
+      } catch (e) {
+        console.warn('Could not copy to brain artifacts:', e.message);
+      }
+    }
+  };
 
   const browser = await puppeteer.launch({
     headless: true,
@@ -47,9 +57,8 @@ async function validateAndCapture() {
   await new Promise(r => setTimeout(r, 1200));
 
   const desktopPath1 = path.join(workspaceArtifacts, 'stanley_desktop.png');
-  const desktopPath2 = path.join(brainArtifacts, 'stanley_desktop.png');
   await page.screenshot({ path: desktopPath1, fullPage: true });
-  fs.copyFileSync(desktopPath1, desktopPath2);
+  copyToBrain(desktopPath1, 'stanley_desktop.png');
   console.log('✓ Desktop full-page screenshot saved.');
 
   // ----------------------------------------------------
@@ -68,9 +77,8 @@ async function validateAndCapture() {
   }
 
   const mobilePath1 = path.join(workspaceArtifacts, 'stanley_mobile.png');
-  const mobilePath2 = path.join(brainArtifacts, 'stanley_mobile.png');
   await page.screenshot({ path: mobilePath1, fullPage: false });
-  fs.copyFileSync(mobilePath1, mobilePath2);
+  copyToBrain(mobilePath1, 'stanley_mobile.png');
   console.log('✓ Mobile screenshot saved.');
 
   // ----------------------------------------------------
@@ -95,7 +103,6 @@ async function validateAndCapture() {
   console.log('Form status received:\n', confirmationStatus);
 
   const formPath1 = path.join(workspaceArtifacts, 'stanley_form_submitted.png');
-  const formPath2 = path.join(brainArtifacts, 'stanley_form_submitted.png');
 
   const contactSection = await page.$('#contact');
   if (contactSection) {
@@ -103,7 +110,7 @@ async function validateAndCapture() {
   } else {
     await page.screenshot({ path: formPath1 });
   }
-  fs.copyFileSync(formPath1, formPath2);
+  copyToBrain(formPath1, 'stanley_form_submitted.png');
   console.log('✓ Form confirmation screenshot saved.');
 
   // ----------------------------------------------------
@@ -120,9 +127,8 @@ async function validateAndCapture() {
     await new Promise(r => setTimeout(r, 600));
 
     const legalPath1 = path.join(workspaceArtifacts, 'stanley_legal_modal.png');
-    const legalPath2 = path.join(brainArtifacts, 'stanley_legal_modal.png');
     await page.screenshot({ path: legalPath1 });
-    fs.copyFileSync(legalPath1, legalPath2);
+    copyToBrain(legalPath1, 'stanley_legal_modal.png');
     console.log('✓ Legal transparency modal screenshot saved.');
   }
 
