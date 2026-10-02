@@ -1,9 +1,7 @@
 import React from 'react';
-import { ShieldCheck, ArrowRight, ChevronDown, Clock, Video, Mountain, MessageCircle } from 'lucide-react';
+import { ShieldCheck, ArrowRight, ChevronDown, Clock, Video, Mountain } from 'lucide-react';
 
 export const Hero: React.FC = () => {
-  const whatsappUrl = "https://wa.me/261375135964?text=Bonjour%20Stanley%20Construction,%20je%20souhaite%20un%20devis%20pour%20un%20projet%20à%20Antananarivo.";
-
   return (
     <section id="accueil" aria-label="Présentation Stanley Construction Antananarivo" className="relative min-h-[88vh] flex items-center justify-center pt-28 pb-16 overflow-hidden bg-stanley-black">
       {/* Subtle vignette background */}
@@ -34,24 +32,14 @@ export const Hero: React.FC = () => {
             Accompagnement de confiance pour les résidents et la diaspora avec un reporting photo &amp; vidéo régulier.
           </p>
 
-          {/* Call to actions */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+          {/* Single Focused Call to Action */}
+          <div className="flex items-center justify-center pt-2">
             <a
               href="#contact"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-3.5 rounded-xl bg-stanley-yellow hover:bg-stanley-gold text-stanley-black font-extrabold text-sm sm:text-base transition-all shadow-lg shadow-amber-500/15 hover:shadow-amber-500/30 hover:-translate-y-0.5 cursor-pointer uppercase tracking-wider"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 sm:px-10 py-4 rounded-xl bg-stanley-yellow hover:bg-stanley-gold text-stanley-black font-extrabold text-sm sm:text-base transition-all shadow-lg shadow-amber-500/15 hover:shadow-amber-500/30 hover:-translate-y-0.5 cursor-pointer uppercase tracking-wider"
             >
               <span>Demander un devis sous 24h</span>
               <ArrowRight className="w-5 h-5 stroke-[2.5]" />
-            </a>
-
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-xl bg-stanley-charcoal hover:bg-zinc-800 border border-stanley-steel hover:border-stanley-yellow text-slate-100 font-bold text-sm sm:text-base transition-all shadow-md cursor-pointer"
-            >
-              <MessageCircle className="w-5 h-5 text-stanley-yellow stroke-[2.2]" />
-              <span>WhatsApp : +261 37 51 359 64</span>
             </a>
           </div>
         </div>
