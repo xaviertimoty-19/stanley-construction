@@ -8,7 +8,7 @@ interface LogoProps {
 
 export const Logo: React.FC<LogoProps> = ({
   variant = 'auto',
-  className = 'h-12 sm:h-14 w-auto',
+  className = 'h-14 sm:h-16 w-auto',
   emblemOnly = false,
 }) => {
   // If emblem only (shield with industrial yellow S)

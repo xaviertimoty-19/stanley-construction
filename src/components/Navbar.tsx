@@ -29,8 +29,8 @@ export const Navbar: React.FC = () => {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-white/95 dark:bg-stanley-black/95 backdrop-blur-md border-b border-zinc-200 dark:border-stanley-steel py-2.5 shadow-md dark:shadow-xl'
-          : 'bg-transparent py-4'
+          ? 'bg-white/95 dark:bg-stanley-black/95 backdrop-blur-md border-b border-zinc-200 dark:border-stanley-steel py-2 sm:py-2.5 shadow-md dark:shadow-xl'
+          : 'bg-transparent py-3 sm:py-4'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -40,7 +40,7 @@ export const Navbar: React.FC = () => {
             <Logo
               variant="auto"
               className={`w-auto group-hover:scale-[1.02] transition-all duration-300 ${
-                isScrolled ? 'h-9 sm:h-10 lg:h-11' : 'h-10 sm:h-11 lg:h-13'
+                isScrolled ? 'h-11 sm:h-11 lg:h-10 xl:h-11' : 'h-14 sm:h-14 lg:h-12 xl:h-13'
               }`}
             />
           </a>

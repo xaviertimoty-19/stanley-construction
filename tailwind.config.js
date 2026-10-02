@@ -7,6 +7,10 @@ export default {
   ],
   theme: {
     extend: {
+      spacing: {
+        '13': '3.25rem', // 52px
+        '15': '3.75rem', // 60px
+      },
       colors: {
         // Palette Officielle STANLEY CONSTRUCTION
         stanley: {

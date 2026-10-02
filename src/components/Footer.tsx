@@ -20,7 +20,7 @@ export const Footer: React.FC = () => {
           {/* Brand Presentation */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center">
-              <Logo variant="auto" className="h-12 sm:h-14 w-auto" />
+              <Logo variant="auto" className="h-14 sm:h-16 w-auto" />
             </div>
             <p className="text-zinc-600 dark:text-slate-300 text-xs leading-relaxed max-w-sm">
               Entreprise générale de bâtiment et travaux publics à Antananarivo (Madagascar), engagée pour la solidité structurelle de vos ouvrages et la transparence de suivi de chantier.
