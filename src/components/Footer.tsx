@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { ArrowUp, Mail, Phone, MapPin, MessageCircle } from 'lucide-react';
+import { ArrowUp, Mail, Phone, MapPin } from 'lucide-react';
 import { Logo } from './Logo';
 import { LegalModal } from './LegalModal';
+import { WhatsAppIcon } from './WhatsAppIcon';
 
 export const Footer: React.FC = () => {
   const [legalModalOpen, setLegalModalOpen] = useState(false);
@@ -67,10 +68,10 @@ export const Footer: React.FC = () => {
                 </a>
               </li>
               <li className="flex items-center gap-2.5 text-zinc-700 dark:text-slate-300">
-                <div className="w-6 h-6 rounded-lg bg-amber-50 dark:bg-stanley-charcoal border border-amber-200 dark:border-stanley-steel flex items-center justify-center text-stanley-gold dark:text-stanley-yellow shrink-0">
-                  <MessageCircle className="w-3 h-3 stroke-[2.2]" />
+                <div className="w-6 h-6 rounded-lg bg-[#25D366]/15 border border-[#25D366]/30 flex items-center justify-center text-[#25D366] shrink-0">
+                  <WhatsAppIcon className="w-3.5 h-3.5 fill-current" />
                 </div>
-                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="text-stanley-gold dark:text-stanley-yellow font-bold hover:underline">
+                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="text-[#25D366] font-bold hover:underline">
                   WhatsApp direct (+261 37 51 359 64)
                 </a>
               </li>

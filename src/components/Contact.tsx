@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, CheckCircle, AlertCircle, MessageCircle, Loader2 } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { WhatsAppIcon } from './WhatsAppIcon';
 
 export const Contact: React.FC = () => {
   const [clientProfile, setClientProfile] = useState<'resident' | 'diaspora'>('resident');
@@ -67,13 +68,13 @@ export const Contact: React.FC = () => {
 
             {/* Direct Cards - Pro Industrial Style */}
             <div className="space-y-3.5">
-              <div className="flex items-start gap-3.5 p-4 rounded-xl bg-white dark:bg-stanley-charcoal border border-zinc-200 dark:border-stanley-steel hover:border-stanley-yellow/50 transition-colors shadow-xs">
-                <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-stanley-black border border-amber-200 dark:border-stanley-steel flex items-center justify-center text-stanley-gold dark:text-stanley-yellow shrink-0">
-                  <MessageCircle className="w-5 h-5 stroke-[2.2]" />
+              <div className="flex items-start gap-3.5 p-4 rounded-xl bg-white dark:bg-stanley-charcoal border border-zinc-200 dark:border-stanley-steel hover:border-[#25D366]/60 transition-colors shadow-xs group">
+                <div className="w-10 h-10 rounded-xl bg-[#25D366]/10 dark:bg-[#25D366]/15 border border-[#25D366]/30 flex items-center justify-center text-[#25D366] shrink-0 group-hover:scale-105 transition-transform">
+                  <WhatsAppIcon className="w-5 h-5 text-[#25D366] fill-current" />
                 </div>
                 <div>
                   <div className="text-xs text-zinc-500 dark:text-slate-400 font-medium">Ligne WhatsApp Directe (Diaspora &amp; Tana)</div>
-                  <a href={whatsappDirectUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-stanley-gold dark:text-stanley-yellow hover:text-amber-600 dark:hover:text-amber-300 transition-colors">
+                  <a href={whatsappDirectUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-[#25D366] hover:text-[#20ba5a] transition-colors inline-block mt-0.5">
                     +261 37 51 359 64
                   </a>
                   <div className="text-[11px] text-zinc-500 dark:text-slate-400 mt-0.5">Échanges directs, transmission de plans &amp; devis PDF</div>

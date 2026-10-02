@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, Menu, X, ArrowUpRight, MessageCircle } from 'lucide-react';
+import { Phone, Menu, X, ArrowUpRight } from 'lucide-react';
 import { Logo } from './Logo';
+import { WhatsAppIcon } from './WhatsAppIcon';
 
 export const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -78,12 +79,12 @@ export const Navbar: React.FC = () => {
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-zinc-100 dark:bg-stanley-charcoal border border-zinc-300 dark:border-stanley-steel hover:border-stanley-yellow text-zinc-900 dark:text-stanley-yellow font-bold text-xs transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-zinc-100 dark:bg-stanley-charcoal border border-zinc-300 dark:border-stanley-steel hover:border-[#25D366] text-zinc-900 dark:text-slate-100 font-bold text-xs transition-all cursor-pointer group shadow-xs"
               title="Discuter sur WhatsApp: +261 37 51 359 64"
             >
-              <MessageCircle className="w-3.5 h-3.5 stroke-[2.2]" />
+              <WhatsAppIcon className="w-4 h-4 text-[#25D366] shrink-0" />
               <span>WhatsApp</span>
-              <span className="hidden xl:inline text-[11px] font-normal opacity-90">(+261 37 51 359 64)</span>
+              <span className="hidden xl:inline text-[11px] font-normal text-zinc-500 dark:text-slate-400">(+261 37 51 359 64)</span>
             </a>
 
             <a
@@ -132,9 +133,9 @@ export const Navbar: React.FC = () => {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full text-center py-2.5 rounded-lg bg-zinc-100 dark:bg-stanley-charcoal border border-zinc-300 dark:border-stanley-steel text-zinc-900 dark:text-stanley-yellow font-bold text-xs flex items-center justify-center gap-2 hover:border-stanley-yellow"
+                className="w-full text-center py-2.5 rounded-lg bg-zinc-100 dark:bg-stanley-charcoal border border-zinc-300 dark:border-stanley-steel text-zinc-900 dark:text-slate-100 font-bold text-xs flex items-center justify-center gap-2 hover:border-[#25D366] transition-colors"
               >
-                <MessageCircle className="w-4 h-4 stroke-[2.2]" />
+                <WhatsAppIcon className="w-4 h-4 text-[#25D366] shrink-0" />
                 <span>Discuter sur WhatsApp (+261 37 51 359 64)</span>
               </a>
               <a
