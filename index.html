@@ -4,7 +4,30 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/assets/logo-emblem.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0f172a" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+
+    <!-- Détection automatique du thème de l'appareil (Clair / Sombre) -->
+    <script>
+      (function() {
+        try {
+          var m = window.matchMedia('(prefers-color-scheme: dark)');
+          function applyTheme(e) {
+            if (e.matches) {
+              document.documentElement.classList.add('dark');
+            } else {
+              document.documentElement.classList.remove('dark');
+            }
+          }
+          applyTheme(m);
+          if (m.addEventListener) {
+            m.addEventListener('change', applyTheme);
+          } else if (m.addListener) {
+            m.addListener(applyTheme);
+          }
+        } catch (_) {}
+      })();
+    </script>
     
     <!-- SEO Primary Antananarivo Madagascar -->
     <title>STANLEY CONSTRUCTION — BTP, Gros Œuvre &amp; Construction à Antananarivo, Madagascar</title>
@@ -98,7 +121,7 @@
     }
     </script>
   </head>
-  <body class="bg-navy-950 text-slate-100 antialiased selection:bg-amber-500 selection:text-navy-950 min-h-screen">
+  <body class="bg-zinc-50 dark:bg-stanley-black text-zinc-900 dark:text-slate-100 antialiased selection:bg-stanley-yellow selection:text-stanley-black min-h-screen transition-colors duration-200">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

@@ -1,13 +1,13 @@
 import React from 'react';
 
 interface LogoProps {
-  variant?: 'dark' | 'light' | 'original';
+  variant?: 'dark' | 'light' | 'original' | 'auto';
   className?: string;
   emblemOnly?: boolean;
 }
 
 export const Logo: React.FC<LogoProps> = ({
-  variant = 'dark',
+  variant = 'auto',
   className = 'h-12 sm:h-14 w-auto',
   emblemOnly = false,
 }) => {
@@ -33,11 +33,27 @@ export const Logo: React.FC<LogoProps> = ({
     );
   }
 
-  // Full Logo (Shield + STANLEY Typography + CONSTRUCTION Banner)
-  const isDark = variant === 'dark';
-  const stanleyTextColor = isDark ? '#f4f4f5' : '#09090b'; // stanley.light ou stanley.black
-  const bannerBg = '#09090b'; // stanley.black
-  const bannerBorder = isDark ? '#27272a' : 'transparent'; // stanley.steel
+  // Text color class based on theme
+  const stanleyTextClass = 
+    variant === 'dark' 
+      ? 'fill-[#f4f4f5]' 
+      : variant === 'light' 
+      ? 'fill-[#09090b]' 
+      : 'fill-[#09090b] dark:fill-[#f4f4f5]';
+
+  const shieldBorderClass =
+    variant === 'dark'
+      ? 'stroke-[#27272a]'
+      : variant === 'light'
+      ? 'stroke-zinc-300'
+      : 'stroke-zinc-300 dark:stroke-[#27272a]';
+
+  const bannerBorderClass =
+    variant === 'dark'
+      ? 'stroke-[#27272a]'
+      : variant === 'light'
+      ? 'stroke-transparent'
+      : 'stroke-transparent dark:stroke-[#27272a]';
 
   return (
     <svg
@@ -52,7 +68,12 @@ export const Logo: React.FC<LogoProps> = ({
       {/* ================= EMBLÈME BLASON NOIR ET JAUNE ================= */}
       <g transform="translate(15, 12)">
         {/* Conteneur Blason Géométrique Noir Lourd */}
-        <path d="M 0 14 L 38 0 L 76 14 L 76 72 L 38 86 L 0 72 Z" fill="#09090b" stroke={isDark ? '#27272a' : 'none'} strokeWidth={isDark ? '1.5' : '0'} />
+        <path 
+          d="M 0 14 L 38 0 L 76 14 L 76 72 L 38 86 L 0 72 Z" 
+          fill="#09090b" 
+          className={shieldBorderClass} 
+          strokeWidth="1.5" 
+        />
         
         {/* Bordure d'angle supérieure Jaune Sécurité */}
         <path d="M 0 14 L 38 0 L 76 14 L 68 17 L 38 6 L 8 17 Z" fill="#f59e0b" />
@@ -78,13 +99,22 @@ export const Logo: React.FC<LogoProps> = ({
           fontWeight="900"
           fontSize="44"
           letterSpacing="2"
-          fill={stanleyTextColor}
+          className={stanleyTextClass}
         >
           STANLEY
         </text>
 
         {/* BANDEAU SOUS-TITRE ENCART NOIR & LETTRES JAUNES (aligné sur STANLEY) */}
-        <rect x="2" y="56" width="240" height="22" rx="3" fill={bannerBg} stroke={bannerBorder} strokeWidth="1" />
+        <rect 
+          x="2" 
+          y="56" 
+          width="240" 
+          height="22" 
+          rx="3" 
+          fill="#09090b" 
+          className={bannerBorderClass} 
+          strokeWidth="1" 
+        />
         
         {/* POINT DE RAPPEL DE NIVEAU JAUNE */}
         <rect x="2" y="56" width="7" height="22" rx="2" fill="#f59e0b" />

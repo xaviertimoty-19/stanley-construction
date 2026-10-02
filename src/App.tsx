@@ -10,7 +10,7 @@ import { WhatsAppButton } from './components/WhatsAppButton';
 
 export const App: React.FC = () => {
   return (
-    <div className="min-h-screen bg-stanley-black text-slate-100 flex flex-col font-sans selection:bg-stanley-yellow selection:text-stanley-black">
+    <div className="min-h-screen bg-zinc-50 dark:bg-stanley-black text-zinc-900 dark:text-slate-100 flex flex-col font-sans selection:bg-stanley-yellow selection:text-stanley-black transition-colors duration-200">
       <Navbar />
       <main className="flex-grow">
         <Hero />

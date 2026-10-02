@@ -244,19 +244,19 @@ export const Portfolio: React.FC = () => {
       : projects.filter(p => p.category === activeFilter);
 
   return (
-    <section id="portfolio" aria-label="Portfolio et Réalisations BTP Antananarivo" className="py-24 bg-stanley-black relative border-t border-stanley-steel">
+    <section id="portfolio" aria-label="Portfolio et Réalisations BTP Antananarivo" className="py-24 bg-zinc-100 dark:bg-stanley-black relative border-t border-zinc-200 dark:border-stanley-steel transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
           <div className="space-y-3 max-w-2xl">
-            <span className="text-xs uppercase tracking-widest text-stanley-yellow font-bold">
+            <span className="text-xs uppercase tracking-widest text-stanley-gold dark:text-stanley-yellow font-bold">
               Chantiers Réels &amp; Suivis en Direct à Antananarivo
             </span>
-            <h2 className="font-display font-bold text-3xl sm:text-5xl text-slate-50 tracking-tight">
+            <h2 className="font-display font-bold text-3xl sm:text-5xl text-zinc-900 dark:text-slate-50 tracking-tight">
               Nos Chantiers en Cours &amp; Réalisations
             </h2>
-            <p className="text-slate-300 text-base leading-relaxed">
-              Découvrez nos chantiers sur le terrain à Antananarivo, dont notre projet actuellement en cours à <strong className="text-stanley-yellow font-semibold">Atsimondrano</strong> (bâtisse R+2 en briques cuites, taille de charpente en bois massif et toiture).
+            <p className="text-zinc-600 dark:text-slate-300 text-base leading-relaxed">
+              Découvrez nos chantiers sur le terrain à Antananarivo, dont notre projet actuellement en cours à <strong className="text-stanley-gold dark:text-stanley-yellow font-semibold">Atsimondrano</strong> (bâtisse R+2 en briques cuites, taille de charpente en bois massif et toiture).
             </p>
           </div>
 
@@ -269,7 +269,7 @@ export const Portfolio: React.FC = () => {
                 className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   activeFilter === filter.key
                     ? 'bg-stanley-yellow text-stanley-black shadow-md'
-                    : 'bg-stanley-charcoal border border-stanley-steel text-slate-300 hover:border-stanley-yellow/60 hover:text-white'
+                    : 'bg-white dark:bg-stanley-charcoal border border-zinc-200 dark:border-stanley-steel text-zinc-700 dark:text-slate-300 hover:border-stanley-yellow/60 hover:text-zinc-900 dark:hover:text-white shadow-xs'
                 }`}
               >
                 {filter.label}
@@ -289,22 +289,22 @@ export const Portfolio: React.FC = () => {
             return (
               <article
                 key={project.id}
-                className={`group rounded-2xl overflow-hidden bg-stanley-charcoal border transition-all duration-300 flex flex-col justify-between hover:shadow-2xl ${
+                className={`group rounded-2xl overflow-hidden bg-white dark:bg-stanley-charcoal border transition-all duration-300 flex flex-col justify-between hover:shadow-xl dark:hover:shadow-2xl shadow-sm ${
                   isOngoing 
-                    ? 'border-stanley-yellow/50 hover:border-stanley-yellow ring-1 ring-stanley-yellow/20' 
-                    : 'border-stanley-steel hover:border-stanley-yellow/60'
+                    ? 'border-stanley-yellow/70 dark:border-stanley-yellow/50 hover:border-stanley-yellow ring-2 ring-stanley-yellow/20' 
+                    : 'border-zinc-200 dark:border-stanley-steel hover:border-stanley-yellow/60'
                 }`}
               >
                 {/* Image Container with Interactive Switcher */}
                 <div className="relative">
                   <figure 
-                    className="relative aspect-[16/10] overflow-hidden bg-slate-900 cursor-pointer"
+                    className="relative aspect-[16/10] overflow-hidden bg-zinc-900 cursor-pointer"
                     onClick={() => setLightbox({ project, photoIndex: currentPhotoIdx })}
                     title="Cliquez pour agrandir les photos en haute résolution"
                   >
                     {!loadedImages[`${project.id}-${currentPhotoIdx}`] && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-slate-900 animate-pulse">
-                        <Camera className="w-8 h-8 text-slate-700 animate-pulse" />
+                      <div className="absolute inset-0 flex items-center justify-center bg-zinc-900 animate-pulse">
+                        <Camera className="w-8 h-8 text-zinc-700 animate-pulse" />
                       </div>
                     )}
                     
@@ -319,11 +319,11 @@ export const Portfolio: React.FC = () => {
                       }`}
                     />
                     
-                    <div className="absolute inset-0 bg-gradient-to-t from-stanley-black via-stanley-black/20 to-transparent pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 dark:from-stanley-black via-black/30 dark:via-stanley-black/20 to-transparent pointer-events-none" />
                     
                     {/* Top Badges */}
                     <div className="absolute top-3 left-3 right-3 flex items-center justify-between gap-2 pointer-events-none">
-                      <span className="bg-stanley-black/90 backdrop-blur-md text-stanley-yellow border border-stanley-steel text-[10px] font-bold px-3 py-1 rounded-md uppercase tracking-wider shadow-sm">
+                      <span className="bg-black/80 dark:bg-stanley-black/90 backdrop-blur-md text-stanley-yellow border border-zinc-700 dark:border-stanley-steel text-[10px] font-bold px-3 py-1 rounded-md uppercase tracking-wider shadow-sm">
                         {project.categoryLabel}
                       </span>
 
@@ -332,7 +332,7 @@ export const Portfolio: React.FC = () => {
                           <span>EN COURS • ATSIMONDRANO</span>
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-stanley-black/90 backdrop-blur-md text-slate-200 border border-stanley-steel text-[10px] font-medium">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-black/80 dark:bg-stanley-black/90 backdrop-blur-md text-slate-200 border border-zinc-700 dark:border-stanley-steel text-[10px] font-medium">
                           <CheckCircle2 className="w-3 h-3 text-stanley-yellow" />
                           <span>Livré</span>
                         </span>
@@ -342,10 +342,10 @@ export const Portfolio: React.FC = () => {
                     {/* Photo Tag & Gallery Indicator overlay */}
                     {project.gallery && project.gallery.length > 1 && (
                       <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-[11px] text-slate-200">
-                        <span className="px-2 py-0.5 rounded bg-stanley-black/80 backdrop-blur-sm border border-stanley-steel font-semibold text-stanley-yellow">
+                        <span className="px-2 py-0.5 rounded bg-black/80 dark:bg-stanley-black/80 backdrop-blur-sm border border-zinc-700 dark:border-stanley-steel font-semibold text-stanley-yellow">
                           {currentPhoto.tag}
                         </span>
-                        <span className="px-2 py-0.5 rounded bg-stanley-black/80 backdrop-blur-sm border border-stanley-steel flex items-center gap-1 font-mono text-[10px]">
+                        <span className="px-2 py-0.5 rounded bg-black/80 dark:bg-stanley-black/80 backdrop-blur-sm border border-zinc-700 dark:border-stanley-steel flex items-center gap-1 font-mono text-[10px]">
                           <Camera className="w-3 h-3 text-stanley-yellow" />
                           {currentPhotoIdx + 1} / {project.gallery.length} photos
                         </span>
@@ -355,7 +355,7 @@ export const Portfolio: React.FC = () => {
 
                   {/* Thumbnail Bar for project with all 5 photos */}
                   {project.gallery && project.gallery.length > 1 && (
-                    <div className="bg-stanley-black/95 px-3 py-2 border-b border-stanley-steel flex items-center justify-between gap-1.5 overflow-x-auto">
+                    <div className="bg-zinc-100 dark:bg-stanley-black/95 px-3 py-2 border-b border-zinc-200 dark:border-stanley-steel flex items-center justify-between gap-1.5 overflow-x-auto">
                       <div className="flex items-center gap-1.5 overflow-x-auto py-0.5">
                         {project.gallery.map((photo, pIdx) => (
                           <button
@@ -364,7 +364,7 @@ export const Portfolio: React.FC = () => {
                             className={`w-9 h-7 rounded overflow-hidden border transition-all shrink-0 cursor-pointer ${
                               currentPhotoIdx === pIdx 
                                 ? 'border-stanley-yellow ring-2 ring-stanley-yellow/30 scale-105' 
-                                : 'border-stanley-steel opacity-60 hover:opacity-100 hover:border-stanley-yellow/60'
+                                : 'border-zinc-300 dark:border-stanley-steel opacity-70 hover:opacity-100 hover:border-stanley-yellow/60'
                             }`}
                             title={photo.tag}
                           >
@@ -375,7 +375,7 @@ export const Portfolio: React.FC = () => {
 
                       <button
                         onClick={() => setLightbox({ project, photoIndex: currentPhotoIdx })}
-                        className="text-[10px] font-bold text-stanley-yellow hover:text-amber-300 px-2 py-1 rounded bg-stanley-charcoal border border-stanley-steel hover:border-stanley-yellow/50 shrink-0 cursor-pointer flex items-center gap-1"
+                        className="text-[10px] font-bold text-stanley-gold dark:text-stanley-yellow hover:text-amber-600 dark:hover:text-amber-300 px-2 py-1 rounded bg-white dark:bg-stanley-charcoal border border-zinc-300 dark:border-stanley-steel hover:border-stanley-yellow/50 shrink-0 cursor-pointer flex items-center gap-1 shadow-xs"
                       >
                         <span>Agrandir ({project.gallery?.length || 1})</span>
                         <Layers className="w-3 h-3" />
@@ -387,30 +387,30 @@ export const Portfolio: React.FC = () => {
                 {/* Content */}
                 <div className="p-6 flex flex-col flex-1 justify-between">
                   <div>
-                    <div className="flex items-center gap-1.5 text-xs text-slate-400 mb-2">
-                      <MapPin className="w-3.5 h-3.5 text-stanley-yellow shrink-0" />
-                      <span className="font-semibold text-slate-300">{project.location}</span>
+                    <div className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-slate-400 mb-2">
+                      <MapPin className="w-3.5 h-3.5 text-stanley-gold dark:text-stanley-yellow shrink-0" />
+                      <span className="font-semibold text-zinc-700 dark:text-slate-300">{project.location}</span>
                     </div>
 
-                    <h3 className="font-display font-bold text-xl text-slate-50 mb-2 group-hover:text-stanley-yellow transition-colors">
+                    <h3 className="font-display font-bold text-xl text-zinc-900 dark:text-slate-50 mb-2 group-hover:text-stanley-gold dark:group-hover:text-stanley-yellow transition-colors">
                       {project.title}
                     </h3>
 
-                    <p className="text-slate-300 text-xs leading-relaxed mb-4">
+                    <p className="text-zinc-600 dark:text-slate-300 text-xs leading-relaxed mb-4">
                       {project.description}
                     </p>
 
                     {/* Highlights bullet points */}
                     {project.highlights && project.highlights.length > 0 && (
-                      <div className="mb-4 bg-stanley-black/70 rounded-xl p-3 border border-stanley-steel">
-                        <div className="text-[10px] font-bold uppercase tracking-wider text-stanley-yellow mb-1.5 flex items-center gap-1">
+                      <div className="mb-4 bg-zinc-50 dark:bg-stanley-black/70 rounded-xl p-3 border border-zinc-200 dark:border-stanley-steel">
+                        <div className="text-[10px] font-bold uppercase tracking-wider text-stanley-gold dark:text-stanley-yellow mb-1.5 flex items-center gap-1">
                           <CheckCircle2 className="w-3 h-3" />
                           <span>Détails &amp; Étapes du Chantier (Atsimondrano)</span>
                         </div>
-                        <ul className="space-y-1 text-[11px] text-slate-300">
+                        <ul className="space-y-1 text-[11px] text-zinc-700 dark:text-slate-300">
                           {project.highlights.map((item, idx) => (
                             <li key={idx} className="flex items-start gap-1.5">
-                              <span className="text-stanley-yellow font-bold">•</span>
+                              <span className="text-stanley-gold dark:text-stanley-yellow font-bold">•</span>
                               <span>{item}</span>
                             </li>
                           ))}
@@ -419,21 +419,21 @@ export const Portfolio: React.FC = () => {
                     )}
                   </div>
 
-                  <div className="border-t border-stanley-steel pt-4 flex items-center justify-between text-xs text-slate-300">
+                  <div className="border-t border-zinc-200 dark:border-stanley-steel pt-4 flex items-center justify-between text-xs text-zinc-600 dark:text-slate-300">
                     <div className="flex items-center gap-4">
                       <span className="flex items-center gap-1 text-[11px]">
-                        <Maximize2 className="w-3.5 h-3.5 text-stanley-yellow" />
+                        <Maximize2 className="w-3.5 h-3.5 text-stanley-gold dark:text-stanley-yellow" />
                         {project.surface}
                       </span>
                       <span className="flex items-center gap-1 text-[11px]">
-                        <Calendar className="w-3.5 h-3.5 text-stanley-yellow" />
+                        <Calendar className="w-3.5 h-3.5 text-stanley-gold dark:text-stanley-yellow" />
                         {project.duration}
                       </span>
                     </div>
 
                     <a
                       href="#contact"
-                      className="w-8 h-8 rounded-full bg-stanley-steel flex items-center justify-center text-slate-300 group-hover:bg-stanley-yellow group-hover:text-stanley-black transition-colors"
+                      className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-stanley-steel border border-zinc-200 dark:border-transparent flex items-center justify-center text-zinc-700 dark:text-slate-300 group-hover:bg-stanley-yellow group-hover:text-stanley-black transition-colors"
                       aria-label={`Demander un devis similaire pour ${project.title}`}
                       title="Demander un devis pour ce type de chantier à Atsimondrano"
                     >
@@ -467,11 +467,11 @@ export const Portfolio: React.FC = () => {
           </button>
 
           <div 
-            className="relative max-w-5xl w-full bg-stanley-black border border-stanley-steel rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[92vh]"
+            className="relative max-w-5xl w-full bg-zinc-900 dark:bg-stanley-black border border-zinc-700 dark:border-stanley-steel rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[92vh]"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="p-3.5 sm:p-5 border-b border-stanley-steel flex items-center justify-between bg-stanley-charcoal shrink-0 gap-3">
+            <div className="p-3.5 sm:p-5 border-b border-zinc-700 dark:border-stanley-steel flex items-center justify-between bg-zinc-800 dark:bg-stanley-charcoal shrink-0 gap-3">
               <div className="flex items-center gap-2 sm:gap-3 min-w-0 pr-2">
                 <span className="px-2.5 py-1 rounded bg-stanley-yellow/15 text-stanley-yellow border border-stanley-yellow/30 text-[10px] sm:text-xs font-bold uppercase tracking-wider shrink-0">
                   {lightbox.project.status === 'en-cours' ? 'Chantier en cours' : 'Réalisation'}
@@ -483,7 +483,7 @@ export const Portfolio: React.FC = () => {
 
               <button
                 onClick={() => setLightbox(null)}
-                className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-stanley-steel hover:bg-zinc-800 border border-slate-600 hover:border-stanley-yellow text-slate-100 font-bold text-xs sm:text-sm transition-all cursor-pointer shrink-0"
+                className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-zinc-700 dark:bg-stanley-steel hover:bg-zinc-600 dark:hover:bg-zinc-800 border border-zinc-600 dark:border-slate-600 hover:border-stanley-yellow text-slate-100 font-bold text-xs sm:text-sm transition-all cursor-pointer shrink-0"
                 aria-label="Fermer la galerie photo"
                 title="Quitter la galerie"
               >
@@ -512,7 +512,7 @@ export const Portfolio: React.FC = () => {
               };
 
               return (
-                <div className="flex-1 flex flex-col overflow-hidden bg-black/60 relative">
+                <div className="flex-1 flex flex-col overflow-hidden bg-black/70 relative">
                   <div className="relative flex-1 flex items-center justify-center p-2 min-h-[300px] sm:min-h-[460px]">
                     <img
                       src={current.url}
@@ -524,7 +524,7 @@ export const Portfolio: React.FC = () => {
                       <>
                         <button
                           onClick={goPrev}
-                          className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-stanley-charcoal/90 border border-stanley-steel text-slate-100 hover:bg-stanley-yellow hover:text-stanley-black transition-all cursor-pointer shadow-xl"
+                          className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-zinc-900/90 dark:bg-stanley-charcoal/90 border border-zinc-700 dark:border-stanley-steel text-slate-100 hover:bg-stanley-yellow hover:text-stanley-black transition-all cursor-pointer shadow-xl"
                           aria-label="Photo précédente"
                         >
                           <ChevronLeft className="w-6 h-6" />
@@ -532,7 +532,7 @@ export const Portfolio: React.FC = () => {
 
                         <button
                           onClick={goNext}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-stanley-charcoal/90 border border-stanley-steel text-slate-100 hover:bg-stanley-yellow hover:text-stanley-black transition-all cursor-pointer shadow-xl"
+                          className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-zinc-900/90 dark:bg-stanley-charcoal/90 border border-zinc-700 dark:border-stanley-steel text-slate-100 hover:bg-stanley-yellow hover:text-stanley-black transition-all cursor-pointer shadow-xl"
                           aria-label="Photo suivante"
                         >
                           <ChevronRight className="w-6 h-6" />
@@ -542,17 +542,17 @@ export const Portfolio: React.FC = () => {
                   </div>
 
                   {/* Caption & Metadata Footer with Explicit Exit Button */}
-                  <div className="p-4 sm:p-5 bg-stanley-charcoal border-t border-stanley-steel flex flex-col gap-3">
+                  <div className="p-4 sm:p-5 bg-zinc-800 dark:bg-stanley-charcoal border-t border-zinc-700 dark:border-stanley-steel flex flex-col gap-3">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <div className="space-y-1">
                         <div className="flex items-center gap-2 text-xs">
                           <span className="font-bold text-stanley-yellow">{current.tag}</span>
-                          <span className="text-slate-500">•</span>
-                          <span className="text-slate-400 font-mono">Photo {lightbox.photoIndex + 1} sur {photos.length}</span>
-                          <span className="text-slate-500">•</span>
+                          <span className="text-zinc-400">•</span>
+                          <span className="text-zinc-300 font-mono">Photo {lightbox.photoIndex + 1} sur {photos.length}</span>
+                          <span className="text-zinc-400">•</span>
                           <span className="text-stanley-yellow font-semibold">{lightbox.project.location}</span>
                         </div>
-                        <p className="text-xs sm:text-sm text-slate-200">
+                        <p className="text-xs sm:text-sm text-slate-100">
                           {current.caption}
                         </p>
                       </div>
@@ -570,7 +570,7 @@ export const Portfolio: React.FC = () => {
 
                     {/* Thumbnail navigation */}
                     {photos.length > 1 && (
-                      <div className="flex items-center gap-2 shrink-0 overflow-x-auto py-1 border-t border-stanley-steel/60 pt-2">
+                      <div className="flex items-center gap-2 shrink-0 overflow-x-auto py-1 border-t border-zinc-700 dark:border-stanley-steel/60 pt-2">
                         {photos.map((p, idx) => (
                           <button
                             key={p.url}
@@ -578,7 +578,7 @@ export const Portfolio: React.FC = () => {
                             className={`w-12 h-10 rounded-lg overflow-hidden border-2 transition-all cursor-pointer shrink-0 ${
                               idx === lightbox.photoIndex 
                                 ? 'border-stanley-yellow scale-105 shadow-md' 
-                                : 'border-stanley-steel opacity-50 hover:opacity-90'
+                                : 'border-zinc-700 dark:border-stanley-steel opacity-50 hover:opacity-90'
                             }`}
                             title={p.tag}
                           >

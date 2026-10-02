@@ -29,7 +29,7 @@ export const Navbar: React.FC = () => {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-stanley-black/95 backdrop-blur-md border-b border-stanley-steel py-3 shadow-xl'
+          ? 'bg-white/95 dark:bg-stanley-black/95 backdrop-blur-md border-b border-zinc-200 dark:border-stanley-steel py-3 shadow-md dark:shadow-xl'
           : 'bg-transparent py-5'
       }`}
     >
@@ -38,7 +38,7 @@ export const Navbar: React.FC = () => {
           {/* Logo Officiel Stanley Construction */}
           <a href="#accueil" className="flex items-center group py-0.5" aria-label="Accueil Stanley Construction">
             <Logo
-              variant="dark"
+              variant="auto"
               className={`w-auto group-hover:scale-[1.02] transition-all duration-300 ${
                 isScrolled ? 'h-11 sm:h-12 lg:h-14' : 'h-12 sm:h-14 lg:h-16'
               }`}
@@ -51,7 +51,7 @@ export const Navbar: React.FC = () => {
               <a
                 key={link.name}
                 href={link.href}
-                className="text-xs font-semibold text-slate-300 hover:text-stanley-yellow transition-colors cursor-pointer relative py-1 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-stanley-yellow after:scale-x-0 hover:after:scale-x-100 after:transition-transform uppercase tracking-wider"
+                className="text-xs font-semibold text-zinc-700 dark:text-slate-300 hover:text-stanley-yellow dark:hover:text-stanley-yellow transition-colors cursor-pointer relative py-1 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-stanley-yellow after:scale-x-0 hover:after:scale-x-100 after:transition-transform uppercase tracking-wider"
               >
                 {link.name}
               </a>
@@ -62,15 +62,15 @@ export const Navbar: React.FC = () => {
           <div className="hidden md:flex items-center gap-4">
             <a
               href="tel:+261348110715"
-              className="flex items-center gap-2 text-xs font-semibold text-slate-300 hover:text-white transition-colors"
+              className="flex items-center gap-2 text-xs font-semibold text-zinc-700 dark:text-slate-300 hover:text-zinc-950 dark:hover:text-white transition-colors"
               title="Appel direct: +261 34 81 107 15"
             >
-              <div className="w-8 h-8 rounded-full bg-stanley-charcoal border border-stanley-steel flex items-center justify-center text-stanley-yellow">
+              <div className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-stanley-charcoal border border-zinc-200 dark:border-stanley-steel flex items-center justify-center text-stanley-yellow">
                 <Phone className="w-3.5 h-3.5" />
               </div>
               <div className="flex flex-col text-left">
-                <span className="text-[9px] text-slate-400 font-normal">Appel direct Tana</span>
-                <span className="font-bold">+261 34 81 107 15</span>
+                <span className="text-[9px] text-zinc-500 dark:text-slate-400 font-normal">Appel direct Tana</span>
+                <span className="font-bold text-zinc-900 dark:text-slate-100">+261 34 81 107 15</span>
               </div>
             </a>
 
@@ -78,7 +78,7 @@ export const Navbar: React.FC = () => {
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-stanley-charcoal border border-stanley-steel hover:border-stanley-yellow text-stanley-yellow font-bold text-xs transition-all cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-zinc-100 dark:bg-stanley-charcoal border border-zinc-300 dark:border-stanley-steel hover:border-stanley-yellow text-zinc-900 dark:text-stanley-yellow font-bold text-xs transition-all cursor-pointer"
               title="Discuter sur WhatsApp: +261 37 51 359 64"
             >
               <MessageCircle className="w-3.5 h-3.5 stroke-[2.2]" />
@@ -98,7 +98,7 @@ export const Navbar: React.FC = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-lg bg-stanley-charcoal border border-stanley-steel text-slate-300 hover:text-white focus:outline-none cursor-pointer"
+            className="lg:hidden p-2 rounded-lg bg-zinc-100 dark:bg-stanley-charcoal border border-zinc-200 dark:border-stanley-steel text-zinc-700 dark:text-slate-300 hover:text-zinc-950 dark:hover:text-white focus:outline-none cursor-pointer"
             aria-label="Ouvrir le menu mobile"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -108,14 +108,14 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-stanley-black/98 backdrop-blur-xl border-b border-stanley-steel px-6 py-6 transition-all">
+        <div className="lg:hidden bg-white/98 dark:bg-stanley-black/98 backdrop-blur-xl border-b border-zinc-200 dark:border-stanley-steel px-6 py-6 transition-all shadow-xl">
           <div className="flex flex-col gap-3">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-sm font-semibold text-slate-200 hover:text-stanley-yellow py-2 border-b border-stanley-steel/50"
+                className="text-sm font-semibold text-zinc-800 dark:text-slate-200 hover:text-stanley-yellow py-2 border-b border-zinc-100 dark:border-stanley-steel/50"
               >
                 {link.name}
               </a>
@@ -123,7 +123,7 @@ export const Navbar: React.FC = () => {
             <div className="pt-4 flex flex-col gap-2.5">
               <a
                 href="tel:+261348110715"
-                className="flex items-center gap-3 text-xs text-slate-300 py-2"
+                className="flex items-center gap-3 text-xs text-zinc-700 dark:text-slate-300 py-2"
               >
                 <Phone className="w-4 h-4 text-stanley-yellow" />
                 <span>+261 34 81 107 15 (Lundi - Samedi)</span>
@@ -132,7 +132,7 @@ export const Navbar: React.FC = () => {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full text-center py-2.5 rounded-lg bg-stanley-charcoal border border-stanley-steel text-stanley-yellow font-bold text-xs flex items-center justify-center gap-2 hover:border-stanley-yellow"
+                className="w-full text-center py-2.5 rounded-lg bg-zinc-100 dark:bg-stanley-charcoal border border-zinc-300 dark:border-stanley-steel text-zinc-900 dark:text-stanley-yellow font-bold text-xs flex items-center justify-center gap-2 hover:border-stanley-yellow"
               >
                 <MessageCircle className="w-4 h-4 stroke-[2.2]" />
                 <span>Discuter sur WhatsApp (+261 37 51 359 64)</span>

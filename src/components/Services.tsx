@@ -56,17 +56,17 @@ export const Services: React.FC = () => {
   ];
 
   return (
-    <section id="services" aria-label="Services et Expertises BTP" className="py-24 bg-stanley-black relative border-t border-stanley-steel">
+    <section id="services" aria-label="Services et Expertises BTP" className="py-24 bg-zinc-50 dark:bg-stanley-black relative border-t border-zinc-200 dark:border-stanley-steel transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-          <span className="text-xs uppercase tracking-widest text-stanley-yellow font-bold">
+          <span className="text-xs uppercase tracking-widest text-stanley-gold dark:text-stanley-yellow font-bold">
             Savoir-Faire Tout Corps d'État
           </span>
-          <h2 className="font-display font-bold text-3xl sm:text-5xl text-slate-50 tracking-tight">
+          <h2 className="font-display font-bold text-3xl sm:text-5xl text-zinc-900 dark:text-slate-50 tracking-tight">
             Bâtiment, Gros Œuvre &amp; Travaux Publics
           </h2>
-          <p className="text-slate-300 text-base sm:text-lg">
+          <p className="text-zinc-600 dark:text-slate-300 text-base sm:text-lg">
             De la préparation du terrain jusqu'aux finitions d'exception, nous mobilisons l'expérience éprouvée de nos compagnons terrain.
           </p>
         </div>
@@ -78,30 +78,30 @@ export const Services: React.FC = () => {
             return (
               <article
                 key={index}
-                className="group relative rounded-2xl bg-stanley-charcoal border border-stanley-steel p-8 hover:border-stanley-yellow/60 transition-all duration-300 flex flex-col justify-between hover:-translate-y-1 hover:shadow-2xl shadow-md"
+                className="group relative rounded-2xl bg-white dark:bg-stanley-charcoal border border-zinc-200 dark:border-stanley-steel p-8 hover:border-stanley-yellow/60 transition-all duration-300 flex flex-col justify-between hover:-translate-y-1 hover:shadow-xl dark:hover:shadow-2xl shadow-sm dark:shadow-md"
               >
                 <div>
                   <div className="flex items-center justify-between mb-6">
-                    <div className="w-12 h-12 rounded-xl bg-stanley-black border border-stanley-steel flex items-center justify-center text-stanley-yellow group-hover:scale-105 group-hover:border-stanley-yellow transition-all shadow-inner">
+                    <div className="w-12 h-12 rounded-xl bg-amber-50 dark:bg-stanley-black border border-amber-200 dark:border-stanley-steel flex items-center justify-center text-stanley-gold dark:text-stanley-yellow group-hover:scale-105 group-hover:border-stanley-yellow transition-all shadow-inner">
                       <Icon className="w-6 h-6 stroke-[2]" />
                     </div>
-                    <span className="text-[10px] font-bold text-stanley-yellow bg-stanley-black border border-stanley-steel px-2.5 py-1 rounded-md uppercase tracking-wider">
+                    <span className="text-[10px] font-bold text-stanley-gold dark:text-stanley-yellow bg-amber-50 dark:bg-stanley-black border border-amber-200 dark:border-stanley-steel px-2.5 py-1 rounded-md uppercase tracking-wider">
                       {service.badge}
                     </span>
                   </div>
 
-                  <h3 className="font-display font-bold text-xl text-slate-50 mb-3 group-hover:text-stanley-yellow transition-colors">
+                  <h3 className="font-display font-bold text-xl text-zinc-900 dark:text-slate-50 mb-3 group-hover:text-stanley-gold dark:group-hover:text-stanley-yellow transition-colors">
                     {service.title}
                   </h3>
 
-                  <p className="text-slate-300 text-sm leading-relaxed mb-6">
+                  <p className="text-zinc-600 dark:text-slate-300 text-sm leading-relaxed mb-6">
                     {service.description}
                   </p>
 
-                  <ul className="space-y-2.5 mb-8 border-t border-stanley-steel pt-4">
+                  <ul className="space-y-2.5 mb-8 border-t border-zinc-200 dark:border-stanley-steel pt-4">
                     {service.points.map((point, ptIndex) => (
-                      <li key={ptIndex} className="text-xs text-slate-300 flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-stanley-yellow shrink-0" />
+                      <li key={ptIndex} className="text-xs text-zinc-700 dark:text-slate-300 flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-stanley-gold dark:bg-stanley-yellow shrink-0" />
                         {point}
                       </li>
                     ))}
@@ -110,7 +110,7 @@ export const Services: React.FC = () => {
 
                 <a
                   href="#contact"
-                  className="inline-flex items-center gap-2 text-xs font-bold text-stanley-yellow hover:text-amber-300 uppercase tracking-wider transition-colors pt-2 group-hover:translate-x-1"
+                  className="inline-flex items-center gap-2 text-xs font-bold text-stanley-gold dark:text-stanley-yellow hover:text-amber-600 dark:hover:text-amber-300 uppercase tracking-wider transition-colors pt-2 group-hover:translate-x-1"
                 >
                   <span>Étudier ce lot</span>
                   <ArrowRight className="w-3.5 h-3.5" />
