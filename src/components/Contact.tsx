@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, CheckCircle, AlertCircle, Loader2, Calculator, ArrowRight } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
+import { calculateEstimate, PROJECT_TYPES } from '../utils/estimator';
 
 export const Contact: React.FC = () => {
   const [clientProfile, setClientProfile] = useState<'resident' | 'diaspora'>('resident');
@@ -18,15 +19,24 @@ export const Contact: React.FC = () => {
     message: '',
   });
 
-  const whatsappDirectUrl = "https://wa.me/261375135964?text=Bonjour%20Stanley%20Construction,%20je%20souhaite%20un%20devis%20pour%20mon%20projet%20à%20Antananarivo.";
+  const estimate = calculateEstimate(projectType, surface);
 
-  const projectTypes = [
-    { id: 'gros-oeuvre', label: 'Gros Œuvre & Murs de Soutènement' },
-    { id: 'villa-diaspora', label: 'Villa Clé en Main (Suivi Diaspora)' },
-    { id: 'travaux-publics', label: 'VRD, Drainage & Piste d\'accès' },
-    { id: 'renovation', label: 'Rénovation & Surélévation Tana' },
-    { id: 'cloture', label: 'Clôture Maçonnée & Sécurisation' },
-  ];
+  const buildWhatsAppMessage = () => {
+    const lines = [
+      '🏗️ *DEMANDE DE DEVIS — STANLEY CONSTRUCTION*',
+      `• *Client* : ${formData.name.trim() || 'Prospect'} (${clientProfile === 'diaspora' ? 'Diaspora Malgache' : 'Résident Tana'})`,
+      `• *Contact* : ${formData.phone.trim() || 'Non renseigné'} | ${formData.email.trim() || 'Non renseigné'}`,
+      `• *Lot / Travaux* : ${estimate.projectType}`,
+      `• *Surface estimée* : ~${surface} m²`,
+      `• *Fourchette indicative* : ${estimate.formattedAr} (soit env. ${estimate.formattedEur})`,
+      formData.quartier.trim() ? `• *Localisation chantier* : ${formData.quartier.trim()}` : '',
+      formData.message.trim() ? `• *Spécificités terrain* : ${formData.message.trim()}` : '',
+    ].filter(Boolean);
+
+    return `https://wa.me/261375135964?text=${encodeURIComponent(lines.join('\n'))}`;
+  };
+
+  const whatsappDirectUrl = "https://wa.me/261375135964?text=Bonjour%20Stanley%20Construction,%20je%20souhaite%20un%20devis%20pour%20mon%20projet%20à%20Antananarivo.";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,11 +48,24 @@ export const Contact: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      // Simulation asynchrone réaliste (réseau ~600ms)
+      // Simulation asynchrone avec persistance locale pour garantir l'historique côté client
       await new Promise(resolve => setTimeout(resolve, 600));
+      try {
+        const history = JSON.parse(localStorage.getItem('stanley_lead_requests') || '[]');
+        history.push({
+          date: new Date().toISOString(),
+          profile: clientProfile,
+          projectType,
+          surface,
+          estimate,
+          ...formData,
+        });
+        localStorage.setItem('stanley_lead_requests', JSON.stringify(history));
+      } catch (_) {}
+
       setIsSubmitted(true);
     } catch {
-      setErrorMessage('Une erreur est survenue lors de l\'envoi. Veuillez réessayer ou nous appeler directement.');
+      setErrorMessage('Une erreur est survenue lors de l\'envoi. Veuillez réessayer ou nous joindre sur WhatsApp.');
     } finally {
       setIsSubmitting(false);
     }
@@ -120,7 +143,7 @@ export const Contact: React.FC = () => {
               </div>
             </div>
 
-            {/* Sleek Reassurance Card */}
+            {/* Reassurance Card */}
             <div className="p-4 rounded-xl bg-white dark:bg-stanley-charcoal border border-zinc-200 dark:border-stanley-steel text-xs text-zinc-600 dark:text-slate-300 space-y-1 shadow-xs">
               <span className="font-bold text-stanley-gold dark:text-stanley-yellow uppercase tracking-wider block text-[11px]">
                 Engagement &amp; Réactivité
@@ -131,35 +154,56 @@ export const Contact: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column: Accessible Interactive Form */}
+          {/* Right Column: Accessible Interactive Form & Real-Time Estimator */}
           <div className="lg:col-span-7">
             <div className="p-8 sm:p-10 rounded-2xl bg-white dark:bg-stanley-charcoal border border-zinc-200 dark:border-stanley-steel relative shadow-md dark:shadow-xl">
               {isSubmitted ? (
-                <div role="status" aria-live="polite" className="text-center py-12 space-y-4">
+                <div role="status" aria-live="polite" className="text-center py-10 space-y-5">
                   <div className="w-16 h-16 rounded-2xl bg-amber-50 dark:bg-stanley-black border-2 border-stanley-gold dark:border-stanley-yellow flex items-center justify-center text-stanley-gold dark:text-stanley-yellow mx-auto">
                     <CheckCircle className="w-8 h-8 stroke-[2.2]" />
                   </div>
                   <h3 className="font-display font-bold text-2xl text-zinc-900 dark:text-slate-50">
-                    Demande de devis transmise avec succès !
+                    Demande de devis enregistrée !
                   </h3>
-                  <p className="text-zinc-600 dark:text-slate-300 text-sm max-w-md mx-auto">
-                    Misaotra tompoko, merci <strong className="text-zinc-900 dark:text-slate-50">{formData.name}</strong>. Nos techniciens à Antananarivo ont bien reçu votre demande ({projectType}, ~{surface} m²).
+                  <p className="text-zinc-600 dark:text-slate-300 text-sm max-w-md mx-auto leading-relaxed">
+                    Misaotra tompoko, merci <strong className="text-zinc-900 dark:text-slate-50">{formData.name}</strong>. Nos techniciens à Antananarivo analysent votre projet (<span className="text-stanley-yellow font-semibold">{estimate.projectType}</span>, ~{surface} m²).
                   </p>
-                  <div className="p-4 rounded-xl bg-zinc-50 dark:bg-stanley-black border border-zinc-200 dark:border-stanley-steel text-xs text-zinc-700 dark:text-slate-300 max-w-sm mx-auto text-left space-y-1.5">
+                  
+                  {/* Estimation summary card */}
+                  <div className="p-4 rounded-xl bg-zinc-50 dark:bg-stanley-black border border-zinc-200 dark:border-stanley-steel text-xs text-zinc-700 dark:text-slate-300 max-w-md mx-auto text-left space-y-2">
+                    <div className="flex justify-between items-center pb-2 border-b border-zinc-200 dark:border-stanley-steel">
+                      <span className="font-semibold">Fourchette estimative indicative :</span>
+                      <span className="font-display font-bold text-stanley-gold dark:text-stanley-yellow text-sm">{estimate.formattedAr}</span>
+                    </div>
+                    <div className="text-[11px] text-zinc-500 dark:text-slate-400">
+                      Soit environ <strong className="text-zinc-800 dark:text-slate-200">{estimate.formattedEur}</strong> selon les conditions du terrain.
+                    </div>
                     <div><strong>Contact direct :</strong> sous 24h au <span className="text-stanley-gold dark:text-stanley-yellow font-bold">{formData.phone}</span></div>
-                    <div><strong>Suivi WhatsApp :</strong> actif sur le numéro renseigné</div>
-                    <div><strong>Email de confirmation :</strong> envoyé à <span className="text-stanley-gold dark:text-stanley-yellow font-bold">{formData.email}</span></div>
+                    <div><strong>Suivi :</strong> email envoyé à <span className="text-stanley-gold dark:text-stanley-yellow font-bold">{formData.email}</span></div>
                   </div>
-                  <button
-                    onClick={() => {
-                      setIsSubmitted(false);
-                      setErrorMessage('');
-                      setFormData({ name: '', email: '', phone: '', whatsapp: '', quartier: '', message: '' });
-                    }}
-                    className="mt-6 px-6 py-2.5 rounded-xl bg-zinc-100 dark:bg-stanley-black hover:bg-zinc-200 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-stanley-steel text-zinc-800 dark:text-slate-200 text-xs font-semibold transition-colors cursor-pointer"
-                  >
-                    Effectuer une nouvelle simulation
-                  </button>
+
+                  {/* Immediate WhatsApp transmission button */}
+                  <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center items-center">
+                    <a
+                      href={buildWhatsAppMessage()}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-extrabold text-xs transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#25D366]/25 cursor-pointer uppercase tracking-wider"
+                    >
+                      <WhatsAppIcon className="w-4 h-4 fill-current text-white shrink-0" />
+                      <span>Transmettre sur WhatsApp (+261 37 51 359 64)</span>
+                    </a>
+                    <button
+                      onClick={() => {
+                        setIsSubmitted(false);
+                        setErrorMessage('');
+                        setFormData({ name: '', email: '', phone: '', whatsapp: '', quartier: '', message: '' });
+                      }}
+                      className="w-full sm:w-auto px-5 py-3 rounded-xl bg-zinc-100 dark:bg-stanley-black hover:bg-zinc-200 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-stanley-steel text-zinc-800 dark:text-slate-200 text-xs font-semibold transition-colors cursor-pointer"
+                    >
+                      Nouvelle simulation
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <form id="devis-form" onSubmit={handleSubmit} noValidate className="space-y-6">
@@ -209,18 +253,19 @@ export const Contact: React.FC = () => {
                     <input type="hidden" name="projectType" value={projectType} />
                     <input type="hidden" name="clientProfile" value={clientProfile} />
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                      {projectTypes.map((type) => (
+                      {PROJECT_TYPES.map((type) => (
                         <button
                           type="button"
                           key={type.id}
                           onClick={() => setProjectType(type.id)}
-                          className={`p-3 rounded-xl text-xs font-semibold text-left transition-all border cursor-pointer ${
+                          className={`p-3 rounded-xl text-xs font-semibold text-left transition-all border cursor-pointer flex flex-col justify-between ${
                             projectType === type.id
                               ? 'bg-amber-50 dark:bg-stanley-black border-stanley-gold dark:border-stanley-yellow text-stanley-gold dark:text-stanley-yellow shadow-xs ring-1 ring-stanley-yellow/30'
                               : 'bg-zinc-50 dark:bg-stanley-black/60 border-zinc-200 dark:border-stanley-steel text-zinc-700 dark:text-slate-300 hover:border-zinc-400 dark:hover:border-slate-700'
                           }`}
                         >
-                          {type.label}
+                          <span className="font-bold">{type.label}</span>
+                          <span className="text-[10px] opacity-75 mt-1 leading-snug">{type.description}</span>
                         </button>
                       ))}
                     </div>
@@ -251,6 +296,32 @@ export const Contact: React.FC = () => {
                       <span>20 m²</span>
                       <span>500 m²</span>
                       <span>1 000 m²+</span>
+                    </div>
+                  </div>
+
+                  {/* Real-Time Live Estimation Banner */}
+                  <div className="p-4 rounded-xl bg-amber-500/10 dark:bg-stanley-black border border-stanley-yellow/40 dark:border-stanley-yellow/30">
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <div className="flex items-center gap-2">
+                        <Calculator className="w-4 h-4 text-stanley-gold dark:text-stanley-yellow shrink-0" />
+                        <span className="text-xs font-bold uppercase tracking-wider text-zinc-800 dark:text-slate-200">
+                          Estimation Budgétaire Réactive
+                        </span>
+                      </div>
+                      <span className="text-[10px] font-semibold text-stanley-gold dark:text-stanley-yellow bg-stanley-yellow/15 px-2 py-0.5 rounded">
+                        Fourchette Indicative HT
+                      </span>
+                    </div>
+                    <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 pt-1 border-t border-amber-500/20 dark:border-stanley-steel">
+                      <div className="font-display font-extrabold text-lg sm:text-xl text-zinc-900 dark:text-stanley-yellow">
+                        {estimate.formattedAr}
+                      </div>
+                      <div className="text-xs font-semibold text-zinc-600 dark:text-slate-300">
+                        Soit env. <span className="text-stanley-gold dark:text-stanley-yellow font-bold">{estimate.formattedEur}</span>
+                      </div>
+                    </div>
+                    <div className="text-[10px] text-zinc-500 dark:text-slate-400 mt-2 leading-relaxed">
+                      * Estimation indicative calculée selon les cours des matériaux à Antananarivo (ciment 350kg/m³, ferraillage FeE500, main-d'œuvre qualifiée). Visite technique terrain requise pour validation.
                     </div>
                   </div>
 
@@ -316,7 +387,7 @@ export const Contact: React.FC = () => {
                           id="client-quartier"
                           name="quartier"
                           type="text"
-                          placeholder="Ex: Ambatobe, Ivato, Ilafy, By-pass..."
+                          placeholder="Ex: Ambatobe, Ivato, Ilafy, By-pass, Itaosy..."
                           value={formData.quartier}
                           onChange={(e) => setFormData({ ...formData, quartier: e.target.value })}
                           className="w-full px-4 py-3 rounded-xl bg-zinc-50 dark:bg-stanley-black border border-zinc-300 dark:border-stanley-steel text-sm text-zinc-900 dark:text-slate-50 placeholder-zinc-400 dark:placeholder-slate-500 focus:ring-1 focus:ring-stanley-yellow focus:border-stanley-yellow focus:outline-none transition-all"
@@ -341,25 +412,40 @@ export const Contact: React.FC = () => {
                     />
                   </div>
 
-                  {/* Submit CTA */}
-                  <button
-                    id="submit-quote-btn"
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full py-4 rounded-xl bg-stanley-yellow hover:bg-stanley-gold disabled:opacity-75 disabled:cursor-not-allowed text-stanley-black font-extrabold text-base flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/35 transition-all cursor-pointer uppercase tracking-wider"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                        <span>Transmission de votre demande...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-5 h-5 stroke-[2.2]" />
-                        <span>Demander mon étude &amp; devis gratuit</span>
-                      </>
-                    )}
-                  </button>
+                  {/* Submit CTAs */}
+                  <div className="space-y-3 pt-2">
+                    <button
+                      id="submit-quote-btn"
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full py-4 rounded-xl bg-stanley-yellow hover:bg-stanley-gold disabled:opacity-75 disabled:cursor-not-allowed text-stanley-black font-extrabold text-base flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/35 transition-all cursor-pointer uppercase tracking-wider"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                          <span>Transmission de votre demande...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Send className="w-5 h-5 stroke-[2.2]" />
+                          <span>Valider ma demande d'étude gratuite</span>
+                        </>
+                      )}
+                    </button>
+
+                    {/* Fast WhatsApp direct dispatch option */}
+                    <a
+                      href={buildWhatsAppMessage()}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full py-3.5 rounded-xl bg-white dark:bg-stanley-charcoal hover:bg-[#25D366]/10 border border-zinc-300 dark:border-stanley-steel hover:border-[#25D366] text-zinc-800 dark:text-slate-200 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs"
+                      title="Envoyer instantanément les paramètres du devis via WhatsApp"
+                    >
+                      <WhatsAppIcon className="w-4 h-4 fill-current text-[#25D366] shrink-0" />
+                      <span>Ou transmettre directement les détails sur WhatsApp</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-[#25D366]" />
+                    </a>
+                  </div>
 
                   <p className="text-[11px] text-zinc-500 dark:text-slate-400 text-center">
                     🔒 Devis confidentiel sans engagement. Visite technique rapide sur votre terrain à Antananarivo.

@@ -1,17 +1,22 @@
-# Project Rules & Guidelines — Bricon Construction
+# Project Rules & Guidelines — Stanley / Bricon Construction
 
-Bienvenue dans le dépôt **Bricon Construction**. Ce document contient les règles d'architecture, les normes de style, les schémas de base de données, et les conventions de développement du projet.
+Bienvenue dans le dépôt **Stanley / Bricon Construction**. Ce document contient les règles d'architecture, les normes de style, l'organisation des composants et les conventions de développement du projet.
 
 ---
 
-## 1. Stack Technique Cœur
+## 1. Stack Technique Active
 
-- **Framework Web** : Next.js 14+ (App Router, Server Components, Server Actions, Dynamic Metadata).
-- **Langage** : TypeScript 5+ (Strict Mode).
-- **Styling** : Tailwind CSS avec typographies Google Fonts (`Outfit` et `Plus Jakarta Sans`), palettes sur mesure (slate/gold/amber), glassmorphism et animations CSS.
-- **Base de Données & Auth** : Supabase PostgreSQL (`@supabase/supabase-js`), migrations SQL versionnées, et politiques de sécurité Row Level Security (RLS).
-- **Formulaires & Validations** : React Hook Form avec résolveurs Zod (`@hookform/resolvers/zod`).
-- **Icônes & UI** : Lucide React (`lucide-react`) et utilitaires de classes `clsx` + `tailwind-merge`.
+- **Framework Web** : Single Page Application (SPA) propulsée par **Vite 6** et **React 18** (Fast Refresh, bundle optimisé).
+- **Langage** : TypeScript 5.7+ (Strict Mode activé dans `tsconfig.json`).
+- **Styling & Thème** : 
+  - **Tailwind CSS 3.4** avec palette industrielle dédiée :
+    - Noir profond / Anthracite : `stanley-black` (`#09090b`), `stanley-charcoal` (`#18181b`), `stanley-steel` (`#27272a`).
+    - Jaune sécurité / Or BTP : `stanley-yellow` (`#f59e0b`), `stanley-gold` (`#d97706`).
+  - **Dark Mode automatique** via `matchMedia('(prefers-color-scheme: dark)')` synchronisé avec la classe `dark` de Tailwind.
+  - **Typographies Google Fonts** : `Montserrat` pour les titres percutants, `Inter` pour la lisibilité des textes techniques.
+- **Icônes & UI** : Lucide React (`lucide-react`), SVG vectoriels sur mesure pour l'emblème et le logo officiel, utilitaire `cn.ts` (`clsx` + `tailwind-merge`).
+- **SEO & Référencement Local** : Données structurées Schema.org JSON-LD de type `HomeAndConstructionBusiness` (Madagascar / Antananarivo, Analamanga, NIF, STAT).
+- **Hébergement & Déploiement** : Vercel (`stanley-construction.vercel.app`).
 
 ---
 
@@ -19,82 +24,88 @@ Bienvenue dans le dépôt **Bricon Construction**. Ce document contient les règ
 
 ```
 c:/Users/Dev/Documents/Bricon Construction/
-├── .agents/                           # Skills & Règles spécifiques au projet pour les assistants IA
-│   ├── AGENTS.md                      # Règles globales du projet (ce fichier)
-│   └── skills/                        # Skills du projet Bricon Construction
-│       ├── bricon-architecture/
-│       │   └── SKILL.md               # Directives d'architecture Next.js App Router & Supabase
-│       ├── quote-estimator/
-│       │   └── SKILL.md               # Guide d'extension de l'estimateur de devis & Zod
-│       └── seo-schema-markup/
-│           └── SKILL.md               # Guide SEO, Métadonnées et Schema.org JSON-LD
-├── app/                               # Next.js App Router (Layouts, Pages, Server Actions & API Routes)
-│   ├── layout.tsx                     # Root Layout avec Google Fonts, Navbar, Footer & JSON-LD
-│   ├── page.tsx                       # Page d'accueil (Hero, 3 Piliers, Modèles RE2020, Avant/Après, Avis)
-│   ├── devis/page.tsx                 # Estimateur & Formulaire de devis multi-étapes
-│   ├── portfolio/page.tsx             # Galerie de réalisations filtrable avec slider Avant/Après
-│   ├── conseils/                      # Centre de ressources Bricolage & Tutos DIY
-│   │   ├── page.tsx                   # Catalogue avec filtres de difficulté et recherche
-│   │   └── [slug]/page.tsx            # Article DIY dynamique avec SEO & Article JSON-LD
-│   ├── api/leads/route.ts             # Route API POST fallback pour devis
-│   └── actions/leads.ts               # Server Action pour validation Zod et insertion Supabase
-├── components/                        # Composants UI modulaires et réutilisables
-│   ├── Navbar.tsx                     # Barre de navigation réactive
-│   ├── Footer.tsx                     # Footer institutionnel, réassurance & badges RGE
-│   ├── HeroSection.tsx                # Hero banner interactif
-│   ├── PillarsSection.tsx             # Présentation des 3 piliers d'activité
-│   ├── QuoteEstimatorWizard.tsx       # Formulaire multi-étapes d'estimation de devis
-│   ├── BeforeAfterSlider.tsx          # Glisseur interactif Avant / Après
-│   ├── PortfolioGallery.tsx           # Galerie de projets filtrable par catégorie
-│   ├── HouseModelsCatalog.tsx         # Catalogue interactif de maisons bioclimatiques RE2020
-│   ├── DiyKnowledgeBase.tsx           # Hub de conseils DIY
-│   ├── BookingModal.tsx               # Modal de prise de RDV
-│   └── JsonLd.tsx                     # Injecteur de balises Schema.org JSON-LD
-├── lib/                               # Logique métier, utilitaires et configurations
-│   ├── supabase/                      # Clients Supabase browser et server
-│   ├── validations/                   # Schémas Zod pour formulaires
-│   ├── utils/                         # Calculateur de devis (`estimator.ts`) et formatteurs
-│   └── data/mockData.ts               # Jeux de données pour le portfolio, modèles et blog
-├── types/                             # Interfaces TypeScript (Supabase DB & Estimateur)
-└── supabase/migrations/               # Migrations SQL Supabase (Tables, RLS, Triggers, Indexes)
+├── .agents/                           # Skills & Règles spécifiques au projet pour assistants IA
+│   ├── AGENTS.md                      # Règles globales du projet (ce document de référence)
+│   └── skills/                        # Guides et compétences spécialisées
+│       ├── bricon-architecture/       # Directives d'architecture et de composition
+│       ├── quote-estimator/           # Logique de calcul des devis & coefficients
+│       ├── seo-schema-markup/         # Directives SEO et balisage Schema.org
+│       └── ...
+├── public/                            # Fichiers statiques publics
+│   ├── assets/
+│   │   ├── chantiers/                 # Photothèque des chantiers réels (Atsimondrano R+2, etc.)
+│   │   ├── logo.svg                   # Logo vectoriel officiel Stanley Construction
+│   │   ├── logo-dark.svg              # Variante sombre du logo
+│   │   └── logo-emblem.svg            # Blason / Favicon vectoriel
+│   └── favicon.ico                    # Favicon du site
+├── scripts/                           # Scripts d'automatisation de captures et de tests (Puppeteer)
+├── src/                               # Code source de l'application
+│   ├── components/                    # Composants d'interface React modulaires
+│   │   ├── CertifiedBadge.tsx         # Bloc officiel NIF / STAT / Fiscalité Madagascar
+│   │   ├── Contact.tsx                # Formulaire de devis avec estimation en temps réel & WhatsApp
+│   │   ├── Footer.tsx                 # Pied de page institutionnel & liens légaux
+│   │   ├── Hero.tsx                   # Section d'en-tête avec métriques et CTA unique
+│   │   ├── LegalModal.tsx             # Modal officiel de transparence et données d'immatriculation
+│   │   ├── Logo.tsx                   # Composant vectoriel réactif avec variantes thématiques
+│   │   ├── Navbar.tsx                 # Barre de navigation fixe avec accès rapide WhatsApp & Téléphone
+│   │   ├── Portfolio.tsx              # Galerie chantiers avec Lightbox interactive multi-photos
+│   │   ├── Services.tsx               # Cartes des 6 piliers d'expertise BTP
+│   │   ├── Values.tsx                 # Spécificités des sols de Tana et suivi diaspora
+│   │   ├── WhatsAppButton.tsx         # Bouton flottant permanent avec micro-animation
+│   │   └── WhatsAppIcon.tsx           # Icône vectorielle officielle WhatsApp
+│   ├── styles/
+│   │   └── index.css                  # Feuilles de styles Tailwind et personnalisations
+│   ├── utils/
+│   │   ├── cn.ts                      # Utilitaire de fusion conditionnelle de classes
+│   │   └── estimator.ts               # Moteur de calcul budgétaire en temps réel (Ar & €)
+│   ├── App.tsx                        # Composant racine assemblant les sections
+│   └── main.tsx                       # Point d'entrée de montage ReactDOM
+├── index.html                         # Template HTML principal avec SEO, OpenGraph & JSON-LD
+├── package.json                       # Dépendances et scripts de build
+├── tailwind.config.js                 # Configuration du thème Tailwind CSS
+├── tsconfig.json                      # Configuration TypeScript stricte
+└── vite.config.ts                     # Configuration du bundler Vite
 ```
 
 ---
 
 ## 3. Normes de Code & Conventions
 
-1. **Server Components vs Client Components** :
-   - Conserver les composants comme Server Components par défaut.
-   - Ajouter `'use client'` uniquement sur les composants nécessitant de l'interactivité (`useState`, `useEffect`, React Hook Form, sliders interactifs).
+1. **Typage Strict TypeScript** :
+   - Strict mode actif. Toute nouvelle fonction ou propriété de composant doit être formellement typée.
+   - Aucun usage de `any` non justifié.
 
-2. **Validation des Formulaires & Server Actions** :
-   - Les entrées de formulaire doivent toujours être validées côté client (React Hook Form + Zod) et ré-validées côté serveur dans les Server Actions avec Zod.
-   - Jamais d'insertion directe en base de données sans validation par schéma Zod (`lib/validations/lead.ts`).
+2. **Estimateur Budgétaire en Temps Réel (`src/utils/estimator.ts`)** :
+   - Calcul réactif au déplacement du curseur de surface et au choix du type de lot.
+   - Restitution en deux devises : **Ariary (Ar)** pour le marché local et **Euros (€)** pour la diaspora.
+   - Fourchette indicative min/max (-10% / +15%) adaptée aux spécificités géotechniques des collines d'Antananarivo.
 
-3. **Design System & Esthétique Visuelle (UI/UX Pro Max)** :
-   - Palette de couleurs : Slate sombre (`bg-slate-900`), ambre/or (`amber-500` / `amber-600`), blanc casse (`slate-50`).
-   - Utiliser des bordures fines subtiles (`border border-slate-800`), des effets de survol doux (`transition-all duration-300`), et du glassmorphism (`backdrop-blur-md bg-slate-900/80`).
-   - Ne pas utiliser de couleurs brutes non harmonisées (ex: vert pur, rouge pur non nuancé).
-   - **Accessibilité & Interaction** :
-     - *Contraste* : Ratio minimum de 4.5:1 pour le texte normal.
-     - *Zones de clic (Touch Targets)* : Minimum 44x44px avec espacement de 8px entre les éléments interactifs.
-     - *Icônes* : Pas d'emojis comme icônes. Utiliser Lucide React (`lucide-react`) uniquement.
-     - *Curseurs* : Ajouter `cursor-pointer` sur tous les éléments cliquables.
-     - *Transitions* : Durée recommandée 150-300ms sans aucun décalage de layout (layout shift).
-     - *Responsive* : Garantir zéro défilement horizontal sur 375px, 768px, 1024px, 1440px.
+3. **Canal WhatsApp Prioritaire** :
+   - Le bouton WhatsApp flottant et les actions rapides sont indispensables pour la conversion à Madagascar.
+   - Le formulaire de contact propose systématiquement la transmission directe préformatée sur la ligne WhatsApp officielle (`+261 37 51 359 64`).
 
-4. **SEO & Structured Data (Schema.org)** :
-   - Chaque page dynamique ou statique doit inclure `generateMetadata` ou un objet `metadata` exporté.
-   - Utiliser `<JsonLd>` pour injecter `LocalBusiness`, `Article`, et `BreadcrumbList` validés par Google Rich Results.
+4. **Design & Ergonomie (UI/UX)** :
+   - Zones tactiles d'au moins 44x44px.
+   - `cursor-pointer` sur tous les boutons, liens et sélecteurs.
+   - Contrastes élevés validés en mode clair comme en mode sombre.
+   - Lightbox avec gestion complète des événements clavier (`Escape`, flèches de navigation) et verrouillage de l'`overflow` du body.
 
-5. **Sécurité PostgreSQL & Supabase RLS** :
-   - Les tables de la base de données doivent activer le Row Level Security (`ALTER TABLE ... ENABLE ROW LEVEL SECURITY`).
-   - Seules les insertions anonymes/publiques sont permises sur `leads` pour la soumission de formulaires ; la lecture des leads est strictement réservée au rôle `admin`.
+5. **Données Légales & Transparence Fiscale** :
+   - Respect strict des identifiants fiscaux légaux de l'entreprise (NIF : 5019315595, STAT : 41001 11 2025 0 05583, Centre Fiscal Itaosy).
+   - Règle de sécurité : non-publication de documents d'identité scannés ou de numéros de CIN sur l'interface publique pour prémunir contre la fraude documentaire.
 
 ---
 
-## 4. Workflows de Vérification
+## 4. Workflows de Vérification & Recette
 
-- Avant toute livraison ou PR :
-  1. Exécuter `npm run typecheck` (`tsc --noEmit`) pour valider le typage TypeScript.
-  2. Exécuter `npm run build` (`next build`) pour vérifier la compilation Next.js et la validité des pages statiques/dynamiques.
+Avant toute validation ou déploiement :
+1. **Contrôle de typage** :
+   ```bash
+   npm run typecheck
+   ```
+   Doit sortir avec le code de retour `0` (zéro erreur).
+2. **Build de production** :
+   ```bash
+   npm run build
+   ```
+   Doit générer le répertoire `dist/` sans erreur de compilation.

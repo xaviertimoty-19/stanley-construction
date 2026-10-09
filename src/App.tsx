@@ -4,6 +4,7 @@ import { Hero } from './components/Hero';
 import { Values } from './components/Values';
 import { Services } from './components/Services';
 import { Portfolio } from './components/Portfolio';
+import { InteriorGallery } from './components/InteriorGallery';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { WhatsAppButton } from './components/WhatsAppButton';
@@ -17,6 +18,7 @@ export const App: React.FC = () => {
         <Values />
         <Services />
         <Portfolio />
+        <InteriorGallery />
         <Contact />
       </main>
       <Footer />

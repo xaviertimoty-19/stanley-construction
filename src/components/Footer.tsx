@@ -50,6 +50,7 @@ export const Footer: React.FC = () => {
               <li><a href="#accueil" className="hover:text-stanley-gold dark:hover:text-stanley-yellow transition-colors">Accueil</a></li>
               <li><a href="#valeurs" className="hover:text-stanley-gold dark:hover:text-stanley-yellow transition-colors">Solutions Sols &amp; Diaspora</a></li>
               <li><a href="#portfolio" className="hover:text-stanley-gold dark:hover:text-stanley-yellow transition-colors">Nos Chantiers à Antananarivo</a></li>
+              <li><a href="#galerie-interieur" className="hover:text-stanley-gold dark:hover:text-stanley-yellow transition-colors">Galerie Finitions Intérieures</a></li>
               <li><a href="#contact" className="hover:text-stanley-gold dark:hover:text-stanley-yellow transition-colors">Demander un Devis Gratuit</a></li>
               <li><a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="hover:text-stanley-gold dark:hover:text-stanley-yellow transition-colors">Ligne WhatsApp Directe</a></li>
             </ul>

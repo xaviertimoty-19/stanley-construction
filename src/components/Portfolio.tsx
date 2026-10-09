@@ -12,7 +12,7 @@ export interface Project {
   title: string;
   status: 'en-cours' | 'livre';
   statusLabel: string;
-  category: 'gros-oeuvre' | 'tp' | 'renovation' | 'neuf' | 'diaspora';
+  category: 'gros-oeuvre' | 'tp' | 'renovation' | 'neuf' | 'diaspora' | 'interieur';
   categoryLabel: string;
   location: string;
   surface: string;
@@ -69,6 +69,55 @@ export const Portfolio: React.FC = () => {
   }, [lightbox]);
 
   const projects: Project[] = [
+    {
+      id: 'chantier-antsiranana-villa-toiture-second-oeuvre',
+      title: "Construction Villa Neuve & Toiture Métallique Bac Acier",
+      status: 'en-cours',
+      statusLabel: 'Chantier en cours (Antsiranana)',
+      category: 'neuf',
+      categoryLabel: 'Villa Neuve & Toiture',
+      location: 'Antsiranana (Diego-Suarez)',
+      surface: '240 m² de chantier',
+      duration: 'En cours • Suivi en direct',
+      image: '/assets/chantiers/antsiranana/toiture-bac-acier-pose-couvreurs.jpg',
+      isRealChantier: true,
+      gallery: [
+        {
+          url: '/assets/chantiers/antsiranana/toiture-bac-acier-pose-couvreurs.jpg',
+          caption: 'Pose en toiture des bacs acier profilés aspect tuile gris anthracite sur charpente métallique en pannes galvanisées, couvreurs au travail sous le soleil du Nord',
+          tag: 'Toiture Bac Acier'
+        },
+        {
+          url: '/assets/chantiers/antsiranana/facade-colonne-peinture-gouttiere.jpg',
+          caption: 'Façade extérieure : colonne d\'angle avec moulures, soubassement bicolore gris et blanc, planche de rive et pose de gouttière en zinc',
+          tag: 'Façade & Gouttière'
+        },
+        {
+          url: '/assets/chantiers/antsiranana/second-oeuvre-piece-de-vie-comptoir.jpg',
+          caption: 'Aménagement intérieur de la pièce de vie : comptoir bar de cuisine maçonné, cloisons enduites prêtes à peindre, outillage et solivage de plafond',
+          tag: 'Second Œuvre & Comptoir'
+        },
+        {
+          url: '/assets/chantiers/antsiranana/ossature-plafond-charpente-metallique.jpg',
+          caption: 'Ossature pour faux plafond suspendu en tasseaux de bois sous charpente métallique avec entreposage des tôles de couverture',
+          tag: 'Ossature Plafond'
+        },
+        {
+          url: '/assets/chantiers/antsiranana/adduction-eau-puits-pompage-cuve.jpg',
+          caption: 'Installation autonome d\'adduction d\'eau : puits / cuve maçonnée avec trappe sécurisée, groupe de surpression et pompe immergée avec flotteur',
+          tag: 'Puits & Pompage d\'Eau'
+        }
+      ],
+      highlights: [
+        "Chantier en direct à Antsiranana (Diego-Suarez) : Suivi photographique régulier pour le client",
+        "Pose de couverture en bacs acier profilés aspect tuile haute résistance aux embruns marins",
+        "Charpente métallique traitée anti-corrosion et pannes galvanisées anti-cycloniques",
+        "Finitions de façade extérieure avec colonnes moulurées et système de gouttières pluviales",
+        "Réseau autonome d'eau potable : cuve maçonnée et double groupe de pompage électrique",
+        "Agencement intérieur : comptoir bar de cuisine maçonné et ossature de faux plafond"
+      ],
+      description: "Chantier de construction d'une villa neuve actuellement en cours à Antsiranana (Diego-Suarez). Réalisation de la toiture en bacs acier ondulés sur charpente métallique adaptée au climat du Nord de Madagascar, pose de gouttières et finitions de façade, aménagement intérieur du second œuvre (pièce de vie, comptoir, faux plafond) et installation d'un système autonome d'adduction en eau avec puits maçonné et pompage électrique."
+    },
     {
       id: 'chantier-atsimondrano-brique-charpente',
       title: "Rénovation Bâtisse R+2 en Briques Cuites & Charpente Bois",
@@ -146,6 +195,106 @@ export const Portfolio: React.FC = () => {
         "Reporting vidéo régulier pour le maître d'ouvrage (Diaspora / Résident)"
       ],
       description: "Chantier d'envergure mené à Atsimondrano (Antananarivo) sur une bâtisse bourgeoise traditionnelle en briques cuites. Confortement structurel, réfection totale de la charpente en bois massif artisanal, écran pare-pluie et aménagement des combles habitables sous lucarnes."
+    },
+    {
+      id: 'chantier-amenagement-interieur-finitions',
+      title: "Finitions Intérieures, Salle de Bain & Escalier Béton",
+      status: 'en-cours',
+      statusLabel: 'Chantier Réel • Second Œuvre',
+      category: 'interieur',
+      categoryLabel: 'Aménagement Intérieur',
+      location: 'Antananarivo (Atsimondrano)',
+      surface: '160 m² de finitions',
+      duration: 'Second Œuvre & Finitions',
+      image: '/assets/chantiers/interieur/meuble-vasque-miroir-led.jpg',
+      isRealChantier: true,
+      gallery: [
+        {
+          url: '/assets/chantiers/interieur/meuble-vasque-miroir-led.jpg',
+          caption: 'Meuble vasque contemporain suspendu deux tiroirs laqué blanc, miroir panoramique rétroéclairé LED, robinetterie chromée et faïence murale en grès cérame',
+          tag: 'Meuble Vasque & Miroir LED'
+        },
+        {
+          url: '/assets/chantiers/interieur/douche-balneo-anthracite.jpg',
+          caption: 'Espace douche à l\'italienne avec colonne d\'hydromassage balnéo gris anthracite, mitigeur thermostatique et alliance faïence ardoise / marbre Calacatta',
+          tag: 'Douche Balnéo & Anthracite'
+        },
+        {
+          url: '/assets/chantiers/interieur/faience-marbre-calacatta.jpg',
+          caption: 'Pose de faïence murale grand format effet marbre blanc veiné Calacatta, calepinage au laser, découpes d\'angles précises et extraction d\'air intégrée',
+          tag: 'Faïence Marbre Calacatta'
+        },
+        {
+          url: '/assets/chantiers/interieur/escalier-beton-rampe-acier.jpg',
+          caption: 'Escalier intérieur en béton armé monobloc avec garde-corps contemporain en acier thermolaqué gris anthracite, appliques murales et lumière naturelle',
+          tag: 'Escalier Béton & Rampe Acier'
+        },
+        {
+          url: '/assets/chantiers/interieur/fenetre-securite-fer-forge.jpg',
+          caption: 'Châssis oscillo-battant double vitrage en PVC blanc avec grille de protection en fer forgé artisanal scellée et habillage en faïence marbrée',
+          tag: 'Menuiserie PVC & Ferronnerie'
+        },
+        {
+          url: '/assets/chantiers/interieur/calepinage-faience-calacatta-plafond.jpg',
+          caption: 'Calepinage de précision des dalles faïence Calacatta avec continuité des veinages sur l\'angle et raccordement net au plafond plâtré',
+          tag: 'Calepinage & Angle Plafond'
+        },
+        {
+          url: '/assets/chantiers/interieur/faience-marbre-ambre-brillant.jpg',
+          caption: 'Pose murale en grès cérame grand format effet marbre ambré poli miroir haute brillance avec reflets lumineux naturels',
+          tag: 'Marbre Ambré Poli Miroir'
+        },
+        {
+          url: '/assets/chantiers/interieur/menuiserie-aluminium-vue-panoramique.jpg',
+          caption: 'Menuiserie aluminium thermolaquée double vitrage thermique offrant une vue panoramique sur les plaines et collines d\'Antananarivo',
+          tag: 'Châssis Aluminium & Vue'
+        },
+        {
+          url: '/assets/chantiers/interieur/amenagement-combles-fenetre-bois-osb.jpg',
+          caption: 'Aménagement des combles habitables sous toiture : isolation thermique, doublage sous rampants en panneaux bois et châssis ouvrant',
+          tag: 'Combles & Isolation Bois'
+        },
+        {
+          url: '/assets/chantiers/interieur/decoration-peinture-tableau-mural.jpg',
+          caption: 'Finitions de plâtrerie et peinture acrylique satinée blanc épuré sur cloisons maçonnées, mise en valeur par un tableau d\'art',
+          tag: 'Peinture & Décoration'
+        },
+        {
+          url: '/assets/chantiers/interieur/comptoir-bar-tasseaux-bois.jpg',
+          caption: 'Comptoir bar de cuisine sur mesure avec claustra en tasseaux de bois massif, plan de travail ardoise et parquet caillebotis bicolore',
+          tag: 'Comptoir Bar & Tasseaux Bois'
+        },
+        {
+          url: '/assets/chantiers/interieur/sanitaires-wc-vasque-industrielle.jpg',
+          caption: 'Espace sanitaires avec WC céramique émaillée, vasque compacte posée sur piètement métallique noir style atelier et faïence murale',
+          tag: 'WC & Vasque Style Atelier'
+        },
+        {
+          url: '/assets/chantiers/interieur/chambre-lit-plateforme-bois-massif.jpg',
+          caption: 'Suite parentale : lit plateforme sur mesure en bois massif avec tête de lit asymétrique graphique bi-matière et sol rouge brique traditionnel',
+          tag: 'Lit Plateforme Bois Massif'
+        },
+        {
+          url: '/assets/chantiers/interieur/chambre-decor-papier-peint-floral.jpg',
+          caption: 'Décoration de chambre avec lés de papier peint intissé panoramique à motifs floraux bleu nuit et plafond chaleureux en lambris bois verni',
+          tag: 'Papier Peint & Plafond Bois'
+        },
+        {
+          url: '/assets/chantiers/interieur/ossature-bois-isolation-combles-osb.jpg',
+          caption: 'Phase chantier combles : ossature en bois massif, écran pare-pluie respirant et doublage sous rampants en panneaux OSB structuraux',
+          tag: 'Ossature & Isolation OSB'
+        }
+      ],
+      highlights: [
+        "Dossier complet (15 photos réelles) : Salles de bain, faïence marbrée, mobilier sur mesure, escalier, menuiseries et combles",
+        "Pose de faïence grand format effet marbre Calacatta et Emperador poli miroir",
+        "Colonne de douche thermostatique balnéo & meuble vasque suspendu rétroéclairé LED",
+        "Menuiserie artisanale bois massif : comptoir bar avec claustra tasseaux et lit plateforme sur mesure",
+        "Escalier en béton armé avec garde-corps contemporain soudé sur mesure",
+        "Menuiseries aluminium et PVC double vitrage avec grilles de sécurité artisanales",
+        "Aménagement complet des combles habitables avec isolation thermique sous toiture"
+      ],
+      description: "Travaux d'aménagement intérieur, second œuvre et mobilier sur mesure haut de gamme à Antananarivo : création de salles de bain contemporaines (douche balnéo, meuble vasque suspendu, WC design), habillages muraux en faïence effet marbre Calacatta et Emperador, fabrication artisanale en bois massif (comptoir bar à tasseaux, lit plateforme suite parentale), escalier béton monobloc et combles aménagés."
     },
     {
       id: 'p1',
@@ -229,7 +378,9 @@ export const Portfolio: React.FC = () => {
 
   const filters = [
     { key: 'all', label: 'Tous nos chantiers' },
-    { key: 'en-cours', label: 'Chantier en cours (Atsimondrano)' },
+    { key: 'en-cours', label: 'Chantiers en cours' },
+    { key: 'antsiranana', label: 'Antsiranana (Diego)' },
+    { key: 'interieur', label: 'Aménagement Intérieur' },
     { key: 'renovation', label: 'Rénovation & Charpente' },
     { key: 'gros-oeuvre', label: 'Murs & Soutènement' },
     { key: 'diaspora', label: 'Suivi Diaspora' },
@@ -241,22 +392,24 @@ export const Portfolio: React.FC = () => {
     ? projects 
     : activeFilter === 'en-cours'
       ? projects.filter(p => p.status === 'en-cours')
-      : projects.filter(p => p.category === activeFilter);
+      : activeFilter === 'antsiranana'
+        ? projects.filter(p => p.location.toLowerCase().includes('antsiranana'))
+        : projects.filter(p => p.category === activeFilter);
 
   return (
-    <section id="portfolio" aria-label="Portfolio et Réalisations BTP Antananarivo" className="py-24 bg-zinc-100 dark:bg-stanley-black relative border-t border-zinc-200 dark:border-stanley-steel transition-colors duration-200">
+    <section id="portfolio" aria-label="Portfolio et Réalisations BTP Antananarivo et Provinces" className="py-24 bg-zinc-100 dark:bg-stanley-black relative border-t border-zinc-200 dark:border-stanley-steel transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
           <div className="space-y-3 max-w-2xl">
             <span className="text-xs uppercase tracking-widest text-stanley-gold dark:text-stanley-yellow font-bold">
-              Chantiers Réels &amp; Suivis en Direct à Antananarivo
+              Chantiers Réels &amp; Suivis en Direct à Madagascar
             </span>
             <h2 className="font-display font-bold text-3xl sm:text-5xl text-zinc-900 dark:text-slate-50 tracking-tight">
               Nos Chantiers en Cours &amp; Réalisations
             </h2>
             <p className="text-zinc-600 dark:text-slate-300 text-base leading-relaxed">
-              Découvrez nos chantiers sur le terrain à Antananarivo, dont notre projet actuellement en cours à <strong className="text-stanley-gold dark:text-stanley-yellow font-semibold">Atsimondrano</strong> (bâtisse R+2 en briques cuites, taille de charpente en bois massif et toiture).
+              Découvrez nos chantiers sur le terrain à Madagascar : notre villa actuellement en cours à <strong className="text-stanley-gold dark:text-stanley-yellow font-semibold">Antsiranana (Diego-Suarez)</strong> (toiture bac acier, façade, second œuvre et pompage d'eau) ainsi que nos chantiers à <strong className="text-stanley-gold dark:text-stanley-yellow font-semibold">Antananarivo</strong> (Atsimondrano R+2 et finitions intérieures).
             </p>
           </div>
 
@@ -329,7 +482,9 @@ export const Portfolio: React.FC = () => {
 
                       {isOngoing ? (
                         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-stanley-yellow text-stanley-black text-[10px] font-extrabold uppercase tracking-wider shadow-md">
-                          <span>EN COURS • ATSIMONDRANO</span>
+                          <span>
+                            EN COURS • {project.location.toUpperCase().includes('ANTSIRANANA') ? 'ANTSIRANANA' : project.location.toUpperCase().includes('ATSIMONDRANO') ? 'ATSIMONDRANO' : 'EN DIRECT'}
+                          </span>
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-black/80 dark:bg-stanley-black/90 backdrop-blur-md text-slate-200 border border-zinc-700 dark:border-stanley-steel text-[10px] font-medium">
@@ -405,7 +560,7 @@ export const Portfolio: React.FC = () => {
                       <div className="mb-4 bg-zinc-50 dark:bg-stanley-black/70 rounded-xl p-3 border border-zinc-200 dark:border-stanley-steel">
                         <div className="text-[10px] font-bold uppercase tracking-wider text-stanley-gold dark:text-stanley-yellow mb-1.5 flex items-center gap-1">
                           <CheckCircle2 className="w-3 h-3" />
-                          <span>Détails &amp; Étapes du Chantier (Atsimondrano)</span>
+                          <span>Détails &amp; Étapes ({project.location.split(',')[0]})</span>
                         </div>
                         <ul className="space-y-1 text-[11px] text-zinc-700 dark:text-slate-300">
                           {project.highlights.map((item, idx) => (
@@ -435,7 +590,7 @@ export const Portfolio: React.FC = () => {
                       href="#contact"
                       className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-stanley-steel border border-zinc-200 dark:border-transparent flex items-center justify-center text-zinc-700 dark:text-slate-300 group-hover:bg-stanley-yellow group-hover:text-stanley-black transition-colors"
                       aria-label={`Demander un devis similaire pour ${project.title}`}
-                      title="Demander un devis pour ce type de chantier à Atsimondrano"
+                      title={`Demander un devis pour ce type de chantier (${project.location.split(',')[0]})`}
                     >
                       <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
                     </a>
