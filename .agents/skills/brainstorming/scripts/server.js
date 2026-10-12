@@ -7,6 +7,7 @@ const path = require('path');
 
 const OPCODES = { TEXT: 0x01, CLOSE: 0x08, PING: 0x09, PONG: 0x0A };
 const WS_MAGIC = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
+const MAX_FRAME_SIZE = 10 * 1024 * 1024; // 10 MB limit
 
 function computeAcceptKey(clientKey) {
   return crypto.createHash('sha1').update(clientKey + WS_MAGIC).digest('base64');
@@ -55,6 +56,10 @@ function decodeFrame(buffer) {
     if (buffer.length < 10) return null;
     payloadLen = Number(buffer.readBigUInt64BE(2));
     offset = 10;
+  }
+
+  if (payloadLen > MAX_FRAME_SIZE) {
+    throw new Error('Frame size exceeds maximum allowed limit');
   }
 
   const maskOffset = offset;
@@ -111,47 +116,73 @@ function wrapInFrame(content) {
   return frameTemplate.replace('<!-- CONTENT -->', content);
 }
 
-function getNewestScreen() {
-  const files = fs.readdirSync(SCREEN_DIR)
-    .filter(f => f.endsWith('.html'))
-    .map(f => {
+async function getNewestScreen() {
+  try {
+    const dirFiles = await fs.promises.readdir(SCREEN_DIR);
+    const htmlFiles = dirFiles.filter(f => f.endsWith('.html'));
+
+    const fileStats = await Promise.all(htmlFiles.map(async (f) => {
       const fp = path.join(SCREEN_DIR, f);
-      return { path: fp, mtime: fs.statSync(fp).mtime.getTime() };
-    })
-    .sort((a, b) => b.mtime - a.mtime);
-  return files.length > 0 ? files[0].path : null;
+      try {
+        const stat = await fs.promises.stat(fp);
+        return { path: fp, mtime: stat.mtime.getTime() };
+      } catch (err) {
+        return null;
+      }
+    }));
+
+    const validFiles = fileStats.filter(Boolean);
+    validFiles.sort((a, b) => b.mtime - a.mtime);
+
+    return validFiles.length > 0 ? validFiles[0].path : null;
+  } catch (err) {
+    return null;
+  }
 }
 
 // ========== HTTP Request Handler ==========
 
-function handleRequest(req, res) {
+async function handleRequest(req, res) {
   touchActivity();
   if (req.method === 'GET' && req.url === '/') {
-    const screenFile = getNewestScreen();
-    let html = screenFile
-      ? (raw => isFullDocument(raw) ? raw : wrapInFrame(raw))(fs.readFileSync(screenFile, 'utf-8'))
-      : WAITING_PAGE;
+    try {
+      const screenFile = await getNewestScreen();
+      let raw = WAITING_PAGE;
+      if (screenFile) {
+        try {
+          raw = await fs.promises.readFile(screenFile, 'utf-8');
+          raw = isFullDocument(raw) ? raw : wrapInFrame(raw);
+        } catch (e) {
+          raw = WAITING_PAGE;
+        }
+      }
 
-    if (html.includes('</body>')) {
-      html = html.replace('</body>', helperInjection + '\n</body>');
-    } else {
-      html += helperInjection;
+      let html = raw;
+      if (html.includes('</body>')) {
+        html = html.replace('</body>', helperInjection + '\n</body>');
+      } else {
+        html += helperInjection;
+      }
+
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(html);
+    } catch (e) {
+      res.writeHead(500);
+      res.end('Internal Server Error');
     }
-
-    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-    res.end(html);
   } else if (req.method === 'GET' && req.url.startsWith('/files/')) {
     const fileName = req.url.slice(7);
     const filePath = path.join(SCREEN_DIR, path.basename(fileName));
-    if (!fs.existsSync(filePath)) {
+    try {
+      const data = await fs.promises.readFile(filePath);
+      const ext = path.extname(filePath).toLowerCase();
+      const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+      res.writeHead(200, { 'Content-Type': contentType });
+      res.end(data);
+    } catch (e) {
       res.writeHead(404);
       res.end('Not found');
-      return;
     }
-    const ext = path.extname(filePath).toLowerCase();
-    const contentType = MIME_TYPES[ext] || 'application/octet-stream';
-    res.writeHead(200, { 'Content-Type': contentType });
-    res.end(fs.readFileSync(filePath));
   } else {
     res.writeHead(404);
     res.end('Not found');
@@ -179,6 +210,11 @@ function handleUpgrade(req, socket) {
 
   socket.on('data', (chunk) => {
     buffer = Buffer.concat([buffer, chunk]);
+    if (buffer.length > MAX_FRAME_SIZE * 2) {
+      socket.end(encodeFrame(OPCODES.CLOSE, Buffer.alloc(0)));
+      clients.delete(socket);
+      return;
+    }
     while (buffer.length > 0) {
       let result;
       try {
@@ -219,7 +255,7 @@ function handleUpgrade(req, socket) {
   socket.on('error', () => clients.delete(socket));
 }
 
-function handleMessage(text) {
+async function handleMessage(text) {
   let event;
   try {
     event = JSON.parse(text);
@@ -231,7 +267,11 @@ function handleMessage(text) {
   console.log(JSON.stringify({ source: 'user-event', ...event }));
   if (event.choice) {
     const eventsFile = path.join(SCREEN_DIR, '.events');
-    fs.appendFileSync(eventsFile, JSON.stringify(event) + '\n');
+    try {
+      await fs.promises.appendFile(eventsFile, JSON.stringify(event) + '\n');
+    } catch (e) {
+      console.error('Failed to append to events file:', e.message);
+    }
   }
 }
 
@@ -266,6 +306,7 @@ function startServer() {
   const knownFiles = new Set(
     fs.readdirSync(SCREEN_DIR).filter(f => f.endsWith('.html'))
   );
+  const MAX_KNOWN_FILES = 1000;
 
   const server = http.createServer(handleRequest);
   server.on('upgrade', handleUpgrade);
@@ -274,17 +315,30 @@ function startServer() {
     if (!filename || !filename.endsWith('.html')) return;
 
     if (debounceTimers.has(filename)) clearTimeout(debounceTimers.get(filename));
-    debounceTimers.set(filename, setTimeout(() => {
+    debounceTimers.set(filename, setTimeout(async () => {
       debounceTimers.delete(filename);
       const filePath = path.join(SCREEN_DIR, filename);
 
-      if (!fs.existsSync(filePath)) return; // file was deleted
+      try {
+        await fs.promises.access(filePath);
+      } catch (err) {
+        return; // file was deleted or cannot be accessed
+      }
       touchActivity();
 
       if (!knownFiles.has(filename)) {
+        if (knownFiles.size >= MAX_KNOWN_FILES) {
+          // Evict an old entry to prevent memory leak
+          const firstItem = knownFiles.values().next().value;
+          knownFiles.delete(firstItem);
+        }
         knownFiles.add(filename);
         const eventsFile = path.join(SCREEN_DIR, '.events');
-        if (fs.existsSync(eventsFile)) fs.unlinkSync(eventsFile);
+        try {
+          await fs.promises.unlink(eventsFile);
+        } catch (e) {
+          // Ignore if it doesn't exist
+        }
         console.log(JSON.stringify({ type: 'screen-added', file: filePath }));
       } else {
         console.log(JSON.stringify({ type: 'screen-updated', file: filePath }));
