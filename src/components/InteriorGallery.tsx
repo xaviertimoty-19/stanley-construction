@@ -6,7 +6,6 @@ import {
   ChevronLeft,
   ChevronRight,
   CheckCircle2,
-  Camera,
   ArrowUpRight,
   Droplets,
   Layers,
@@ -36,26 +35,14 @@ const getThumbUrl = (url: string): string => {
 };
 
 const InteriorCardImage: React.FC<{ src: string; alt: string }> = ({ src, alt }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
-
   return (
-    <>
-      {!isLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-zinc-900 animate-pulse">
-          <Camera className="w-8 h-8 text-zinc-700" />
-        </div>
-      )}
-      <img
-        src={src}
-        alt={alt}
-        loading="lazy"
-        decoding="async"
-        onLoad={() => setIsLoaded(true)}
-        className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 will-change-transform ${
-          isLoaded ? 'opacity-100' : 'opacity-0'
-        }`}
-      />
-    </>
+    <img
+      src={src}
+      alt={alt}
+      loading="lazy"
+      decoding="async"
+      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 will-change-transform"
+    />
   );
 };
 
@@ -596,7 +583,7 @@ export const InteriorGallery: React.FC = () => {
       {/* Lightbox Modal */}
       {activePhoto && selectedPhotoIndex !== null && (
         <div
-          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex items-center justify-center p-3 sm:p-6"
+          className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center p-2 sm:p-6 overflow-y-auto"
           onClick={() => setSelectedPhotoIndex(null)}
           role="dialog"
           aria-modal="true"
@@ -604,7 +591,7 @@ export const InteriorGallery: React.FC = () => {
           {/* Floating Close Button */}
           <button
             onClick={() => setSelectedPhotoIndex(null)}
-            className="fixed top-3 right-3 sm:top-5 sm:right-5 z-[70] flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-stanley-yellow hover:bg-stanley-gold text-stanley-black font-extrabold text-xs sm:text-sm shadow-2xl transition-all cursor-pointer border-2 border-stanley-black"
+            className="fixed top-3 right-3 sm:top-5 sm:right-5 z-[110] flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-stanley-yellow hover:bg-stanley-gold text-stanley-black font-extrabold text-xs sm:text-sm shadow-2xl transition-all cursor-pointer border-2 border-stanley-black"
             aria-label="Fermer la vue agrandie"
           >
             <X className="w-4 h-4 stroke-[3]" />
@@ -612,11 +599,11 @@ export const InteriorGallery: React.FC = () => {
           </button>
 
           <div
-            className="relative max-w-5xl w-full bg-zinc-900 dark:bg-stanley-black border border-zinc-700 dark:border-stanley-steel rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[92vh]"
+            className="relative max-w-5xl w-full bg-zinc-900 dark:bg-stanley-black border border-zinc-700 dark:border-stanley-steel rounded-2xl overflow-hidden shadow-2xl flex flex-col my-auto max-h-[94vh]"
             onClick={e => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="p-3.5 sm:p-5 border-b border-zinc-700 dark:border-stanley-steel flex items-center justify-between bg-zinc-800 dark:bg-stanley-charcoal shrink-0 gap-3">
+            <div className="p-3 sm:p-4 border-b border-zinc-700 dark:border-stanley-steel flex items-center justify-between bg-zinc-800 dark:bg-stanley-charcoal shrink-0 gap-3">
               <div className="flex items-center gap-2 sm:gap-3 min-w-0 pr-2">
                 <span className="px-2.5 py-1 rounded bg-stanley-yellow/15 text-stanley-yellow border border-stanley-yellow/30 text-[10px] sm:text-xs font-bold uppercase tracking-wider shrink-0">
                   {activePhoto.categoryLabel}
@@ -626,18 +613,28 @@ export const InteriorGallery: React.FC = () => {
                 </h4>
               </div>
 
-              <span className="text-zinc-400 font-mono text-xs hidden sm:inline shrink-0">
-                {selectedPhotoIndex + 1} / {filteredPhotos.length}
-              </span>
+              <div className="flex items-center gap-3 shrink-0">
+                <span className="text-zinc-400 font-mono text-xs hidden sm:inline">
+                  {selectedPhotoIndex + 1} / {filteredPhotos.length}
+                </span>
+                <button
+                  onClick={() => setSelectedPhotoIndex(null)}
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-stanley-yellow hover:bg-stanley-gold text-stanley-black font-extrabold text-xs transition-all cursor-pointer shadow-md"
+                  aria-label="Fermer la vue agrandie"
+                >
+                  <X className="w-4 h-4 stroke-[2.5]" />
+                  <span>Fermer ✕</span>
+                </button>
+              </div>
             </div>
 
             {/* Modal Image Viewport */}
             <div className="flex-1 flex flex-col overflow-hidden bg-black/80 relative">
-              <div className="relative flex-1 flex items-center justify-center p-2 min-h-[300px] sm:min-h-[460px]">
+              <div className="relative flex-1 flex items-center justify-center p-2 min-h-[200px] sm:min-h-[460px]">
                 <img
                   src={activePhoto.url}
                   alt={activePhoto.title}
-                  className="max-h-[58vh] max-w-full object-contain rounded-lg shadow-2xl"
+                  className="max-h-[48vh] sm:max-h-[58vh] max-w-full object-contain rounded-lg shadow-2xl"
                 />
 
                 {filteredPhotos.length > 1 && (

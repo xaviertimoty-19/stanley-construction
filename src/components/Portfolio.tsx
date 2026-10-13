@@ -39,26 +39,14 @@ const getThumbUrl = (url: string): string => {
 };
 
 const ProjectCardImage: React.FC<{ src: string; alt: string }> = ({ src, alt }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
-
   return (
-    <>
-      {!isLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-zinc-900 animate-pulse">
-          <Camera className="w-8 h-8 text-zinc-700 animate-pulse" />
-        </div>
-      )}
-      <img
-        src={src}
-        alt={alt}
-        loading="lazy"
-        decoding="async"
-        onLoad={() => setIsLoaded(true)}
-        className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 will-change-transform ${
-          isLoaded ? 'opacity-100' : 'opacity-0'
-        }`}
-      />
-    </>
+    <img
+      src={src}
+      alt={alt}
+      loading="lazy"
+      decoding="async"
+      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 will-change-transform"
+    />
   );
 };
 
@@ -776,7 +764,7 @@ export const Portfolio: React.FC = () => {
       {/* Lightbox Modal for High-Resolution Photo Inspection */}
       {lightbox && (
         <div 
-          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex items-center justify-center p-3 sm:p-6"
+          className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center p-2 sm:p-6 overflow-y-auto"
           onClick={() => setLightbox(null)}
           role="dialog"
           aria-modal="true"
@@ -784,7 +772,7 @@ export const Portfolio: React.FC = () => {
           {/* Floating Fixed Close Button in Top-Right Corner */}
           <button
             onClick={() => setLightbox(null)}
-            className="fixed top-3 right-3 sm:top-5 sm:right-5 z-[70] flex items-center gap-1.5 sm:gap-2 px-3.5 py-2 rounded-xl bg-stanley-yellow hover:bg-stanley-gold text-stanley-black font-extrabold text-xs sm:text-sm shadow-2xl transition-all cursor-pointer border-2 border-stanley-black"
+            className="fixed top-3 right-3 sm:top-5 sm:right-5 z-[110] flex items-center gap-1.5 sm:gap-2 px-3.5 py-2 rounded-xl bg-stanley-yellow hover:bg-stanley-gold text-stanley-black font-extrabold text-xs sm:text-sm shadow-2xl transition-all cursor-pointer border-2 border-stanley-black"
             aria-label="Fermer la galerie photo"
             title="Fermer la galerie (Échap)"
           >
@@ -793,11 +781,11 @@ export const Portfolio: React.FC = () => {
           </button>
 
           <div 
-            className="relative max-w-5xl w-full bg-zinc-900 dark:bg-stanley-black border border-zinc-700 dark:border-stanley-steel rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[92vh]"
+            className="relative max-w-5xl w-full bg-zinc-900 dark:bg-stanley-black border border-zinc-700 dark:border-stanley-steel rounded-2xl overflow-hidden shadow-2xl flex flex-col my-auto max-h-[94vh]"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="p-3.5 sm:p-5 border-b border-zinc-700 dark:border-stanley-steel flex items-center justify-between bg-zinc-800 dark:bg-stanley-charcoal shrink-0 gap-3">
+            <div className="p-3 sm:p-4 border-b border-zinc-700 dark:border-stanley-steel flex items-center justify-between bg-zinc-800 dark:bg-stanley-charcoal shrink-0 gap-3">
               <div className="flex items-center gap-2 sm:gap-3 min-w-0 pr-2">
                 <span className="px-2.5 py-1 rounded bg-stanley-yellow/15 text-stanley-yellow border border-stanley-yellow/30 text-[10px] sm:text-xs font-bold uppercase tracking-wider shrink-0">
                   {lightbox.project.status === 'en-cours' ? 'Chantier en cours' : 'Réalisation'}
@@ -809,12 +797,12 @@ export const Portfolio: React.FC = () => {
 
               <button
                 onClick={() => setLightbox(null)}
-                className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-zinc-700 dark:bg-stanley-steel hover:bg-zinc-600 dark:hover:bg-zinc-800 border border-zinc-600 dark:border-slate-600 hover:border-stanley-yellow text-slate-100 font-bold text-xs sm:text-sm transition-all cursor-pointer shrink-0"
+                className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-stanley-yellow hover:bg-stanley-gold text-stanley-black font-extrabold text-xs sm:text-sm transition-all cursor-pointer shrink-0 shadow-md"
                 aria-label="Fermer la galerie photo"
                 title="Quitter la galerie"
               >
-                <X className="w-4 h-4 text-stanley-yellow stroke-[2.5]" />
-                <span className="hidden sm:inline">Quitter</span>
+                <X className="w-4 h-4 stroke-[2.5]" />
+                <span>Fermer ✕</span>
               </button>
             </div>
 
@@ -839,11 +827,11 @@ export const Portfolio: React.FC = () => {
 
               return (
                 <div className="flex-1 flex flex-col overflow-hidden bg-black/70 relative">
-                  <div className="relative flex-1 flex items-center justify-center p-2 min-h-[300px] sm:min-h-[460px]">
+                  <div className="relative flex-1 flex items-center justify-center p-2 min-h-[200px] sm:min-h-[460px]">
                     <img
                       src={current.url}
                       alt={current.caption}
-                      className="max-h-[58vh] max-w-full object-contain rounded-lg shadow-2xl"
+                      className="max-h-[48vh] sm:max-h-[58vh] max-w-full object-contain rounded-lg shadow-2xl"
                     />
 
                     {photos.length > 1 && (

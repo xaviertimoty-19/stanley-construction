@@ -69,13 +69,3 @@ input:focus, textarea:focus, select:focus, button:focus-visible {
   box-shadow: 0 0 0 2px #f59e0b;
 }
 
-/* Fluid scrolling and rendering performance optimizations for image-heavy sections */
-#portfolio,
-#galerie-interieur {
-  content-visibility: auto;
-  contain-intrinsic-size: 800px;
-}
-
-img {
-  content-visibility: auto;
-}
