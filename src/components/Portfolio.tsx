@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Maximize2, Calendar, ArrowUpRight, Camera, X, ChevronLeft, ChevronRight, CheckCircle2, Layers, ArrowLeft } from 'lucide-react';
+import { MapPin, Maximize2, Calendar, ArrowUpRight, Camera, X, ChevronLeft, ChevronRight, CheckCircle2, Layers, ArrowLeft, Calculator } from 'lucide-react';
 
 export interface ProjectPhoto {
   url: string;
+  thumbUrl?: string;
   caption: string;
   tag: string;
 }
@@ -17,6 +18,9 @@ export interface Project {
   location: string;
   surface: string;
   duration: string;
+  estimatedBudgetAr: string;
+  estimatedBudgetEur: string;
+  costPerM2?: string;
   image: string;
   gallery?: ProjectPhoto[];
   description: string;
@@ -24,15 +28,45 @@ export interface Project {
   isRealChantier?: boolean;
 }
 
+const getThumbUrl = (url: string): string => {
+  if (url.includes('/assets/chantiers/')) {
+    return url.replace(/\.webp$/, '-thumb.webp').replace(/\.jpg$/, '-thumb.webp');
+  }
+  if (url.includes('images.unsplash.com')) {
+    return url.replace(/w=\d+/, 'w=120').replace(/q=\d+/, 'q=60');
+  }
+  return url;
+};
+
+const ProjectCardImage: React.FC<{ src: string; alt: string }> = ({ src, alt }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  return (
+    <>
+      {!isLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center bg-zinc-900 animate-pulse">
+          <Camera className="w-8 h-8 text-zinc-700 animate-pulse" />
+        </div>
+      )}
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        decoding="async"
+        onLoad={() => setIsLoaded(true)}
+        className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 will-change-transform ${
+          isLoaded ? 'opacity-100' : 'opacity-0'
+        }`}
+      />
+    </>
+  );
+};
+
 export const Portfolio: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState<string>('all');
-  const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
   const [activePhotoByProject, setActivePhotoByProject] = useState<Record<string, number>>({});
   const [lightbox, setLightbox] = useState<{ project: Project; photoIndex: number } | null>(null);
 
-  const handleImageLoad = (key: string) => {
-    setLoadedImages(prev => ({ ...prev, [key]: true }));
-  };
 
   // Keyboard navigation & body scroll lock for Lightbox
   useEffect(() => {
@@ -79,44 +113,97 @@ export const Portfolio: React.FC = () => {
       location: 'Antsiranana (Diego-Suarez)',
       surface: '240 m² de chantier',
       duration: 'En cours • Suivi en direct',
-      image: '/assets/chantiers/antsiranana/toiture-bac-acier-pose-couvreurs.jpg',
+      estimatedBudgetAr: '320 000 000 Ar',
+      estimatedBudgetEur: '64 000 €',
+      costPerM2: '1 330 000 Ar/m² (≈ 266 €/m²)',
+      image: '/assets/chantiers/antsiranana/toiture-bac-acier-pose-couvreurs.webp',
       isRealChantier: true,
       gallery: [
         {
-          url: '/assets/chantiers/antsiranana/toiture-bac-acier-pose-couvreurs.jpg',
+          url: '/assets/chantiers/antsiranana/toiture-bac-acier-pose-couvreurs.webp',
           caption: 'Pose en toiture des bacs acier profilés aspect tuile gris anthracite sur charpente métallique en pannes galvanisées, couvreurs au travail sous le soleil du Nord',
           tag: 'Toiture Bac Acier'
         },
         {
-          url: '/assets/chantiers/antsiranana/facade-colonne-peinture-gouttiere.jpg',
-          caption: 'Façade extérieure : colonne d\'angle avec moulures, soubassement bicolore gris et blanc, planche de rive et pose de gouttière en zinc',
-          tag: 'Façade & Gouttière'
+          url: '/assets/chantiers/antsiranana/pose-crochets-gouttiere-planche-rive.webp',
+          caption: 'Alignement au cordeau et fixation des crochets de gouttière sur planche de rive sous couverture en bac acier galvanisé',
+          tag: 'Pose Crochets Gouttière'
         },
         {
-          url: '/assets/chantiers/antsiranana/second-oeuvre-piece-de-vie-comptoir.jpg',
+          url: '/assets/chantiers/antsiranana/descente-pluviale-gouttiere-facade.webp',
+          caption: 'Pose complète du réseau d\'évacuation pluviale : gouttière de rive, naissance et tuyau de descente fixé sur façade traitée',
+          tag: 'Descente Pluviale & Façade'
+        },
+        {
+          url: '/assets/chantiers/antsiranana/gouttiere-rive-colonne-angle-toit.webp',
+          caption: 'Détail de rive de toiture : pose soignée du chéneau pluvial et retombée de façade avec colonne moulurée',
+          tag: 'Gouttière de Toiture'
+        },
+        {
+          url: '/assets/chantiers/antsiranana/facade-colonne-peinture-gouttiere.webp',
+          caption: 'Façade extérieure : colonne d\'angle avec moulures, soubassement bicolore gris et blanc, planche de rive et pose de gouttière en zinc',
+          tag: 'Façade & Colonne'
+        },
+        {
+          url: '/assets/chantiers/antsiranana/facade-laterale-escalier-terrassement.webp',
+          caption: 'Façade latérale de la villa : escalier d\'accès maçonné, réseaux d\'évacuation verticaux et terrassement du terrain',
+          tag: 'Façade & Réseaux Extérieurs'
+        },
+        {
+          url: '/assets/chantiers/antsiranana/cuisine-comptoir-bar-tasseaux-placard.webp',
+          caption: 'Aménagement achevé de la cuisine : comptoir bar avec claustra en tasseaux bois, plan de travail noir ardoise, crédence marbrée et meubles hauts à persiennes',
+          tag: 'Cuisine & Mobilier Bois'
+        },
+        {
+          url: '/assets/chantiers/antsiranana/comptoir-bar-agencement-tasseaux-sol.webp',
+          caption: 'Fabrication et ajustement artisanal des tasseaux de bois franc massif pour l\'habillage de pied et le retour de comptoir bar',
+          tag: 'Agencement Tasseaux Bois'
+        },
+        {
+          url: '/assets/chantiers/antsiranana/second-oeuvre-piece-de-vie-comptoir.webp',
           caption: 'Aménagement intérieur de la pièce de vie : comptoir bar de cuisine maçonné, cloisons enduites prêtes à peindre, outillage et solivage de plafond',
           tag: 'Second Œuvre & Comptoir'
         },
         {
-          url: '/assets/chantiers/antsiranana/ossature-plafond-charpente-metallique.jpg',
+          url: '/assets/chantiers/antsiranana/ossature-plafond-charpente-metallique.webp',
           caption: 'Ossature pour faux plafond suspendu en tasseaux de bois sous charpente métallique avec entreposage des tôles de couverture',
           tag: 'Ossature Plafond'
         },
         {
-          url: '/assets/chantiers/antsiranana/adduction-eau-puits-pompage-cuve.jpg',
+          url: '/assets/chantiers/antsiranana/pose-panneau-plafond-bois-charpente.webp',
+          caption: 'Pose et fixation des panneaux de faux plafond en contreplaqué sous charpente métallique par notre compagnon artisan',
+          tag: 'Pose Plafond Bois'
+        },
+        {
+          url: '/assets/chantiers/antsiranana/outillage-dewalt-terrasse-cloture.webp',
+          caption: 'Parc d\'outillage électroportatif professionnel sur le muret de terrasse et implantation de la clôture extérieure',
+          tag: 'Outillage & Terrasse'
+        },
+        {
+          url: '/assets/chantiers/antsiranana/raccordement-plomberie-cuve-terrasse.webp',
+          caption: 'Travaux de plomberie et raccordement de la cuve tampon de stockage d\'eau potable sur la terrasse carrelée',
+          tag: 'Raccordement Cuve Eau'
+        },
+        {
+          url: '/assets/chantiers/antsiranana/cuve-eau-stockage-adduction-ppr.webp',
+          caption: 'Installation de la cuve tampon de stockage d\'eau avec réseau de tuyauterie PPR rigide et contacteur flotteur automatique sur terrasse',
+          tag: 'Cuve & Adduction PPR'
+        },
+        {
+          url: '/assets/chantiers/antsiranana/adduction-eau-puits-pompage-cuve.webp',
           caption: 'Installation autonome d\'adduction d\'eau : puits / cuve maçonnée avec trappe sécurisée, groupe de surpression et pompe immergée avec flotteur',
           tag: 'Puits & Pompage d\'Eau'
         }
       ],
       highlights: [
-        "Chantier en direct à Antsiranana (Diego-Suarez) : Suivi photographique régulier pour le client",
+        "Dossier complet (15 photos réelles) : Toiture bac acier, descentes pluviales, faux plafonds, cuisine et réseau d'eau potable",
         "Pose de couverture en bacs acier profilés aspect tuile haute résistance aux embruns marins",
         "Charpente métallique traitée anti-corrosion et pannes galvanisées anti-cycloniques",
-        "Finitions de façade extérieure avec colonnes moulurées et système de gouttières pluviales",
-        "Réseau autonome d'eau potable : cuve maçonnée et double groupe de pompage électrique",
-        "Agencement intérieur : comptoir bar de cuisine maçonné et ossature de faux plafond"
+        "Système complet d'évacuation des eaux pluviales : chéneaux de rive et descentes de façade",
+        "Second œuvre complet : faux plafond en bois, comptoir bar avec claustra en tasseaux et mobilier",
+        "Installation autonome d'eau potable : cuve polyéthylène, tuyauterie PPR scellée et pompe immergée"
       ],
-      description: "Chantier de construction d'une villa neuve actuellement en cours à Antsiranana (Diego-Suarez). Réalisation de la toiture en bacs acier ondulés sur charpente métallique adaptée au climat du Nord de Madagascar, pose de gouttières et finitions de façade, aménagement intérieur du second œuvre (pièce de vie, comptoir, faux plafond) et installation d'un système autonome d'adduction en eau avec puits maçonné et pompage électrique."
+      description: "Chantier de construction d'une villa neuve actuellement en cours à Antsiranana (Diego-Suarez). Réalisation de la toiture en bacs acier ondulés sur charpente métallique adaptée au climat du Nord de Madagascar, pose intégrale des gouttières pluviales et finitions de façade, aménagement intérieur (faux plafond bois, cuisine sur mesure avec comptoir bar à tasseaux) et installation d'un réseau autonome d'adduction en eau avec cuve de stockage, tuyauterie PPR et groupe de pompage."
     },
     {
       id: 'chantier-atsimondrano-brique-charpente',
@@ -128,73 +215,128 @@ export const Portfolio: React.FC = () => {
       location: 'Atsimondrano, Antananarivo',
       surface: '380 m² (R+2 + Combles)',
       duration: 'En cours • Suivi 7j/7',
-      image: '/assets/chantiers/chantier-tana-brique-perspective-plan-3d.jpg',
+      estimatedBudgetAr: '435 000 000 Ar',
+      estimatedBudgetEur: '87 000 €',
+      costPerM2: '1 145 000 Ar/m² (≈ 229 €/m²)',
+      image: '/assets/chantiers/chantier-tana-brique-perspective-plan-3d.webp',
       isRealChantier: true,
       gallery: [
         {
-          url: '/assets/chantiers/chantier-tana-brique-perspective-plan-3d.jpg',
+          url: '/assets/chantiers/chantier-tana-brique-perspective-plan-3d.webp',
           caption: 'Modélisation architecturale 3D & plans axonométriques par niveaux (RDC, R+1 et Combles habitables avec plan de masse)',
           tag: 'Perspective & Plans 3D'
         },
         {
-          url: '/assets/chantiers/chantier-tana-brique-facade-principale.jpg',
+          url: '/assets/chantiers/chantier-tana-brique-facade-principale.webp',
           caption: 'Façade principale R+2 en briques cuites traditionnelles avec balcon en fer forgé et lucarnes maçonnées',
           tag: 'Façade Principale'
         },
         {
-          url: '/assets/chantiers/chantier-tana-brique-facade-pignon.jpg',
+          url: '/assets/chantiers/chantier-tana-brique-facade-pignon.webp',
           caption: 'Élévation latérale montrant le pignon triangulaire en briques cuites artisanales et mur d\'enceinte paysager',
           tag: 'Façade Pignon'
         },
         {
-          url: '/assets/chantiers/chantier-tana-charpente-ferme-traditionnelle.jpg',
+          url: '/assets/chantiers/chantier-tana-charpente-ferme-traditionnelle.webp',
           caption: 'Ferme maîtresse triangulée en bois massif (arbalétriers, poinçon, contrefiches) renforcée par boulons zingués et baladeuse de chantier',
           tag: 'Charpente Bois Massif'
         },
         {
-          url: '/assets/chantiers/chantier-tana-charpente-vue-lucarne.jpg',
+          url: '/assets/chantiers/chantier-tana-charpente-vue-lucarne.webp',
           caption: 'Vue d\'ensemble de l\'ossature des combles avec éclairage de chantier et vue sur la lucarne de toit',
           tag: 'Combles & Lucarnes'
         },
         {
-          url: '/assets/chantiers/chantier-tana-toiture-chevrons-combles.jpg',
+          url: '/assets/chantiers/chantier-tana-toiture-chevrons-combles.webp',
           caption: 'Pose des chevrons calibrés sous écran pare-pluie / pare-vapeur avec scellement au mur pignon maçonné',
           tag: 'Toiture & Chevrons'
         },
         {
-          url: '/assets/chantiers/chantier-tana-escalier-beton-rampe-fer.jpg',
+          url: '/assets/chantiers/chantier-tana-escalier-beton-rampe-fer.webp',
           caption: 'Escalier intérieur en béton armé avec rampe métallique laquée gris anthracite, mur en moellons et éclairage intégré',
           tag: 'Escalier Béton & Métal'
         },
         {
-          url: '/assets/chantiers/chantier-tana-palier-escalier-faience.jpg',
+          url: '/assets/chantiers/chantier-tana-palier-escalier-faience.webp',
           caption: 'Montée d\'escalier et palier intermédiaire : appliques murales, garde-corps acier et habillage mural faïence marbrée',
           tag: 'Palier & Second Œuvre'
         },
         {
-          url: '/assets/chantiers/chantier-tana-combles-lucarne-isolation.jpg',
+          url: '/assets/chantiers/chantier-tana-escalier-ragreage-macon.webp',
+          caption: 'Ragréage et lissage de précision des marches d\'escalier en béton à la taloche par notre compagnon maçon',
+          tag: 'Lissage Escalier Béton'
+        },
+        {
+          url: '/assets/chantiers/chantier-tana-escalier-vue-plongee-palier.webp',
+          caption: 'Vue d\'ensemble en plongée de la cage d\'escalier et des volées bétonnées en cours de finition et réglage de niveau',
+          tag: 'Cage d\'Escalier Palier'
+        },
+        {
+          url: '/assets/chantiers/chantier-tana-escalier-malaxeur-mortier.webp',
+          caption: 'Gâchage mécanique du mortier de ragréage au malaxeur électrique et contrôle des niveaux des marches à la règle',
+          tag: 'Mortier & Malaxeur'
+        },
+        {
+          url: '/assets/chantiers/chantier-tana-facade-echafaudage-enduit.webp',
+          caption: 'Ravalement de façade extérieure : échafaudage traditionnel en bois et application de l\'enduit ciment protecteur',
+          tag: 'Échafaudage & Ravalement'
+        },
+        {
+          url: '/assets/chantiers/chantier-tana-terrasse-echafaudage-briques-dalle.webp',
+          caption: 'Chantier extérieur sur la terrasse : approvisionnement en briques cuites traditionnelles et maçon opérant au faîtage sur échelle et échafaudage',
+          tag: 'Terrasse & Échafaudage'
+        },
+        {
+          url: '/assets/chantiers/chantier-tana-pignon-echafaudage-hauteur-macon.webp',
+          caption: 'Travaux en hauteur sur le pignon supérieur : maçon sur échafaudage traditionnel en bois réalisant les finitions d\'enduit de façade',
+          tag: 'Échafaudage & Pignon'
+        },
+        {
+          url: '/assets/chantiers/chantier-tana-pignon-briques-echafaudage.webp',
+          caption: 'Élévation extérieure sur mur pignon en briques cuites traditionnelles avec échafaudage pour reprise des enduits sous toiture',
+          tag: 'Pignon Briques Cuites'
+        },
+        {
+          url: '/assets/chantiers/chantier-tana-cuisine-maconnee-placards-bois.webp',
+          caption: 'Agencement de la cuisine maçonnée : pose des portes de placards en bois, évier encastré et plan carrelé avec radio de chantier DeWalt',
+          tag: 'Cuisine Maçonnée & Placards'
+        },
+        {
+          url: '/assets/chantiers/chantier-tana-cuisine-plan-travail-carrelage-noir.webp',
+          caption: 'Pose du plan de travail de cuisine en carrelage poli noir profond avec crédence assortie effet marbre noir veiné',
+          tag: 'Plan de Travail Carrelé'
+        },
+        {
+          url: '/assets/chantiers/chantier-tana-sanitaires-wc-console-vasque.webp',
+          caption: 'Pose des sanitaires : cuvette WC céramique, faïence murale rectifiée et console vasque suspendue en acier thermolaqué noir',
+          tag: 'Sanitaires & WC'
+        },
+        {
+          url: '/assets/chantiers/chantier-tana-combles-lucarne-isolation.webp',
           caption: 'Aménagement des combles : fenêtre lucarne bois double vitrage, isolation et parements bois / OSB sous rampants',
           tag: 'Combles & Lucarne Bois'
         },
         {
-          url: '/assets/chantiers/chantier-tana-combles-mansarde-doublage.jpg',
+          url: '/assets/chantiers/chantier-tana-combles-mansarde-doublage.webp',
           caption: 'Vue d\'ensemble des volumes mansardés sous toiture : isolation thermique, doublage sous rampants et châssis bois',
           tag: 'Volumes Mansardés'
         },
         {
-          url: '/assets/chantiers/chantier-tana-menuiserie-grille-fer-forge.jpg',
+          url: '/assets/chantiers/chantier-tana-menuiserie-grille-fer-forge.webp',
           caption: 'Menuiserie bois avec grille de sécurité en fer forgé artisanal aux motifs géométriques traditionnels',
           tag: 'Ferronnerie de Sécurité'
         }
       ],
       highlights: [
-        "Dossier complet (11 photos) : Plans 3D, gros œuvre briques, charpente et finitions intérieures",
-        "Architecture patrimoniale en briques de terre cuite locales",
+        "Dossier complet (21 photos réelles) : Plans 3D, gros œuvre briques, échafaudage en hauteur, charpente bois, escalier béton et cuisine maçonnée",
+        "Architecture patrimoniale en briques de terre cuite locales et ravalement de façade sur échafaudage traditionnel",
         "Taille et levage d'une charpente en bois dur massif local",
+        "Coulage, lissage et ragréage de précision de l'escalier en béton armé à double volée",
+        "Agencement intérieur : cuisine maçonnée avec placards en bois, plan de travail carrelé noir et sanitaires",
         "Écran de sous-toiture pare-pluie respirant et isolation combles",
         "Reporting vidéo régulier pour le maître d'ouvrage (Diaspora / Résident)"
       ],
-      description: "Chantier d'envergure mené à Atsimondrano (Antananarivo) sur une bâtisse bourgeoise traditionnelle en briques cuites. Confortement structurel, réfection totale de la charpente en bois massif artisanal, écran pare-pluie et aménagement des combles habitables sous lucarnes."
+      description: "Chantier d'envergure mené à Atsimondrano (Antananarivo) sur une bâtisse bourgeoise traditionnelle en briques cuites. Confortement structurel, réfection totale de la charpente en bois massif artisanal, ravalement extérieur sur échafaudage traditionnel de grande hauteur, coulage et lissage d'escalier en béton armé, second œuvre complet (cuisine maçonnée, placards bois, sanitaires) et aménagement des combles habitables sous lucarnes."
     },
     {
       id: 'chantier-amenagement-interieur-finitions',
@@ -206,81 +348,84 @@ export const Portfolio: React.FC = () => {
       location: 'Antananarivo (Atsimondrano)',
       surface: '160 m² de finitions',
       duration: 'Second Œuvre & Finitions',
-      image: '/assets/chantiers/interieur/meuble-vasque-miroir-led.jpg',
+      estimatedBudgetAr: '115 000 000 Ar',
+      estimatedBudgetEur: '23 000 €',
+      costPerM2: '720 000 Ar/m² (≈ 144 €/m²)',
+      image: '/assets/chantiers/interieur/meuble-vasque-miroir-led.webp',
       isRealChantier: true,
       gallery: [
         {
-          url: '/assets/chantiers/interieur/meuble-vasque-miroir-led.jpg',
+          url: '/assets/chantiers/interieur/meuble-vasque-miroir-led.webp',
           caption: 'Meuble vasque contemporain suspendu deux tiroirs laqué blanc, miroir panoramique rétroéclairé LED, robinetterie chromée et faïence murale en grès cérame',
           tag: 'Meuble Vasque & Miroir LED'
         },
         {
-          url: '/assets/chantiers/interieur/douche-balneo-anthracite.jpg',
+          url: '/assets/chantiers/interieur/douche-balneo-anthracite.webp',
           caption: 'Espace douche à l\'italienne avec colonne d\'hydromassage balnéo gris anthracite, mitigeur thermostatique et alliance faïence ardoise / marbre Calacatta',
           tag: 'Douche Balnéo & Anthracite'
         },
         {
-          url: '/assets/chantiers/interieur/faience-marbre-calacatta.jpg',
+          url: '/assets/chantiers/interieur/faience-marbre-calacatta.webp',
           caption: 'Pose de faïence murale grand format effet marbre blanc veiné Calacatta, calepinage au laser, découpes d\'angles précises et extraction d\'air intégrée',
           tag: 'Faïence Marbre Calacatta'
         },
         {
-          url: '/assets/chantiers/interieur/escalier-beton-rampe-acier.jpg',
+          url: '/assets/chantiers/interieur/escalier-beton-rampe-acier.webp',
           caption: 'Escalier intérieur en béton armé monobloc avec garde-corps contemporain en acier thermolaqué gris anthracite, appliques murales et lumière naturelle',
           tag: 'Escalier Béton & Rampe Acier'
         },
         {
-          url: '/assets/chantiers/interieur/fenetre-securite-fer-forge.jpg',
+          url: '/assets/chantiers/interieur/fenetre-securite-fer-forge.webp',
           caption: 'Châssis oscillo-battant double vitrage en PVC blanc avec grille de protection en fer forgé artisanal scellée et habillage en faïence marbrée',
           tag: 'Menuiserie PVC & Ferronnerie'
         },
         {
-          url: '/assets/chantiers/interieur/calepinage-faience-calacatta-plafond.jpg',
+          url: '/assets/chantiers/interieur/calepinage-faience-calacatta-plafond.webp',
           caption: 'Calepinage de précision des dalles faïence Calacatta avec continuité des veinages sur l\'angle et raccordement net au plafond plâtré',
           tag: 'Calepinage & Angle Plafond'
         },
         {
-          url: '/assets/chantiers/interieur/faience-marbre-ambre-brillant.jpg',
+          url: '/assets/chantiers/interieur/faience-marbre-ambre-brillant.webp',
           caption: 'Pose murale en grès cérame grand format effet marbre ambré poli miroir haute brillance avec reflets lumineux naturels',
           tag: 'Marbre Ambré Poli Miroir'
         },
         {
-          url: '/assets/chantiers/interieur/menuiserie-aluminium-vue-panoramique.jpg',
+          url: '/assets/chantiers/interieur/menuiserie-aluminium-vue-panoramique.webp',
           caption: 'Menuiserie aluminium thermolaquée double vitrage thermique offrant une vue panoramique sur les plaines et collines d\'Antananarivo',
           tag: 'Châssis Aluminium & Vue'
         },
         {
-          url: '/assets/chantiers/interieur/amenagement-combles-fenetre-bois-osb.jpg',
+          url: '/assets/chantiers/interieur/amenagement-combles-fenetre-bois-osb.webp',
           caption: 'Aménagement des combles habitables sous toiture : isolation thermique, doublage sous rampants en panneaux bois et châssis ouvrant',
           tag: 'Combles & Isolation Bois'
         },
         {
-          url: '/assets/chantiers/interieur/decoration-peinture-tableau-mural.jpg',
+          url: '/assets/chantiers/interieur/decoration-peinture-tableau-mural.webp',
           caption: 'Finitions de plâtrerie et peinture acrylique satinée blanc épuré sur cloisons maçonnées, mise en valeur par un tableau d\'art',
           tag: 'Peinture & Décoration'
         },
         {
-          url: '/assets/chantiers/interieur/comptoir-bar-tasseaux-bois.jpg',
+          url: '/assets/chantiers/interieur/comptoir-bar-tasseaux-bois.webp',
           caption: 'Comptoir bar de cuisine sur mesure avec claustra en tasseaux de bois massif, plan de travail ardoise et parquet caillebotis bicolore',
           tag: 'Comptoir Bar & Tasseaux Bois'
         },
         {
-          url: '/assets/chantiers/interieur/sanitaires-wc-vasque-industrielle.jpg',
+          url: '/assets/chantiers/interieur/sanitaires-wc-vasque-industrielle.webp',
           caption: 'Espace sanitaires avec WC céramique émaillée, vasque compacte posée sur piètement métallique noir style atelier et faïence murale',
           tag: 'WC & Vasque Style Atelier'
         },
         {
-          url: '/assets/chantiers/interieur/chambre-lit-plateforme-bois-massif.jpg',
+          url: '/assets/chantiers/interieur/chambre-lit-plateforme-bois-massif.webp',
           caption: 'Suite parentale : lit plateforme sur mesure en bois massif avec tête de lit asymétrique graphique bi-matière et sol rouge brique traditionnel',
           tag: 'Lit Plateforme Bois Massif'
         },
         {
-          url: '/assets/chantiers/interieur/chambre-decor-papier-peint-floral.jpg',
+          url: '/assets/chantiers/interieur/chambre-decor-papier-peint-floral.webp',
           caption: 'Décoration de chambre avec lés de papier peint intissé panoramique à motifs floraux bleu nuit et plafond chaleureux en lambris bois verni',
           tag: 'Papier Peint & Plafond Bois'
         },
         {
-          url: '/assets/chantiers/interieur/ossature-bois-isolation-combles-osb.jpg',
+          url: '/assets/chantiers/interieur/ossature-bois-isolation-combles-osb.webp',
           caption: 'Phase chantier combles : ossature en bois massif, écran pare-pluie respirant et doublage sous rampants en panneaux OSB structuraux',
           tag: 'Ossature & Isolation OSB'
         }
@@ -298,81 +443,99 @@ export const Portfolio: React.FC = () => {
     },
     {
       id: 'p1',
-      title: "Mur de Soutènement & Plateforme en Pente",
+      title: "Mur de Soutènement en Moellons & Plateforme",
       status: 'livre',
       statusLabel: 'Chantier Livré',
       category: 'gros-oeuvre',
       categoryLabel: 'Gros Œuvre & Pentes',
       location: 'Imerinkasinina, Antananarivo',
-      surface: '650 m²',
+      surface: '650 m² plateforme',
       duration: 'Livré • 2 mois de travaux',
-      image: 'https://images.unsplash.com/photo-1541888946425-d0fbb18615f3?q=80&w=1200&fm=webp&auto=format&fit=crop',
-      description: "Terrassement en déblai/remblai, mur de soutènement en béton armé de 4.5m de hauteur et réseau de drainage pluvial avec barbacanes."
+      estimatedBudgetAr: '285 000 000 Ar',
+      estimatedBudgetEur: '57 000 €',
+      costPerM2: '950 000 Ar/m² (≈ 190 €/m²)',
+      image: '/assets/chantiers/realisation-tana-mur-soutenement-moellons.webp',
+      description: "Terrassement en déblai/remblai sur colline latéritique, mur de soutènement cyclopéen en moellons de granit de 4,5m de hauteur avec barbacanes de drainage et plateforme stabilisée."
     },
     {
       id: 'p2',
-      title: "Villa R+1 Clé en Main pour la Diaspora",
+      title: "Villa R+1 avec Varangue pour la Diaspora",
       status: 'livre',
       statusLabel: 'Chantier Livré',
       category: 'diaspora',
       categoryLabel: 'Projet Diaspora',
-      location: 'Ivato Aéroport, Antananarivo',
-      surface: '280 m²',
+      location: 'Ivato / Ambatobe, Antananarivo',
+      surface: '220 m² (R+1)',
       duration: 'Livré • 7 mois de travaux',
-      image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&fm=webp&auto=format&fit=crop',
-      description: "Construction complète suivie à distance depuis Paris : fondations semelles isolées, briques cuites de qualité, menuiseries alu et finitions premium."
+      estimatedBudgetAr: '405 000 000 Ar',
+      estimatedBudgetEur: '81 000 €',
+      costPerM2: '1 840 000 Ar/m² (≈ 368 €/m²)',
+      image: '/assets/chantiers/realisation-tana-villa-r1-diaspora.webp',
+      description: "Construction complète suivie à distance depuis la France (reporting photo/vidéo hebdomadaire) : fondations renforcées sol rouge, varangue avec colonnes maçonnées, toiture bac acier profilé et clôture sécurisée en moellons."
     },
     {
       id: 'p3',
-      title: "Villa d'Architecte sur les Hauteurs",
+      title: "Pavillon Plain-Pied & Grande Varangue Traditionnelle",
       status: 'livre',
       statusLabel: 'Chantier Livré',
       category: 'neuf',
-      categoryLabel: 'Construction Neuve',
-      location: 'Ambatobe, Antananarivo',
-      surface: '340 m²',
-      duration: 'Livré • 8.5 mois',
-      image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1200&fm=webp&auto=format&fit=crop',
-      description: "Ouvrage moderne avec vue panoramique sur les collines sacrées. Béton hydrofuge, grandes baies vitrées et toiture terrasse étanchée."
+      categoryLabel: 'Villa Plain-Pied',
+      location: 'Ambatobe / Ilafy, Antananarivo',
+      surface: '150 m² hab. + 35 m² varangue',
+      duration: 'Livré • 5 mois de travaux',
+      estimatedBudgetAr: '275 000 000 Ar',
+      estimatedBudgetEur: '55 000 €',
+      costPerM2: '1 830 000 Ar/m² (≈ 366 €/m²)',
+      image: '/assets/chantiers/realisation-tana-villa-plain-pied-varangue.webp',
+      description: "Pavillon familial de plain-pied typique des banlieues résidentielles de Tana : vaste varangue ombragée avec colonnade, toiture quatre pans en bac acier laqué, cour pavée autobloquante et clôture en maçonnerie de pierre taillée."
     },
     {
       id: 'p4',
-      title: "Rénovation Lourde & Renfort de Structure",
+      title: "Rénovation Bâtisse Trano Gasy & Confortement",
       status: 'livre',
       statusLabel: 'Chantier Livré',
       category: 'renovation',
-      categoryLabel: 'Rénovation Tana',
-      location: 'Isoraka / Antaninarenina, Tana',
-      surface: '210 m²',
-      duration: 'Livré • 4 mois',
-      image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1200&fm=webp&auto=format&fit=crop',
-      description: "Reprise sous-œuvre de fondations anciennes, ouverture avec profilés IPN traités anti-corrosion et rénovation complète des réseaux."
+      categoryLabel: 'Rénovation Patrimoine',
+      location: 'Haute-Ville / Isoraka, Antananarivo',
+      surface: '210 m² (R+1)',
+      duration: 'Livré • 4 mois de travaux',
+      estimatedBudgetAr: '240 000 000 Ar',
+      estimatedBudgetEur: '48 000 €',
+      costPerM2: '1 140 000 Ar/m² (≈ 228 €/m²)',
+      image: '/assets/chantiers/realisation-tana-renovation-trano-gasy.webp',
+      description: "Réhabilitation soignée d'une maison traditionnelle malgache (Trano Gasy) en briques cuites artisanales rouges : confortement des fondations anciennes, rejointoiement à la chaux, balcons en ferronnerie et réfection totale de la charpente."
     },
     {
       id: 'p5',
-      title: "Aménagement VRD & Piste Carrossable",
+      title: "Aménagement VRD, Caniveaux Béton & Voie Pavée",
       status: 'livre',
       statusLabel: 'Chantier Livré',
       category: 'tp',
       categoryLabel: 'Travaux Publics & VRD',
       location: 'By-pass / Tanjombato, Atsimondrano',
-      surface: '1 800 m²',
-      duration: 'Livré • 1.5 mois',
-      image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1200&fm=webp&auto=format&fit=crop',
-      description: "Création d'un accès privé pour résidences : caniveaux maçonnés, dallettes de franchissement, empierrement et compactage au rouleau vibrant."
+      surface: '1 200 m² de voirie',
+      duration: 'Livré • 1.5 mois de travaux',
+      estimatedBudgetAr: '190 000 000 Ar',
+      estimatedBudgetEur: '38 000 €',
+      costPerM2: '475 000 Ar/m² (≈ 95 €/m²)',
+      image: '/assets/chantiers/realisation-tana-vrd-caniveaux-piste.webp',
+      description: "Création et viabilisation d'un accès carrossable en zone périurbaine : terrassement, caniveaux d'assainissement pluvial maçonnés avec dallettes amovibles en béton armé, empierrement et pose de pavés autobloquants."
     },
     {
       id: 'p6',
-      title: "Résidence Familiale Contemporaine",
+      title: "Résidence Familiale R+1 Contemporaine & Clôture",
       status: 'livre',
       statusLabel: 'Chantier Livré',
       category: 'neuf',
       categoryLabel: 'Construction Neuve',
-      location: 'Ilafy, Antananarivo',
-      surface: '220 m²',
-      duration: 'Livré • 6 mois',
-      image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1200&fm=webp&auto=format&fit=crop',
-      description: "Conception thermique naturelle adaptée au climat des Hautes Terres, isolation phonique soignée et cuve de récupération d'eau intégrée."
+      location: 'Ilafy / Ankadikely, Antananarivo',
+      surface: '190 m² (R+1)',
+      duration: 'Livré • 6 mois de travaux',
+      estimatedBudgetAr: '350 000 000 Ar',
+      estimatedBudgetEur: '70 000 €',
+      costPerM2: '1 840 000 Ar/m² (≈ 368 €/m²)',
+      image: '/assets/chantiers/realisation-tana-residence-familiale-ilafy.webp',
+      description: "Villa d'habitation contemporaine à étage adaptée aux contraintes de Tana : structure poteaux-poutres en béton armé, toiture terrasse étanchée avec bac acier, cour pavée intégrée et réservoir tampon d'eau potable."
     }
   ];
 
@@ -455,22 +618,7 @@ export const Portfolio: React.FC = () => {
                     onClick={() => setLightbox({ project, photoIndex: currentPhotoIdx })}
                     title="Cliquez pour agrandir les photos en haute résolution"
                   >
-                    {!loadedImages[`${project.id}-${currentPhotoIdx}`] && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-zinc-900 animate-pulse">
-                        <Camera className="w-8 h-8 text-zinc-700 animate-pulse" />
-                      </div>
-                    )}
-                    
-                    <img
-                      src={currentPhoto.url}
-                      alt={currentPhoto.caption}
-                      loading="lazy"
-                      decoding="async"
-                      onLoad={() => handleImageLoad(`${project.id}-${currentPhotoIdx}`)}
-                      className={`w-full h-full object-cover group-hover:scale-105 transition-all duration-500 ${
-                        loadedImages[`${project.id}-${currentPhotoIdx}`] ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-                      }`}
-                    />
+                    <ProjectCardImage src={currentPhoto.url} alt={currentPhoto.caption} />
                     
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 dark:from-stanley-black via-black/30 dark:via-stanley-black/20 to-transparent pointer-events-none" />
                     
@@ -523,7 +671,7 @@ export const Portfolio: React.FC = () => {
                             }`}
                             title={photo.tag}
                           >
-                            <img src={photo.url} alt="" className="w-full h-full object-cover" />
+                            <img src={photo.thumbUrl || getThumbUrl(photo.url)} alt="" loading="lazy" decoding="async" width={36} height={28} className="w-full h-full object-cover pointer-events-none" />
                           </button>
                         ))}
                       </div>
@@ -572,6 +720,29 @@ export const Portfolio: React.FC = () => {
                         </ul>
                       </div>
                     )}
+
+                    {/* Estimation de Devis Réelle */}
+                    <div className="mb-4 p-3 rounded-xl bg-amber-500/10 dark:bg-amber-400/5 border border-amber-500/30 dark:border-amber-400/20">
+                      <div className="flex items-center justify-between gap-2 mb-1">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-stanley-gold dark:text-stanley-yellow flex items-center gap-1">
+                          <Calculator className="w-3 h-3" />
+                          <span>Estimation de Devis Réel</span>
+                        </span>
+                        {project.costPerM2 && (
+                          <span className="text-[10px] font-semibold text-zinc-600 dark:text-slate-400">
+                            {project.costPerM2}
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-baseline justify-between gap-2">
+                        <span className="font-display font-extrabold text-sm sm:text-base text-zinc-900 dark:text-white">
+                          {project.estimatedBudgetAr}
+                        </span>
+                        <span className="text-xs font-semibold text-amber-700 dark:text-stanley-yellow">
+                          ≈ {project.estimatedBudgetEur}
+                        </span>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="border-t border-zinc-200 dark:border-stanley-steel pt-4 flex items-center justify-between text-xs text-zinc-600 dark:text-slate-300">
@@ -710,6 +881,16 @@ export const Portfolio: React.FC = () => {
                         <p className="text-xs sm:text-sm text-slate-100">
                           {current.caption}
                         </p>
+                        <div className="flex flex-wrap items-center gap-2 pt-1">
+                          <span className="px-2 py-0.5 rounded bg-amber-500/20 text-stanley-yellow font-bold text-[11px] border border-amber-500/30">
+                            Devis indicatif : {lightbox.project.estimatedBudgetAr} (≈ {lightbox.project.estimatedBudgetEur})
+                          </span>
+                          {lightbox.project.costPerM2 && (
+                            <span className="text-zinc-400 text-[11px]">
+                              Soit env. {lightbox.project.costPerM2}
+                            </span>
+                          )}
+                        </div>
                       </div>
 
                       {/* Explicit Return / Exit Button in Footer */}
@@ -737,7 +918,7 @@ export const Portfolio: React.FC = () => {
                             }`}
                             title={p.tag}
                           >
-                            <img src={p.url} alt="" className="w-full h-full object-cover" />
+                            <img src={p.thumbUrl || getThumbUrl(p.url)} alt="" loading="lazy" decoding="async" width={48} height={40} className="w-full h-full object-cover" />
                           </button>
                         ))}
                       </div>

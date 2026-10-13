@@ -17,6 +17,7 @@ import { WhatsAppIcon } from './WhatsAppIcon';
 
 export interface InteriorPhoto {
   id: string;
+  thumbUrl?: string;
   url: string;
   title: string;
   room: string;
@@ -27,16 +28,46 @@ export interface InteriorPhoto {
   dimensions?: string;
 }
 
+const getThumbUrl = (url: string): string => {
+  if (url.includes('/assets/chantiers/')) {
+    return url.replace(/\.webp$/, '-thumb.webp').replace(/\.jpg$/, '-thumb.webp');
+  }
+  return url;
+};
+
+const InteriorCardImage: React.FC<{ src: string; alt: string }> = ({ src, alt }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  return (
+    <>
+      {!isLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center bg-zinc-900 animate-pulse">
+          <Camera className="w-8 h-8 text-zinc-700" />
+        </div>
+      )}
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        decoding="async"
+        onLoad={() => setIsLoaded(true)}
+        className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 will-change-transform ${
+          isLoaded ? 'opacity-100' : 'opacity-0'
+        }`}
+      />
+    </>
+  );
+};
+
 export const InteriorGallery: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
-  const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
 
   const photos: InteriorPhoto[] = [
     // 1. Salles de bain & WC (3 photos)
     {
       id: 'meuble-vasque',
-      url: '/assets/chantiers/interieur/meuble-vasque-miroir-led.jpg',
+      url: '/assets/chantiers/interieur/meuble-vasque-miroir-led.webp',
       title: 'Meuble Vasque Suspendu & Miroir Rétroéclairé LED',
       room: 'Salle d’Eau Principale',
       category: 'salle-de-bain',
@@ -52,7 +83,7 @@ export const InteriorGallery: React.FC = () => {
     },
     {
       id: 'douche-balneo',
-      url: '/assets/chantiers/interieur/douche-balneo-anthracite.jpg',
+      url: '/assets/chantiers/interieur/douche-balneo-anthracite.webp',
       title: 'Douche à l’Italienne & Colonne Balnéo Anthracite',
       room: 'Salle de Bain / Suite',
       category: 'salle-de-bain',
@@ -68,7 +99,7 @@ export const InteriorGallery: React.FC = () => {
     },
     {
       id: 'sanitaires-wc-vasque',
-      url: '/assets/chantiers/interieur/sanitaires-wc-vasque-industrielle.jpg',
+      url: '/assets/chantiers/interieur/sanitaires-wc-vasque-industrielle.webp',
       title: 'Espace Sanitaires, WC & Vasque Style Atelier',
       room: 'Toilettes Invités / RDC',
       category: 'salle-de-bain',
@@ -86,7 +117,7 @@ export const InteriorGallery: React.FC = () => {
     // 2. Carrelages & Marbrerie (3 photos)
     {
       id: 'faience-marbre-calacatta',
-      url: '/assets/chantiers/interieur/faience-marbre-calacatta.jpg',
+      url: '/assets/chantiers/interieur/faience-marbre-calacatta.webp',
       title: 'Faïence Murale Haut de Gamme Effet Marbre Calacatta',
       room: 'Revêtement Mural & Plafond',
       category: 'revetement',
@@ -102,7 +133,7 @@ export const InteriorGallery: React.FC = () => {
     },
     {
       id: 'calepinage-faience-plafond',
-      url: '/assets/chantiers/interieur/calepinage-faience-calacatta-plafond.jpg',
+      url: '/assets/chantiers/interieur/calepinage-faience-calacatta-plafond.webp',
       title: 'Calepinage Précis & Raccordement Faïence au Plafond',
       room: 'Angle & Retombée de Plafond',
       category: 'revetement',
@@ -118,7 +149,7 @@ export const InteriorGallery: React.FC = () => {
     },
     {
       id: 'faience-marbre-ambre',
-      url: '/assets/chantiers/interieur/faience-marbre-ambre-brillant.jpg',
+      url: '/assets/chantiers/interieur/faience-marbre-ambre-brillant.webp',
       title: 'Grès Cérame Effet Marbre Ambré Poli Miroir',
       room: 'Espace Bains & Bien-Être',
       category: 'revetement',
@@ -136,7 +167,7 @@ export const InteriorGallery: React.FC = () => {
     // 3. Menuiseries & Métallerie (3 photos)
     {
       id: 'escalier-acier',
-      url: '/assets/chantiers/interieur/escalier-beton-rampe-acier.jpg',
+      url: '/assets/chantiers/interieur/escalier-beton-rampe-acier.webp',
       title: 'Escalier Béton Armé & Rampe Métallique Contemporaine',
       room: 'Cage d’Escalier & Distribution',
       category: 'menuiserie-metal',
@@ -152,7 +183,7 @@ export const InteriorGallery: React.FC = () => {
     },
     {
       id: 'fenetre-fer-forge',
-      url: '/assets/chantiers/interieur/fenetre-securite-fer-forge.jpg',
+      url: '/assets/chantiers/interieur/fenetre-securite-fer-forge.webp',
       title: 'Menuiserie Oscillo-Battante & Grille Forgée Sécurité',
       room: 'Ouvertures & Protection',
       category: 'menuiserie-metal',
@@ -168,7 +199,7 @@ export const InteriorGallery: React.FC = () => {
     },
     {
       id: 'menuiserie-panoramique',
-      url: '/assets/chantiers/interieur/menuiserie-aluminium-vue-panoramique.jpg',
+      url: '/assets/chantiers/interieur/menuiserie-aluminium-vue-panoramique.webp',
       title: 'Châssis Vitré Aluminium & Vue Panoramique sur Tana',
       room: 'Pièce de Vie / Chambre Étage',
       category: 'menuiserie-metal',
@@ -186,7 +217,7 @@ export const InteriorGallery: React.FC = () => {
     // 4. Mobilier & Agencement Bois (3 photos)
     {
       id: 'comptoir-bar-tasseaux',
-      url: '/assets/chantiers/interieur/comptoir-bar-tasseaux-bois.jpg',
+      url: '/assets/chantiers/interieur/comptoir-bar-tasseaux-bois.webp',
       title: 'Comptoir Bar Cuisine & Tasseaux Bois Massif',
       room: 'Espace Cuisine & Salle à Manger',
       category: 'agencement-bois',
@@ -202,7 +233,7 @@ export const InteriorGallery: React.FC = () => {
     },
     {
       id: 'chambre-lit-plateforme',
-      url: '/assets/chantiers/interieur/chambre-lit-plateforme-bois-massif.jpg',
+      url: '/assets/chantiers/interieur/chambre-lit-plateforme-bois-massif.webp',
       title: 'Lit Plateforme Bois Massif & Tête Asymétrique Bi-Matière',
       room: 'Suite Parentale / Combles',
       category: 'agencement-bois',
@@ -218,7 +249,7 @@ export const InteriorGallery: React.FC = () => {
     },
     {
       id: 'combles-fenetre-osb',
-      url: '/assets/chantiers/interieur/amenagement-combles-fenetre-bois-osb.jpg',
+      url: '/assets/chantiers/interieur/amenagement-combles-fenetre-bois-osb.webp',
       title: 'Aménagement Combles Habitables & Fenêtre Bois',
       room: 'Combles Aménagés & Rampants',
       category: 'agencement-bois',
@@ -236,7 +267,7 @@ export const InteriorGallery: React.FC = () => {
     // 5. Combles, Peinture & Décoration (3 photos)
     {
       id: 'ossature-bois-combles',
-      url: '/assets/chantiers/interieur/ossature-bois-isolation-combles-osb.jpg',
+      url: '/assets/chantiers/interieur/ossature-bois-isolation-combles-osb.webp',
       title: 'Ossature Bois & Doublage sous Rampants OSB',
       room: 'Chantier Combles & Toiture',
       category: 'combles-deco',
@@ -252,7 +283,7 @@ export const InteriorGallery: React.FC = () => {
     },
     {
       id: 'chambre-decor-papier-peint',
-      url: '/assets/chantiers/interieur/chambre-decor-papier-peint-floral.jpg',
+      url: '/assets/chantiers/interieur/chambre-decor-papier-peint-floral.webp',
       title: 'Décoration Murale Panoramique & Plafond Lambris Bois',
       room: 'Chambre à Coucher Contemporaine',
       category: 'combles-deco',
@@ -268,7 +299,7 @@ export const InteriorGallery: React.FC = () => {
     },
     {
       id: 'decoration-peinture',
-      url: '/assets/chantiers/interieur/decoration-peinture-tableau-mural.jpg',
+      url: '/assets/chantiers/interieur/decoration-peinture-tableau-mural.webp',
       title: 'Finitions Peinture Satinée & Décoration Murale',
       room: 'Séjour / Salon Intérieur',
       category: 'combles-deco',
@@ -297,9 +328,6 @@ export const InteriorGallery: React.FC = () => {
     ? photos
     : photos.filter(p => p.category === activeCategory);
 
-  const handleImageLoad = (id: string) => {
-    setLoadedImages(prev => ({ ...prev, [id]: true }));
-  };
 
   // Keyboard navigation & body scroll lock for Lightbox
   useEffect(() => {
@@ -385,8 +413,7 @@ export const InteriorGallery: React.FC = () => {
         {/* Interior Gallery Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-16">
           {filteredPhotos.map((photo, index) => {
-            const isLoaded = loadedImages[photo.id];
-            return (
+                        return (
               <article
                 key={photo.id}
                 className="group rounded-2xl overflow-hidden bg-zinc-50 dark:bg-stanley-black border border-zinc-200 dark:border-stanley-steel hover:border-stanley-yellow/70 dark:hover:border-stanley-yellow/60 transition-all duration-300 flex flex-col justify-between hover:shadow-xl dark:hover:shadow-2xl hover:-translate-y-1 shadow-sm"
@@ -397,22 +424,7 @@ export const InteriorGallery: React.FC = () => {
                   onClick={() => setSelectedPhotoIndex(index)}
                   title="Cliquer pour agrandir et inspecter les détails"
                 >
-                  {!isLoaded && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-zinc-900 animate-pulse">
-                      <Camera className="w-8 h-8 text-zinc-700" />
-                    </div>
-                  )}
-
-                  <img
-                    src={photo.url}
-                    alt={photo.title}
-                    loading="lazy"
-                    decoding="async"
-                    onLoad={() => handleImageLoad(photo.id)}
-                    className={`w-full h-full object-cover group-hover:scale-105 transition-all duration-500 ${
-                      isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-                    }`}
-                  />
+                  <InteriorCardImage src={photo.url} alt={photo.title} />
 
                   {/* Gradient Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none" />
@@ -699,7 +711,7 @@ export const InteriorGallery: React.FC = () => {
                         }`}
                         title={p.title}
                       >
-                        <img src={p.url} alt="" className="w-full h-full object-cover" />
+                        <img src={p.thumbUrl || getThumbUrl(p.url)} alt="" loading="lazy" decoding="async" width={56} height={44} className="w-full h-full object-cover" />
                       </button>
                     ))}
                   </div>
