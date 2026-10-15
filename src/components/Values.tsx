@@ -1,6 +1,5 @@
 import React from 'react';
 import { Mountain, Video, CheckCircle2, ShieldCheck } from 'lucide-react';
-import { CertifiedBadge } from './CertifiedBadge';
 
 export const Values: React.FC = () => {
   return (
@@ -115,9 +114,6 @@ export const Values: React.FC = () => {
             </div>
           </div>
         </div>
-
-        {/* Bloc officiel Entreprise Agréée & Déclarée Madagascar */}
-        <CertifiedBadge className="mt-12" />
       </div>
     </section>
   );

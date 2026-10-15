@@ -15,7 +15,7 @@ export interface Project {
   statusLabel: string;
   category: 'gros-oeuvre' | 'tp' | 'renovation' | 'neuf' | 'diaspora' | 'interieur';
   categoryLabel: string;
-  location: string;
+  location?: string;
   surface: string;
   duration: string;
   estimatedBudgetAr: string;
@@ -275,6 +275,16 @@ export const Portfolio: React.FC = () => {
           tag: 'Terrasse & Échafaudage'
         },
         {
+          url: '/assets/chantiers/chantier-tana-terrasse-piliers-briques-sunset.webp',
+          caption: 'Terrasse panoramique à Atsimondrano : élévation des piliers en briques cuites artisanales avec fers d\'attente et vue sur les rizières de la plaine de Tana',
+          tag: 'Piliers Terrasse & Vue'
+        },
+        {
+          url: '/assets/chantiers/chantier-tana-terrasse-alignement-piliers-briques.webp',
+          caption: 'Alignement précis des 5 piliers maçonnés en briques cuites sur muret acrotère de terrasse de toit au crépuscule',
+          tag: 'Alignement Piliers Briques'
+        },
+        {
           url: '/assets/chantiers/chantier-tana-pignon-echafaudage-hauteur-macon.webp',
           caption: 'Travaux en hauteur sur le pignon supérieur : maçon sur échafaudage traditionnel en bois réalisant les finitions d\'enduit de façade',
           tag: 'Échafaudage & Pignon'
@@ -316,7 +326,7 @@ export const Portfolio: React.FC = () => {
         }
       ],
       highlights: [
-        "Dossier complet (21 photos réelles) : Plans 3D, gros œuvre briques, échafaudage en hauteur, charpente bois, escalier béton et cuisine maçonnée",
+        "Dossier complet (23 photos réelles) : Plans 3D, gros œuvre briques, échafaudage en hauteur, terrasse panoramique à piliers, charpente bois, escalier béton et cuisine maçonnée",
         "Architecture patrimoniale en briques de terre cuite locales et ravalement de façade sur échafaudage traditionnel",
         "Taille et levage d'une charpente en bois dur massif local",
         "Coulage, lissage et ragréage de précision de l'escalier en béton armé à double volée",
@@ -324,7 +334,7 @@ export const Portfolio: React.FC = () => {
         "Écran de sous-toiture pare-pluie respirant et isolation combles",
         "Reporting vidéo régulier pour le maître d'ouvrage (Diaspora / Résident)"
       ],
-      description: "Chantier d'envergure mené à Atsimondrano (Antananarivo) sur une bâtisse bourgeoise traditionnelle en briques cuites. Confortement structurel, réfection totale de la charpente en bois massif artisanal, ravalement extérieur sur échafaudage traditionnel de grande hauteur, coulage et lissage d'escalier en béton armé, second œuvre complet (cuisine maçonnée, placards bois, sanitaires) et aménagement des combles habitables sous lucarnes."
+      description: "Chantier d'envergure mené à Atsimondrano (Antananarivo) sur une bâtisse bourgeoise traditionnelle en briques cuites. Confortement structurel, réfection totale de la charpente en bois massif artisanal, ravalement extérieur sur échafaudage traditionnel de grande hauteur, coulage et lissage d'escalier en béton armé, terrasse panoramique avec piliers maçonnés en briques, second œuvre complet (cuisine maçonnée, placards bois, sanitaires) et aménagement des combles habitables sous lucarnes."
     },
     {
       id: 'chantier-amenagement-interieur-finitions',
@@ -436,7 +446,6 @@ export const Portfolio: React.FC = () => {
       statusLabel: 'Chantier Livré',
       category: 'gros-oeuvre',
       categoryLabel: 'Gros Œuvre & Pentes',
-      location: 'Imerinkasinina, Antananarivo',
       surface: '650 m² plateforme',
       duration: 'Livré • 2 mois de travaux',
       estimatedBudgetAr: '285 000 000 Ar',
@@ -452,7 +461,6 @@ export const Portfolio: React.FC = () => {
       statusLabel: 'Chantier Livré',
       category: 'diaspora',
       categoryLabel: 'Projet Diaspora',
-      location: 'Ivato / Ambatobe, Antananarivo',
       surface: '220 m² (R+1)',
       duration: 'Livré • 7 mois de travaux',
       estimatedBudgetAr: '405 000 000 Ar',
@@ -468,7 +476,6 @@ export const Portfolio: React.FC = () => {
       statusLabel: 'Chantier Livré',
       category: 'neuf',
       categoryLabel: 'Villa Plain-Pied',
-      location: 'Ambatobe / Ilafy, Antananarivo',
       surface: '150 m² hab. + 35 m² varangue',
       duration: 'Livré • 5 mois de travaux',
       estimatedBudgetAr: '275 000 000 Ar',
@@ -484,7 +491,6 @@ export const Portfolio: React.FC = () => {
       statusLabel: 'Chantier Livré',
       category: 'renovation',
       categoryLabel: 'Rénovation Patrimoine',
-      location: 'Haute-Ville / Isoraka, Antananarivo',
       surface: '210 m² (R+1)',
       duration: 'Livré • 4 mois de travaux',
       estimatedBudgetAr: '240 000 000 Ar',
@@ -500,7 +506,6 @@ export const Portfolio: React.FC = () => {
       statusLabel: 'Chantier Livré',
       category: 'tp',
       categoryLabel: 'Travaux Publics & VRD',
-      location: 'By-pass / Tanjombato, Atsimondrano',
       surface: '1 200 m² de voirie',
       duration: 'Livré • 1.5 mois de travaux',
       estimatedBudgetAr: '190 000 000 Ar',
@@ -516,7 +521,6 @@ export const Portfolio: React.FC = () => {
       statusLabel: 'Chantier Livré',
       category: 'neuf',
       categoryLabel: 'Construction Neuve',
-      location: 'Ilafy / Ankadikely, Antananarivo',
       surface: '190 m² (R+1)',
       duration: 'Livré • 6 mois de travaux',
       estimatedBudgetAr: '350 000 000 Ar',
@@ -544,7 +548,7 @@ export const Portfolio: React.FC = () => {
     : activeFilter === 'en-cours'
       ? projects.filter(p => p.status === 'en-cours')
       : activeFilter === 'antsiranana'
-        ? projects.filter(p => p.location.toLowerCase().includes('antsiranana'))
+        ? projects.filter(p => p.location?.toLowerCase().includes('antsiranana'))
         : projects.filter(p => p.category === activeFilter);
 
   return (
@@ -619,7 +623,7 @@ export const Portfolio: React.FC = () => {
                       {isOngoing ? (
                         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-stanley-yellow text-stanley-black text-[10px] font-extrabold uppercase tracking-wider shadow-md">
                           <span>
-                            EN COURS • {project.location.toUpperCase().includes('ANTSIRANANA') ? 'ANTSIRANANA' : project.location.toUpperCase().includes('ATSIMONDRANO') ? 'ATSIMONDRANO' : 'EN DIRECT'}
+                            EN COURS • {project.location?.toUpperCase().includes('ANTSIRANANA') ? 'ANTSIRANANA' : project.location?.toUpperCase().includes('ATSIMONDRANO') ? 'ATSIMONDRANO' : 'EN DIRECT'}
                           </span>
                         </span>
                       ) : (
@@ -678,10 +682,12 @@ export const Portfolio: React.FC = () => {
                 {/* Content */}
                 <div className="p-6 flex flex-col flex-1 justify-between">
                   <div>
-                    <div className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-slate-400 mb-2">
-                      <MapPin className="w-3.5 h-3.5 text-stanley-gold dark:text-stanley-yellow shrink-0" />
-                      <span className="font-semibold text-zinc-700 dark:text-slate-300">{project.location}</span>
-                    </div>
+                    {project.location && (
+                      <div className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-slate-400 mb-2">
+                        <MapPin className="w-3.5 h-3.5 text-stanley-gold dark:text-stanley-yellow shrink-0" />
+                        <span className="font-semibold text-zinc-700 dark:text-slate-300">{project.location}</span>
+                      </div>
+                    )}
 
                     <h3 className="font-display font-bold text-xl text-zinc-900 dark:text-slate-50 mb-2 group-hover:text-stanley-gold dark:group-hover:text-stanley-yellow transition-colors">
                       {project.title}
@@ -696,7 +702,7 @@ export const Portfolio: React.FC = () => {
                       <div className="mb-4 bg-zinc-50 dark:bg-stanley-black/70 rounded-xl p-3 border border-zinc-200 dark:border-stanley-steel">
                         <div className="text-[10px] font-bold uppercase tracking-wider text-stanley-gold dark:text-stanley-yellow mb-1.5 flex items-center gap-1">
                           <CheckCircle2 className="w-3 h-3" />
-                          <span>Détails &amp; Étapes ({project.location.split(',')[0]})</span>
+                          <span>Détails &amp; Étapes {project.location ? `(${project.location.split(',')[0]})` : ''}</span>
                         </div>
                         <ul className="space-y-1 text-[11px] text-zinc-700 dark:text-slate-300">
                           {project.highlights.map((item, idx) => (
@@ -749,7 +755,7 @@ export const Portfolio: React.FC = () => {
                       href="#contact"
                       className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-stanley-steel border border-zinc-200 dark:border-transparent flex items-center justify-center text-zinc-700 dark:text-slate-300 group-hover:bg-stanley-yellow group-hover:text-stanley-black transition-colors"
                       aria-label={`Demander un devis similaire pour ${project.title}`}
-                      title={`Demander un devis pour ce type de chantier (${project.location.split(',')[0]})`}
+                      title={project.location ? `Demander un devis pour ce type de chantier (${project.location.split(',')[0]})` : `Demander un devis pour ${project.title}`}
                     >
                       <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
                     </a>
@@ -764,40 +770,29 @@ export const Portfolio: React.FC = () => {
       {/* Lightbox Modal for High-Resolution Photo Inspection */}
       {lightbox && (
         <div 
-          className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center p-2 sm:p-6 overflow-y-auto"
+          className="fixed inset-0 z-[100] bg-black/75 dark:bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-2 sm:p-6 overflow-y-auto"
           onClick={() => setLightbox(null)}
           role="dialog"
           aria-modal="true"
         >
-          {/* Floating Fixed Close Button in Top-Right Corner */}
-          <button
-            onClick={() => setLightbox(null)}
-            className="fixed top-3 right-3 sm:top-5 sm:right-5 z-[110] flex items-center gap-1.5 sm:gap-2 px-3.5 py-2 rounded-xl bg-stanley-yellow hover:bg-stanley-gold text-stanley-black font-extrabold text-xs sm:text-sm shadow-2xl transition-all cursor-pointer border-2 border-stanley-black"
-            aria-label="Fermer la galerie photo"
-            title="Fermer la galerie (Échap)"
-          >
-            <X className="w-4 h-4 stroke-[3]" />
-            <span>Fermer ✕</span>
-          </button>
-
           <div 
-            className="relative max-w-5xl w-full bg-zinc-900 dark:bg-stanley-black border border-zinc-700 dark:border-stanley-steel rounded-2xl overflow-hidden shadow-2xl flex flex-col my-auto max-h-[94vh]"
+            className="relative max-w-5xl w-full bg-white dark:bg-stanley-charcoal border border-zinc-200 dark:border-stanley-steel rounded-2xl overflow-hidden shadow-2xl flex flex-col my-auto max-h-[94vh] transition-colors"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="p-3 sm:p-4 border-b border-zinc-700 dark:border-stanley-steel flex items-center justify-between bg-zinc-800 dark:bg-stanley-charcoal shrink-0 gap-3">
+            <div className="p-3 sm:p-4 border-b border-zinc-200 dark:border-stanley-steel flex items-center justify-between bg-zinc-50 dark:bg-stanley-black shrink-0 gap-3 transition-colors">
               <div className="flex items-center gap-2 sm:gap-3 min-w-0 pr-2">
-                <span className="px-2.5 py-1 rounded bg-stanley-yellow/15 text-stanley-yellow border border-stanley-yellow/30 text-[10px] sm:text-xs font-bold uppercase tracking-wider shrink-0">
+                <span className="px-2.5 py-1 rounded bg-amber-500/10 dark:bg-stanley-yellow/15 text-stanley-gold dark:text-stanley-yellow border border-amber-500/20 dark:border-stanley-yellow/30 text-[10px] sm:text-xs font-bold uppercase tracking-wider shrink-0">
                   {lightbox.project.status === 'en-cours' ? 'Chantier en cours' : 'Réalisation'}
                 </span>
-                <h4 className="font-display font-bold text-xs sm:text-base text-slate-100 truncate">
+                <h4 className="font-display font-bold text-xs sm:text-base text-zinc-900 dark:text-slate-100 truncate">
                   {lightbox.project.title}
                 </h4>
               </div>
 
               <button
                 onClick={() => setLightbox(null)}
-                className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-stanley-yellow hover:bg-stanley-gold text-stanley-black font-extrabold text-xs sm:text-sm transition-all cursor-pointer shrink-0 shadow-md"
+                className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-stanley-yellow hover:bg-stanley-gold text-stanley-black font-extrabold text-xs sm:text-sm transition-all cursor-pointer shrink-0 shadow-sm hover:shadow"
                 aria-label="Fermer la galerie photo"
                 title="Quitter la galerie"
               >
@@ -826,7 +821,7 @@ export const Portfolio: React.FC = () => {
               };
 
               return (
-                <div className="flex-1 flex flex-col overflow-hidden bg-black/70 relative">
+                <div className="flex-1 flex flex-col overflow-hidden bg-zinc-950 dark:bg-black/85 relative">
                   <div className="relative flex-1 flex items-center justify-center p-2 min-h-[200px] sm:min-h-[460px]">
                     <img
                       src={current.url}
@@ -838,7 +833,7 @@ export const Portfolio: React.FC = () => {
                       <>
                         <button
                           onClick={goPrev}
-                          className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-zinc-900/90 dark:bg-stanley-charcoal/90 border border-zinc-700 dark:border-stanley-steel text-slate-100 hover:bg-stanley-yellow hover:text-stanley-black transition-all cursor-pointer shadow-xl"
+                          className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/90 dark:bg-stanley-charcoal/90 border border-zinc-200 dark:border-stanley-steel text-zinc-800 dark:text-slate-100 hover:bg-stanley-yellow hover:text-stanley-black transition-all cursor-pointer shadow-xl"
                           aria-label="Photo précédente"
                         >
                           <ChevronLeft className="w-6 h-6" />
@@ -846,7 +841,7 @@ export const Portfolio: React.FC = () => {
 
                         <button
                           onClick={goNext}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-zinc-900/90 dark:bg-stanley-charcoal/90 border border-zinc-700 dark:border-stanley-steel text-slate-100 hover:bg-stanley-yellow hover:text-stanley-black transition-all cursor-pointer shadow-xl"
+                          className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/90 dark:bg-stanley-charcoal/90 border border-zinc-200 dark:border-stanley-steel text-zinc-800 dark:text-slate-100 hover:bg-stanley-yellow hover:text-stanley-black transition-all cursor-pointer shadow-xl"
                           aria-label="Photo suivante"
                         >
                           <ChevronRight className="w-6 h-6" />
@@ -856,25 +851,29 @@ export const Portfolio: React.FC = () => {
                   </div>
 
                   {/* Caption & Metadata Footer with Explicit Exit Button */}
-                  <div className="p-4 sm:p-5 bg-zinc-800 dark:bg-stanley-charcoal border-t border-zinc-700 dark:border-stanley-steel flex flex-col gap-3">
+                  <div className="p-4 sm:p-5 bg-white dark:bg-stanley-charcoal border-t border-zinc-200 dark:border-stanley-steel flex flex-col gap-3 transition-colors">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <div className="space-y-1">
                         <div className="flex items-center gap-2 text-xs">
-                          <span className="font-bold text-stanley-yellow">{current.tag}</span>
-                          <span className="text-zinc-400">•</span>
-                          <span className="text-zinc-300 font-mono">Photo {lightbox.photoIndex + 1} sur {photos.length}</span>
-                          <span className="text-zinc-400">•</span>
-                          <span className="text-stanley-yellow font-semibold">{lightbox.project.location}</span>
+                          <span className="font-bold text-stanley-gold dark:text-stanley-yellow">{current.tag}</span>
+                          <span className="text-zinc-400 dark:text-zinc-500">•</span>
+                          <span className="text-zinc-600 dark:text-slate-300 font-mono">Photo {lightbox.photoIndex + 1} sur {photos.length}</span>
+                          {lightbox.project.location && (
+                            <>
+                              <span className="text-zinc-400 dark:text-zinc-500">•</span>
+                              <span className="text-zinc-800 dark:text-slate-200 font-semibold">{lightbox.project.location}</span>
+                            </>
+                          )}
                         </div>
-                        <p className="text-xs sm:text-sm text-slate-100">
+                        <p className="text-xs sm:text-sm text-zinc-700 dark:text-slate-200 leading-relaxed">
                           {current.caption}
                         </p>
                         <div className="flex flex-wrap items-center gap-2 pt-1">
-                          <span className="px-2 py-0.5 rounded bg-amber-500/20 text-stanley-yellow font-bold text-[11px] border border-amber-500/30">
+                          <span className="px-2 py-0.5 rounded bg-amber-500/10 dark:bg-amber-400/10 text-amber-900 dark:text-stanley-yellow font-bold text-[11px] border border-amber-500/20 dark:border-amber-400/20">
                             Devis indicatif : {lightbox.project.estimatedBudgetAr} (≈ {lightbox.project.estimatedBudgetEur})
                           </span>
                           {lightbox.project.costPerM2 && (
-                            <span className="text-zinc-400 text-[11px]">
+                            <span className="text-zinc-500 dark:text-slate-400 text-[11px]">
                               Soit env. {lightbox.project.costPerM2}
                             </span>
                           )}
@@ -884,7 +883,7 @@ export const Portfolio: React.FC = () => {
                       {/* Explicit Return / Exit Button in Footer */}
                       <button
                         onClick={() => setLightbox(null)}
-                        className="w-full sm:w-auto px-4 py-2 rounded-xl bg-stanley-yellow hover:bg-stanley-gold text-stanley-black font-extrabold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md shrink-0"
+                        className="w-full sm:w-auto px-4 py-2 rounded-xl bg-stanley-yellow hover:bg-stanley-gold text-stanley-black font-extrabold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:shadow shrink-0"
                         title="Fermer et retourner aux réalisations"
                       >
                         <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
@@ -894,15 +893,15 @@ export const Portfolio: React.FC = () => {
 
                     {/* Thumbnail navigation */}
                     {photos.length > 1 && (
-                      <div className="flex items-center gap-2 shrink-0 overflow-x-auto py-1 border-t border-zinc-700 dark:border-stanley-steel/60 pt-2">
+                      <div className="flex items-center gap-2 shrink-0 overflow-x-auto py-1 border-t border-zinc-200 dark:border-stanley-steel/60 pt-2">
                         {photos.map((p, idx) => (
                           <button
                             key={p.url}
                             onClick={() => setLightbox(prev => prev ? { ...prev, photoIndex: idx } : null)}
                             className={`w-12 h-10 rounded-lg overflow-hidden border-2 transition-all cursor-pointer shrink-0 ${
                               idx === lightbox.photoIndex 
-                                ? 'border-stanley-yellow scale-105 shadow-md' 
-                                : 'border-zinc-700 dark:border-stanley-steel opacity-50 hover:opacity-90'
+                                ? 'border-stanley-yellow ring-2 ring-stanley-yellow/30 scale-105 shadow-md' 
+                                : 'border-zinc-300 dark:border-stanley-steel opacity-60 hover:opacity-100'
                             }`}
                             title={p.tag}
                           >

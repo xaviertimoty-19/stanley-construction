@@ -583,43 +583,33 @@ export const InteriorGallery: React.FC = () => {
       {/* Lightbox Modal */}
       {activePhoto && selectedPhotoIndex !== null && (
         <div
-          className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center p-2 sm:p-6 overflow-y-auto"
+          className="fixed inset-0 z-[100] bg-black/75 dark:bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-2 sm:p-6 overflow-y-auto"
           onClick={() => setSelectedPhotoIndex(null)}
           role="dialog"
           aria-modal="true"
         >
-          {/* Floating Close Button */}
-          <button
-            onClick={() => setSelectedPhotoIndex(null)}
-            className="fixed top-3 right-3 sm:top-5 sm:right-5 z-[110] flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-stanley-yellow hover:bg-stanley-gold text-stanley-black font-extrabold text-xs sm:text-sm shadow-2xl transition-all cursor-pointer border-2 border-stanley-black"
-            aria-label="Fermer la vue agrandie"
-          >
-            <X className="w-4 h-4 stroke-[3]" />
-            <span>Fermer ✕</span>
-          </button>
-
           <div
-            className="relative max-w-5xl w-full bg-zinc-900 dark:bg-stanley-black border border-zinc-700 dark:border-stanley-steel rounded-2xl overflow-hidden shadow-2xl flex flex-col my-auto max-h-[94vh]"
+            className="relative max-w-5xl w-full bg-white dark:bg-stanley-charcoal border border-zinc-200 dark:border-stanley-steel rounded-2xl overflow-hidden shadow-2xl flex flex-col my-auto max-h-[94vh] transition-colors"
             onClick={e => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="p-3 sm:p-4 border-b border-zinc-700 dark:border-stanley-steel flex items-center justify-between bg-zinc-800 dark:bg-stanley-charcoal shrink-0 gap-3">
+            <div className="p-3 sm:p-4 border-b border-zinc-200 dark:border-stanley-steel flex items-center justify-between bg-zinc-50 dark:bg-stanley-black shrink-0 gap-3 transition-colors">
               <div className="flex items-center gap-2 sm:gap-3 min-w-0 pr-2">
-                <span className="px-2.5 py-1 rounded bg-stanley-yellow/15 text-stanley-yellow border border-stanley-yellow/30 text-[10px] sm:text-xs font-bold uppercase tracking-wider shrink-0">
+                <span className="px-2.5 py-1 rounded bg-amber-500/10 dark:bg-stanley-yellow/15 text-stanley-gold dark:text-stanley-yellow border border-amber-500/20 dark:border-stanley-yellow/30 text-[10px] sm:text-xs font-bold uppercase tracking-wider shrink-0">
                   {activePhoto.categoryLabel}
                 </span>
-                <h4 className="font-display font-bold text-xs sm:text-base text-slate-100 truncate">
+                <h4 className="font-display font-bold text-xs sm:text-base text-zinc-900 dark:text-slate-100 truncate">
                   {activePhoto.title}
                 </h4>
               </div>
 
               <div className="flex items-center gap-3 shrink-0">
-                <span className="text-zinc-400 font-mono text-xs hidden sm:inline">
+                <span className="text-zinc-500 dark:text-zinc-400 font-mono text-xs hidden sm:inline">
                   {selectedPhotoIndex + 1} / {filteredPhotos.length}
                 </span>
                 <button
                   onClick={() => setSelectedPhotoIndex(null)}
-                  className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-stanley-yellow hover:bg-stanley-gold text-stanley-black font-extrabold text-xs transition-all cursor-pointer shadow-md"
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-stanley-yellow hover:bg-stanley-gold text-stanley-black font-extrabold text-xs transition-all cursor-pointer shadow-sm hover:shadow"
                   aria-label="Fermer la vue agrandie"
                 >
                   <X className="w-4 h-4 stroke-[2.5]" />
@@ -629,7 +619,7 @@ export const InteriorGallery: React.FC = () => {
             </div>
 
             {/* Modal Image Viewport */}
-            <div className="flex-1 flex flex-col overflow-hidden bg-black/80 relative">
+            <div className="flex-1 flex flex-col overflow-hidden bg-zinc-950 dark:bg-black/85 relative">
               <div className="relative flex-1 flex items-center justify-center p-2 min-h-[200px] sm:min-h-[460px]">
                 <img
                   src={activePhoto.url}
@@ -645,7 +635,7 @@ export const InteriorGallery: React.FC = () => {
                           (selectedPhotoIndex - 1 + filteredPhotos.length) % filteredPhotos.length
                         )
                       }
-                      className="absolute left-3 top-1/2 -translate-y-1/2 p-3 rounded-full bg-zinc-900/90 border border-zinc-700 text-slate-100 hover:bg-stanley-yellow hover:text-stanley-black transition-all cursor-pointer shadow-xl"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/90 dark:bg-stanley-charcoal/90 border border-zinc-200 dark:border-stanley-steel text-zinc-800 dark:text-slate-100 hover:bg-stanley-yellow hover:text-stanley-black transition-all cursor-pointer shadow-xl"
                       aria-label="Photo précédente"
                     >
                       <ChevronLeft className="w-6 h-6" />
@@ -655,7 +645,7 @@ export const InteriorGallery: React.FC = () => {
                       onClick={() =>
                         setSelectedPhotoIndex((selectedPhotoIndex + 1) % filteredPhotos.length)
                       }
-                      className="absolute right-3 top-1/2 -translate-y-1/2 p-3 rounded-full bg-zinc-900/90 border border-zinc-700 text-slate-100 hover:bg-stanley-yellow hover:text-stanley-black transition-all cursor-pointer shadow-xl"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/90 dark:bg-stanley-charcoal/90 border border-zinc-200 dark:border-stanley-steel text-zinc-800 dark:text-slate-100 hover:bg-stanley-yellow hover:text-stanley-black transition-all cursor-pointer shadow-xl"
                       aria-label="Photo suivante"
                     >
                       <ChevronRight className="w-6 h-6" />
@@ -665,19 +655,19 @@ export const InteriorGallery: React.FC = () => {
               </div>
 
               {/* Modal Details Footer */}
-              <div className="p-4 sm:p-5 bg-zinc-800 dark:bg-stanley-charcoal border-t border-zinc-700 dark:border-stanley-steel flex flex-col gap-3">
+              <div className="p-4 sm:p-5 bg-white dark:bg-stanley-charcoal border-t border-zinc-200 dark:border-stanley-steel flex flex-col gap-3 transition-colors">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="space-y-1 max-w-2xl">
                     <div className="flex items-center gap-2 text-xs">
-                      <span className="font-bold text-stanley-yellow">{activePhoto.room}</span>
+                      <span className="font-bold text-stanley-gold dark:text-stanley-yellow">{activePhoto.room}</span>
                       {activePhoto.dimensions && (
                         <>
-                          <span className="text-zinc-400">•</span>
-                          <span className="text-zinc-300 text-[11px]">{activePhoto.dimensions}</span>
+                          <span className="text-zinc-400 dark:text-zinc-500">•</span>
+                          <span className="text-zinc-600 dark:text-slate-300 text-[11px]">{activePhoto.dimensions}</span>
                         </>
                       )}
                     </div>
-                    <p className="text-xs sm:text-sm text-slate-100 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-zinc-700 dark:text-slate-200 leading-relaxed">
                       {activePhoto.description}
                     </p>
                   </div>
@@ -687,7 +677,7 @@ export const InteriorGallery: React.FC = () => {
                     href={whatsappInquiryUrl(activePhoto.title)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full sm:w-auto px-4 py-2 rounded-xl bg-[#25D366] hover:bg-[#1fb855] text-white font-extrabold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md shrink-0"
+                    className="w-full sm:w-auto px-4 py-2 rounded-xl bg-[#25D366] hover:bg-[#1fb855] text-white font-extrabold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:shadow shrink-0"
                   >
                     <WhatsAppIcon className="w-4 h-4 fill-white" />
                     <span>Demander sur WhatsApp</span>
@@ -696,7 +686,7 @@ export const InteriorGallery: React.FC = () => {
 
                 {/* Thumbnails Navigator */}
                 {filteredPhotos.length > 1 && (
-                  <div className="flex items-center gap-2 shrink-0 overflow-x-auto py-1 border-t border-zinc-700 dark:border-stanley-steel/60 pt-2">
+                  <div className="flex items-center gap-2 shrink-0 overflow-x-auto py-1 border-t border-zinc-200 dark:border-stanley-steel/60 pt-2">
                     {filteredPhotos.map((p, idx) => (
                       <button
                         key={p.id}
@@ -704,7 +694,7 @@ export const InteriorGallery: React.FC = () => {
                         className={`w-14 h-11 rounded-lg overflow-hidden border-2 transition-all cursor-pointer shrink-0 ${
                           idx === selectedPhotoIndex
                             ? 'border-stanley-yellow scale-105 shadow-md ring-2 ring-stanley-yellow/40'
-                            : 'border-zinc-700 opacity-50 hover:opacity-90'
+                            : 'border-zinc-300 dark:border-stanley-steel opacity-60 hover:opacity-100'
                         }`}
                         title={p.title}
                       >
