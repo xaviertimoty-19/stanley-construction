@@ -1,9 +1,9 @@
 import React from 'react';
-import { ShieldCheck, ArrowRight, ChevronDown, Clock, Video, Mountain } from 'lucide-react';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 
 export const Hero: React.FC = () => {
   return (
-    <section id="accueil" aria-label="Présentation Stanley Construction Antananarivo" className="relative min-h-[88vh] flex items-center justify-center pt-28 pb-16 overflow-hidden bg-zinc-50 dark:bg-stanley-black transition-colors duration-200">
+    <section id="accueil" aria-label="Présentation Stanley Construction Antananarivo" className="relative min-h-[85vh] flex items-center justify-center pt-28 pb-16 overflow-hidden bg-zinc-50 dark:bg-stanley-black transition-colors duration-200">
       {/* Subtle vignette background */}
       <div className="absolute inset-0 bg-gradient-to-b from-zinc-100/80 via-zinc-50 to-zinc-50 dark:from-black/80 dark:via-stanley-black dark:to-stanley-black -z-10" />
 
@@ -44,47 +44,8 @@ export const Hero: React.FC = () => {
           </div>
         </div>
 
-        {/* 4 Professional Industrial Metric Cards - Styled to reflect the Stanley Logo */}
-        <div className="mt-14 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
-          <div className="p-5 rounded-xl bg-white dark:bg-stanley-charcoal border border-zinc-200 dark:border-stanley-steel text-left hover:border-stanley-yellow/60 transition-all shadow-sm dark:shadow-md group">
-            <div className="w-10 h-10 rounded-lg bg-amber-50 dark:bg-stanley-black border border-amber-200 dark:border-stanley-steel flex items-center justify-center text-stanley-gold dark:text-stanley-yellow mb-3 group-hover:border-stanley-yellow transition-colors">
-              <Mountain className="w-5 h-5 stroke-[2.2]" />
-            </div>
-            <div className="font-display font-bold text-base text-zinc-900 dark:text-slate-50">Sols & Murs de Soutènement</div>
-            <div className="text-xs text-stanley-gold dark:text-stanley-yellow font-semibold mt-0.5">Reliefs & Pentes de Tana</div>
-            <div className="text-[11px] text-zinc-500 dark:text-slate-400 mt-1 leading-snug">Calculs de poussée, moellons & drainage pluvial</div>
-          </div>
-
-          <div className="p-5 rounded-xl bg-white dark:bg-stanley-charcoal border border-zinc-200 dark:border-stanley-steel text-left hover:border-stanley-yellow/60 transition-all shadow-sm dark:shadow-md group">
-            <div className="w-10 h-10 rounded-lg bg-amber-50 dark:bg-stanley-black border border-amber-200 dark:border-stanley-steel flex items-center justify-center text-stanley-gold dark:text-stanley-yellow mb-3 group-hover:border-stanley-yellow transition-colors">
-              <ShieldCheck className="w-5 h-5 stroke-[2.2]" />
-            </div>
-            <div className="font-display font-bold text-base text-zinc-900 dark:text-slate-50">Dosages Normés</div>
-            <div className="text-xs text-stanley-gold dark:text-stanley-yellow font-semibold mt-0.5">Béton dosé à 350 kg/m³</div>
-            <div className="text-[11px] text-zinc-500 dark:text-slate-400 mt-1 leading-snug">Aciers certifiés FeE500 & vibration continue</div>
-          </div>
-
-          <div className="p-5 rounded-xl bg-white dark:bg-stanley-charcoal border border-zinc-200 dark:border-stanley-steel text-left hover:border-stanley-yellow/60 transition-all shadow-sm dark:shadow-md group">
-            <div className="w-10 h-10 rounded-lg bg-amber-50 dark:bg-stanley-black border border-amber-200 dark:border-stanley-steel flex items-center justify-center text-stanley-gold dark:text-stanley-yellow mb-3 group-hover:border-stanley-yellow transition-colors">
-              <Video className="w-5 h-5 stroke-[2.2]" />
-            </div>
-            <div className="font-display font-bold text-base text-zinc-900 dark:text-slate-50">Suivi Transparent Diaspora</div>
-            <div className="text-xs text-stanley-gold dark:text-stanley-yellow font-semibold mt-0.5">Direct WhatsApp 7j/7</div>
-            <div className="text-[11px] text-zinc-500 dark:text-slate-400 mt-1 leading-snug">Photos & vidéos HD transmises à chaque coulée</div>
-          </div>
-
-          <div className="p-5 rounded-xl bg-white dark:bg-stanley-charcoal border border-zinc-200 dark:border-stanley-steel text-left hover:border-stanley-yellow/60 transition-all shadow-sm dark:shadow-md group">
-            <div className="w-10 h-10 rounded-lg bg-amber-50 dark:bg-stanley-black border border-amber-200 dark:border-stanley-steel flex items-center justify-center text-stanley-gold dark:text-stanley-yellow mb-3 group-hover:border-stanley-yellow transition-colors">
-              <Clock className="w-5 h-5 stroke-[2.2]" />
-            </div>
-            <div className="font-display font-bold text-base text-zinc-900 dark:text-slate-50">Chiffrage Réactif</div>
-            <div className="text-xs text-stanley-gold dark:text-stanley-yellow font-semibold mt-0.5">Devis sous 24h ouvrées</div>
-            <div className="text-[11px] text-zinc-500 dark:text-slate-400 mt-1 leading-snug">Visite technique sur terrain à Antananarivo</div>
-          </div>
-        </div>
-
         {/* Scroll indicator */}
-        <div className="flex justify-center mt-10 text-zinc-400 dark:text-slate-500 hover:text-stanley-yellow transition-colors">
+        <div className="flex justify-center mt-12 sm:mt-16 text-zinc-400 dark:text-slate-500 hover:text-stanley-yellow transition-colors">
           <a href="#valeurs" aria-label="Découvrir nos solutions techniques pour Antananarivo" className="animate-bounce p-2">
             <ChevronDown className="w-6 h-6" />
           </a>
