@@ -310,6 +310,36 @@ export const Portfolio: React.FC = () => {
           tag: 'Sanitaires & WC'
         },
         {
+          url: '/assets/chantiers/chantier-tana-combles-puits-lumiere-charpente.webp',
+          caption: 'Création de l\'ouverture zénithale sous toiture : découpe de l\'écran sous-toiture sur charpente bois et vue sur les plaques de couverture profilées',
+          tag: 'Puits de Lumière & Toiture'
+        },
+        {
+          url: '/assets/chantiers/chantier-tana-salle-d-eau-saignees-reseaux-ppr.webp',
+          caption: 'Second œuvre dans la pièce d\'eau sous combles : saignées murales, gaines électriques sous colliers et réseau d\'adduction en tuyauterie PPR rigide sous puits de lumière',
+          tag: 'Réseaux Électricité & PPR'
+        },
+        {
+          url: '/assets/chantiers/chantier-tana-plomberie-ppr-encastree-salle-d-eau.webp',
+          caption: 'Plomberie sanitaire encastrée : distribution eau chaude / eau froide en tuyaux PPR rigides thermosoudés, platine de robinetterie et gaines électriques avant pose du carrelage',
+          tag: 'Plomberie Encastrée PPR'
+        },
+        {
+          url: '/assets/chantiers/chantier-tana-combles-preparation-plafond-osb-spots.webp',
+          caption: 'Façonnage et pré-câblage des panneaux de plafond en bois OSB : perçage des réservations et raccordement électrique des spots LED encastrés',
+          tag: 'Préparation Plafond OSB'
+        },
+        {
+          url: '/assets/chantiers/chantier-tana-combles-pose-plafond-osb-fenetre-toit.webp',
+          caption: 'Habillage sous rampant en panneaux OSB avec intégration des spots et pose de la fenêtre de toit basculante pour la lumière naturelle',
+          tag: 'Plafond OSB & Fenêtre de Toit'
+        },
+        {
+          url: '/assets/chantiers/chantier-tana-combles-eclairage-spots-led-osb.webp',
+          caption: 'Mise sous tension des spots LED encastrés sur plafond OSB chaleureux : vue d\'ensemble du volume aménagé sous toiture avec fenêtre de toit et réseaux',
+          tag: 'Éclairage LED & Finitions Combles'
+        },
+        {
           url: '/assets/chantiers/chantier-tana-combles-lucarne-isolation.webp',
           caption: 'Aménagement des combles : fenêtre lucarne bois double vitrage, isolation et parements bois / OSB sous rampants',
           tag: 'Combles & Lucarne Bois'
@@ -326,15 +356,16 @@ export const Portfolio: React.FC = () => {
         }
       ],
       highlights: [
-        "Dossier complet (23 photos réelles) : Plans 3D, gros œuvre briques, échafaudage en hauteur, terrasse panoramique à piliers, charpente bois, escalier béton et cuisine maçonnée",
+        "Dossier complet (29 photos réelles) : Plans 3D, gros œuvre briques, échafaudage en hauteur, terrasse panoramique à piliers, charpente bois, escalier béton, cuisine maçonnée, plomberie PPR encastrée, isolation combles et plafonds OSB avec spots LED intégrés",
         "Architecture patrimoniale en briques de terre cuite locales et ravalement de façade sur échafaudage traditionnel",
         "Taille et levage d'une charpente en bois dur massif local",
         "Coulage, lissage et ragréage de précision de l'escalier en béton armé à double volée",
         "Agencement intérieur : cuisine maçonnée avec placards en bois, plan de travail carrelé noir et sanitaires",
-        "Écran de sous-toiture pare-pluie respirant et isolation combles",
+        "Second œuvre complet : saignées murales, réseaux encastrés, plomberie rigide PPR et faux plafonds en panneaux OSB avec spots LED",
+        "Écran de sous-toiture pare-pluie respirant, fenêtre de toit et isolation combles",
         "Reporting vidéo régulier pour le maître d'ouvrage (Diaspora / Résident)"
       ],
-      description: "Chantier d'envergure mené à Atsimondrano (Antananarivo) sur une bâtisse bourgeoise traditionnelle en briques cuites. Confortement structurel, réfection totale de la charpente en bois massif artisanal, ravalement extérieur sur échafaudage traditionnel de grande hauteur, coulage et lissage d'escalier en béton armé, terrasse panoramique avec piliers maçonnés en briques, second œuvre complet (cuisine maçonnée, placards bois, sanitaires) et aménagement des combles habitables sous lucarnes."
+      description: "Chantier d'envergure mené à Atsimondrano (Antananarivo) sur une bâtisse bourgeoise traditionnelle en briques cuites. Confortement structurel, réfection totale de la charpente en bois massif artisanal, ravalement extérieur sur échafaudage traditionnel de grande hauteur, coulage et lissage d'escalier en béton armé, terrasse panoramique avec piliers maçonnés en briques, second œuvre complet (cuisine maçonnée, placards bois, sanitaires, réseaux PPR et électricité) et aménagement des combles habitables avec plafonds en panneaux OSB, spots LED encastrés et fenêtre de toit."
     },
     {
       id: 'chantier-amenagement-interieur-finitions',
