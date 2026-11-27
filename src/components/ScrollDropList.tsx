@@ -71,8 +71,8 @@ export function ScrollDropList<T>({
       },
       {
         root: null,
-        rootMargin: '0px 0px -4% 0px',
-        threshold: 0.05,
+        rootMargin: '0px 0px -10% 0px',
+        threshold: 0.1,
       }
     );
 
@@ -96,10 +96,10 @@ export function ScrollDropList<T>({
           <div
             key={key}
             data-drop-key={key}
-            className={`transition-[transform,opacity] duration-500 ease-out motion-reduce:transform-none motion-reduce:transition-none ${
+            className={`transition-[transform,opacity] duration-700 ease-out motion-reduce:transform-none motion-reduce:transition-none ${
               isVisible
                 ? 'opacity-100 translate-y-0'
-                : 'transform-gpu opacity-0 -translate-y-4'
+                : 'transform-gpu opacity-0 -translate-y-6'
             }`}
           >
             {renderItem(item, index)}

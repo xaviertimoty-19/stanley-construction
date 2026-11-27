@@ -1,6 +1,7 @@
 import React from 'react';
 import { Home, Hammer, Building2, Shovel, Compass, Shield, ArrowRight } from 'lucide-react';
 import { ScrollDropList } from './ScrollDropList';
+import { ScrollReveal } from './ScrollReveal';
 
 export interface ServiceItem {
   id: string;
@@ -71,7 +72,7 @@ export const Services: React.FC<ServicesProps> = ({ services = SERVICES_LIST }) 
     <section id="services" aria-label="Services et Expertises BTP" className="py-24 bg-zinc-50 dark:bg-stanley-black relative border-t border-zinc-200 dark:border-stanley-steel transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
+        <ScrollReveal className="text-center max-w-3xl mx-auto mb-16 space-y-3">
           <span className="text-xs uppercase tracking-widest text-stanley-gold dark:text-stanley-yellow font-bold">
             Savoir-Faire Tout Corps d'État
           </span>
@@ -81,7 +82,7 @@ export const Services: React.FC<ServicesProps> = ({ services = SERVICES_LIST }) 
           <p className="text-zinc-600 dark:text-slate-300 text-base sm:text-lg">
             De la préparation du terrain jusqu'aux finitions d'exception, nous mobilisons l'expérience éprouvée de nos compagnons terrain.
           </p>
-        </div>
+        </ScrollReveal>
 
         {/* Services Grid */}
         <ScrollDropList

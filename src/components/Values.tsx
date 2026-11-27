@@ -1,11 +1,12 @@
 import React from 'react';
 import { Mountain, Video, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { ScrollReveal } from './ScrollReveal';
 
 export const Values: React.FC = () => {
   return (
     <section id="valeurs" aria-label="Nos Engagements et Spécificités Techniques à Antananarivo" className="py-20 bg-zinc-100 dark:bg-stanley-black border-y border-zinc-200 dark:border-stanley-steel relative transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
+        <ScrollReveal className="text-center max-w-3xl mx-auto mb-16 space-y-3">
           <span className="text-xs uppercase tracking-widest text-stanley-gold dark:text-stanley-yellow font-bold">
             Piliers Techniques &amp; Transparence
           </span>
@@ -15,7 +16,7 @@ export const Values: React.FC = () => {
           <p className="text-zinc-600 dark:text-slate-300 text-base sm:text-lg">
             Face aux exigences géologiques des collines d'Antananarivo et aux attentes de la diaspora, nous appliquons une rigueur de chantier stricte.
           </p>
-        </div>
+        </ScrollReveal>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Pillar 1: Sols d'Antananarivo */}

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send, CheckCircle, AlertCircle, Loader2, Calculator, ArrowRight } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { calculateEstimate, PROJECT_TYPES } from '../utils/estimator';
+import { ScrollReveal } from './ScrollReveal';
 
 export const Contact: React.FC = () => {
   const [clientProfile, setClientProfile] = useState<'resident' | 'diaspora'>('resident');
@@ -76,7 +77,7 @@ export const Contact: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           {/* Left Column: Direct Info & Reassurance */}
-          <div className="lg:col-span-5 space-y-6">
+          <ScrollReveal className="lg:col-span-5 space-y-6">
             <div>
               <span className="text-xs uppercase tracking-widest text-stanley-gold dark:text-stanley-yellow font-bold">
                 Contact Direct &amp; Devis Gratuit
@@ -152,7 +153,7 @@ export const Contact: React.FC = () => {
                 Prise de contact sous 24h, visite sur site et devis estimatif détaillé sans engagement.
               </p>
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* Right Column: Accessible Interactive Form & Real-Time Estimator */}
           <div className="lg:col-span-7">

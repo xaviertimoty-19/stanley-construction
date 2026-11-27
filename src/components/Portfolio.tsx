@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { MapPin, Maximize2, Calendar, ArrowUpRight, Camera, X, ChevronLeft, ChevronRight, CheckCircle2, Layers, ArrowLeft, Calculator } from 'lucide-react';
 import { ScrollDropList } from './ScrollDropList';
+import { ScrollReveal } from './ScrollReveal';
 
 export interface ProjectPhoto {
   url: string;
@@ -606,7 +607,7 @@ export const Portfolio: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
-          <div className="space-y-3 max-w-2xl">
+          <ScrollReveal className="space-y-3 max-w-2xl">
             <span className="text-xs uppercase tracking-widest text-stanley-gold dark:text-stanley-yellow font-bold">
               Chantiers Réels &amp; Suivis en Direct à Madagascar
             </span>
@@ -616,7 +617,7 @@ export const Portfolio: React.FC = () => {
             <p className="text-zinc-600 dark:text-slate-300 text-base leading-relaxed">
               Découvrez nos chantiers sur le terrain à Madagascar : notre villa actuellement en cours à <strong className="text-stanley-gold dark:text-stanley-yellow font-semibold">Antsiranana (Diego-Suarez)</strong> (toiture bac acier, façade, second œuvre et pompage d'eau) ainsi que nos chantiers à <strong className="text-stanley-gold dark:text-stanley-yellow font-semibold">Antananarivo</strong> (Atsimondrano R+2 et finitions intérieures).
             </p>
-          </div>
+          </ScrollReveal>
 
           {/* Filter Pills */}
           <div className="flex flex-wrap gap-2 mt-6 md:mt-0">

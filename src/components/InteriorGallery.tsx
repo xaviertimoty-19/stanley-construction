@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { ScrollDropList } from './ScrollDropList';
+import { ScrollReveal } from './ScrollReveal';
 
 export interface InteriorPhoto {
   id: string;
@@ -384,7 +385,7 @@ export const InteriorGallery: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-12 gap-6">
-          <div className="space-y-3 max-w-2xl">
+          <ScrollReveal className="space-y-3 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-stanley-yellow/30 text-stanley-gold dark:text-stanley-yellow text-xs font-bold uppercase tracking-wider">
               <Sparkles className="w-3.5 h-3.5" />
               <span>15 Réalisations Photographiées • Second Œuvre &amp; Finitions</span>
@@ -395,7 +396,7 @@ export const InteriorGallery: React.FC = () => {
             <p className="text-zinc-600 dark:text-slate-300 text-base leading-relaxed">
               Découvrez la précision du second œuvre exécuté par nos artisans sur nos chantiers à Antananarivo : faïences marbrées Calacatta et Emperador, salles d'eau avec douches balnéo, menuiserie et métallerie contemporaines, agencement sur mesure en bois massif, combles isolés et décoration soignée.
             </p>
-          </div>
+          </ScrollReveal>
 
           {/* Filter Pills */}
           <div className="flex flex-wrap gap-2 shrink-0">
