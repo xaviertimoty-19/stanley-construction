@@ -9,9 +9,11 @@ export const Navbar: React.FC = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      const scrolled = window.scrollY > 20;
+      setIsScrolled(prev => (prev === scrolled ? prev : scrolled));
     };
-    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -28,9 +30,9 @@ export const Navbar: React.FC = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-200 ${
         isScrolled
-          ? 'bg-white/95 dark:bg-stanley-black/95 backdrop-blur-md border-b border-zinc-200 dark:border-stanley-steel py-2 sm:py-2.5 shadow-md dark:shadow-xl'
+          ? 'bg-white/95 dark:bg-stanley-black/95 border-b border-zinc-200 dark:border-stanley-steel py-2 sm:py-2.5 shadow-md dark:shadow-xl'
           : 'bg-transparent py-3 sm:py-4'
       }`}
     >

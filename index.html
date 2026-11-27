@@ -51,10 +51,18 @@
     <meta name="twitter:description" content="Entreprise générale de BTP à Antananarivo : gros œuvre, briques cuites, charpente bois et suivi de chantier transparent." />
     <meta name="twitter:image" content="https://stanley-construction.vercel.app/assets/chantiers/chantier-tana-brique-facade-principale.jpg" />
 
-    <!-- Google Fonts: Montserrat & Inter -->
+    <!-- Google Fonts: Montserrat & Inter (chargement non-bloquant) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    >
+    <noscript>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+    </noscript>
 
     <!-- Schema.org Structured Data: HomeAndConstructionBusiness (Local SEO Antananarivo, Madagascar) -->
     <script type="application/ld+json">

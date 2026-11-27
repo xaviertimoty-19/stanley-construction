@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Sparkles,
   Maximize2,
   X,
   ChevronLeft,
   ChevronRight,
-  CheckCircle2,
   ArrowUpRight,
   Droplets,
   Layers,
@@ -13,6 +12,7 @@ import {
   Hammer
 } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
+import { ScrollDropList } from './ScrollDropList';
 
 export interface InteriorPhoto {
   id: string;
@@ -41,14 +41,18 @@ const InteriorCardImage: React.FC<{ src: string; alt: string }> = ({ src, alt })
       alt={alt}
       loading="lazy"
       decoding="async"
-      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 will-change-transform"
+      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
     />
   );
 };
 
+const INITIAL_VISIBLE_COUNT = 6;
+
 export const InteriorGallery: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [showAll, setShowAll] = useState<boolean>(false);
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
   const photos: InteriorPhoto[] = [
     // 1. Salles de bain & WC (3 photos)
@@ -311,9 +315,18 @@ export const InteriorGallery: React.FC = () => {
     { key: 'combles-deco', label: 'Combles & Déco', count: photos.filter(p => p.category === 'combles-deco').length },
   ];
 
-  const filteredPhotos = activeCategory === 'all'
-    ? photos
-    : photos.filter(p => p.category === activeCategory);
+  const filteredPhotos = useMemo(() => {
+    return activeCategory === 'all'
+      ? photos
+      : photos.filter(p => p.category === activeCategory);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeCategory]);
+
+  const visiblePhotos = useMemo(() => {
+    return activeCategory === 'all' && !showAll
+      ? filteredPhotos.slice(0, INITIAL_VISIBLE_COUNT)
+      : filteredPhotos;
+  }, [activeCategory, showAll, filteredPhotos]);
 
 
   // Keyboard navigation & body scroll lock for Lightbox
@@ -341,6 +354,19 @@ export const InteriorGallery: React.FC = () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [selectedPhotoIndex, filteredPhotos.length]);
+
+  // Preload adjacent photos when lightbox is open
+  useEffect(() => {
+    if (selectedPhotoIndex === null || filteredPhotos.length <= 1) return;
+    const nextIdx = (selectedPhotoIndex + 1) % filteredPhotos.length;
+    const prevIdx = (selectedPhotoIndex - 1 + filteredPhotos.length) % filteredPhotos.length;
+    [filteredPhotos[nextIdx]?.url, filteredPhotos[prevIdx]?.url].forEach((src) => {
+      if (src) {
+        const img = new Image();
+        img.src = src;
+      }
+    });
+  }, [selectedPhotoIndex, filteredPhotos]);
 
   const activePhoto = selectedPhotoIndex !== null ? filteredPhotos[selectedPhotoIndex] : null;
 
@@ -397,98 +423,82 @@ export const InteriorGallery: React.FC = () => {
           </div>
         </div>
 
-        {/* Interior Gallery Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-16">
-          {filteredPhotos.map((photo, index) => {
-                        return (
+        {/* Interior Gallery Grid - Photo-first layout */}
+        <ScrollDropList
+          items={visiblePhotos}
+          getKey={(photo) => photo.id}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 mb-10"
+          renderItem={(photo, index) => {
+            return (
               <article
-                key={photo.id}
-                className="group rounded-2xl overflow-hidden bg-zinc-50 dark:bg-stanley-black border border-zinc-200 dark:border-stanley-steel hover:border-stanley-yellow/70 dark:hover:border-stanley-yellow/60 transition-all duration-300 flex flex-col justify-between hover:shadow-xl dark:hover:shadow-2xl hover:-translate-y-1 shadow-sm"
+                className="h-full group rounded-2xl overflow-hidden bg-zinc-50 dark:bg-stanley-black border border-zinc-200 dark:border-stanley-steel hover:border-stanley-yellow/70 dark:hover:border-stanley-yellow/60 transition-[border-color,box-shadow,transform] duration-300 flex flex-col justify-between hover:shadow-xl dark:hover:shadow-2xl hover:-translate-y-1 shadow-sm"
               >
                 {/* Image Showcase */}
-                <div
-                  className="relative aspect-[4/3] overflow-hidden bg-zinc-900 cursor-pointer"
+                <button
+                  type="button"
+                  className="relative aspect-[4/3] w-full overflow-hidden bg-zinc-900 cursor-pointer text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stanley-yellow"
                   onClick={() => setSelectedPhotoIndex(index)}
-                  title="Cliquer pour agrandir et inspecter les détails"
+                  aria-label={`Agrandir la photo : ${photo.title}`}
                 >
                   <InteriorCardImage src={photo.url} alt={photo.title} />
 
-                  {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none" />
+                  {/* Subtle bottom gradient for hover affordance */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-85 transition-opacity pointer-events-none" />
 
-                  {/* Top Badges */}
-                  <div className="absolute top-3 left-3 right-3 flex items-center justify-between gap-2 pointer-events-none">
-                    <span className="bg-black/80 dark:bg-stanley-black/90 backdrop-blur-md text-stanley-yellow border border-zinc-700 dark:border-stanley-steel text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider shadow-sm">
-                      {photo.categoryLabel}
-                    </span>
-                    <span className="bg-stanley-yellow text-stanley-black text-[10px] font-extrabold px-2 py-0.5 rounded shadow">
-                      RÉEL
-                    </span>
-                  </div>
+                  {/* Single clean category badge */}
+                  <span className="absolute top-3 left-3 bg-black/80 text-stanley-yellow border border-white/10 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider pointer-events-none">
+                    {photo.categoryLabel}
+                  </span>
 
-                  {/* Zoom Pill Overlay */}
-                  <div className="absolute bottom-3 right-3 opacity-90 group-hover:opacity-100 transition-opacity">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/80 backdrop-blur-md text-slate-100 text-xs font-semibold border border-zinc-700">
-                      <Maximize2 className="w-3.5 h-3.5 text-stanley-yellow" />
-                      <span>Zoom HD</span>
-                    </span>
-                  </div>
+                  {/* Hover Zoom Pill */}
+                  <span className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/80 text-slate-100 text-xs font-semibold border border-white/10 opacity-90 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity pointer-events-none">
+                    <Maximize2 className="w-3.5 h-3.5 text-stanley-yellow" />
+                    <span>Voir</span>
+                  </span>
+                </button>
 
-                  {/* Room indicator */}
-                  <div className="absolute bottom-3 left-3">
-                    <span className="text-[11px] font-medium text-slate-200 bg-black/60 px-2 py-0.5 rounded backdrop-blur-xs">
-                      {photo.room}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Content Card Body */}
-                <div className="p-6 flex flex-col flex-1 justify-between">
-                  <div>
-                    <h3 className="font-display font-bold text-lg text-zinc-900 dark:text-slate-50 mb-2 group-hover:text-stanley-gold dark:group-hover:text-stanley-yellow transition-colors leading-snug">
+                {/* Compact Photo Caption Footer */}
+                <div className="px-4 py-3.5 flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <h3
+                      onClick={() => setSelectedPhotoIndex(index)}
+                      className="font-display font-bold text-sm text-zinc-900 dark:text-slate-50 group-hover:text-stanley-gold dark:group-hover:text-stanley-yellow transition-colors truncate cursor-pointer"
+                      title={photo.title}
+                    >
                       {photo.title}
                     </h3>
-                    <p className="text-zinc-600 dark:text-slate-300 text-xs leading-relaxed mb-4">
-                      {photo.description}
+                    <p className="text-[11px] text-zinc-500 dark:text-slate-400 truncate mt-0.5">
+                      {photo.room}
                     </p>
-
-                    {/* Technical Specs List */}
-                    <div className="space-y-1.5 mb-5 pt-3 border-t border-zinc-200 dark:border-stanley-steel/80">
-                      {photo.specs.slice(0, 3).map((spec, sIdx) => (
-                        <div key={sIdx} className="flex items-start gap-1.5 text-[11px] text-zinc-700 dark:text-slate-300">
-                          <CheckCircle2 className="w-3 h-3 text-stanley-gold dark:text-stanley-yellow shrink-0 mt-0.5" />
-                          <span>{spec}</span>
-                        </div>
-                      ))}
-                    </div>
                   </div>
 
-                  {/* Card Action Footer */}
-                  <div className="pt-3 border-t border-zinc-200 dark:border-stanley-steel flex items-center justify-between gap-3">
-                    <button
-                      onClick={() => setSelectedPhotoIndex(index)}
-                      className="text-xs font-bold text-zinc-800 dark:text-slate-200 hover:text-stanley-gold dark:hover:text-stanley-yellow flex items-center gap-1 cursor-pointer transition-colors"
-                    >
-                      <span>Inspecter les détails</span>
-                      <Maximize2 className="w-3 h-3 text-stanley-yellow" />
-                    </button>
-
-                    <a
-                      href={whatsappInquiryUrl(photo.title)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-stanley-charcoal border border-zinc-300 dark:border-stanley-steel hover:border-[#25D366] text-zinc-900 dark:text-slate-100 text-[11px] font-bold transition-all shadow-xs group/wa"
-                      title="Demander cette finition sur WhatsApp"
-                    >
-                      <WhatsAppIcon className="w-3.5 h-3.5 text-[#25D366] shrink-0" />
-                      <span>Ce modèle</span>
-                    </a>
-                  </div>
+                  <a
+                    href={whatsappInquiryUrl(photo.title)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-1.5 px-3 min-h-[38px] rounded-lg bg-zinc-100 dark:bg-stanley-charcoal border border-zinc-300 dark:border-stanley-steel hover:border-[#25D366] text-zinc-900 dark:text-slate-100 text-[11px] font-bold transition-colors shrink-0"
+                    title="Demander cette finition sur WhatsApp"
+                  >
+                    <WhatsAppIcon className="w-3.5 h-3.5 text-[#25D366] shrink-0" />
+                    <span>Devis</span>
+                  </a>
                 </div>
               </article>
             );
-          })}
-        </div>
+          }}
+        />
+
+        {/* Show All Button when paginated */}
+        {activeCategory === 'all' && !showAll && filteredPhotos.length > INITIAL_VISIBLE_COUNT && (
+          <div className="flex justify-center mb-16">
+            <button
+              onClick={() => setShowAll(true)}
+              className="px-6 py-3 rounded-xl bg-zinc-100 dark:bg-stanley-black border border-zinc-300 dark:border-stanley-steel hover:border-stanley-yellow text-zinc-900 dark:text-slate-100 font-bold text-xs uppercase tracking-wider transition-colors cursor-pointer shadow-sm"
+            >
+              Afficher toutes les finitions ({filteredPhotos.length})
+            </button>
+          </div>
+        )}
 
         {/* Quality Guarantees Bar for Interior Finishes */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-6 sm:p-8 rounded-2xl bg-zinc-50 dark:bg-stanley-black border border-zinc-200 dark:border-stanley-steel">
@@ -583,17 +593,17 @@ export const InteriorGallery: React.FC = () => {
       {/* Lightbox Modal */}
       {activePhoto && selectedPhotoIndex !== null && (
         <div
-          className="fixed inset-0 z-[100] bg-black/75 dark:bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-2 sm:p-6 overflow-y-auto"
+          className="fixed inset-0 z-[100] bg-black/90 flex flex-col items-center justify-center p-2 sm:p-4"
           onClick={() => setSelectedPhotoIndex(null)}
           role="dialog"
           aria-modal="true"
         >
           <div
-            className="relative max-w-5xl w-full bg-white dark:bg-stanley-charcoal border border-zinc-200 dark:border-stanley-steel rounded-2xl overflow-hidden shadow-2xl flex flex-col my-auto max-h-[94vh] transition-colors"
+            className="relative max-w-6xl w-full h-[94vh] bg-white dark:bg-stanley-charcoal border border-zinc-200 dark:border-stanley-steel rounded-2xl overflow-hidden shadow-2xl flex flex-col transition-colors"
             onClick={e => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="p-3 sm:p-4 border-b border-zinc-200 dark:border-stanley-steel flex items-center justify-between bg-zinc-50 dark:bg-stanley-black shrink-0 gap-3 transition-colors">
+            <div className="px-3 py-2.5 sm:px-4 sm:py-3 border-b border-zinc-200 dark:border-stanley-steel flex items-center justify-between bg-zinc-50 dark:bg-stanley-black shrink-0 gap-3 transition-colors">
               <div className="flex items-center gap-2 sm:gap-3 min-w-0 pr-2">
                 <span className="px-2.5 py-1 rounded bg-amber-500/10 dark:bg-stanley-yellow/15 text-stanley-gold dark:text-stanley-yellow border border-amber-500/20 dark:border-stanley-yellow/30 text-[10px] sm:text-xs font-bold uppercase tracking-wider shrink-0">
                   {activePhoto.categoryLabel}
@@ -604,27 +614,40 @@ export const InteriorGallery: React.FC = () => {
               </div>
 
               <div className="flex items-center gap-3 shrink-0">
-                <span className="text-zinc-500 dark:text-zinc-400 font-mono text-xs hidden sm:inline">
+                <span className="text-zinc-500 dark:text-zinc-400 font-mono text-xs">
                   {selectedPhotoIndex + 1} / {filteredPhotos.length}
                 </span>
                 <button
                   onClick={() => setSelectedPhotoIndex(null)}
-                  className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-stanley-yellow hover:bg-stanley-gold text-stanley-black font-extrabold text-xs transition-all cursor-pointer shadow-sm hover:shadow"
+                  className="flex items-center gap-1 px-3 min-h-[38px] rounded-xl bg-stanley-yellow hover:bg-stanley-gold text-stanley-black font-extrabold text-xs transition-colors cursor-pointer shadow-sm"
                   aria-label="Fermer la vue agrandie"
                 >
                   <X className="w-4 h-4 stroke-[2.5]" />
-                  <span>Fermer ✕</span>
+                  <span className="hidden sm:inline">Fermer</span>
                 </button>
               </div>
             </div>
 
-            {/* Modal Image Viewport */}
-            <div className="flex-1 flex flex-col overflow-hidden bg-zinc-950 dark:bg-black/85 relative">
-              <div className="relative flex-1 flex items-center justify-center p-2 min-h-[200px] sm:min-h-[460px]">
+            {/* Modal Image Viewport (maximizes photo area + touch swipe) */}
+            <div className="flex-1 min-h-0 flex flex-col overflow-hidden bg-zinc-950 dark:bg-black relative">
+              <div
+                className="relative flex-1 min-h-0 flex items-center justify-center p-2 sm:p-4 select-none"
+                onTouchStart={(e) => setTouchStartX(e.touches[0].clientX)}
+                onTouchEnd={(e) => {
+                  if (touchStartX === null || filteredPhotos.length <= 1) return;
+                  const diff = e.changedTouches[0].clientX - touchStartX;
+                  if (diff > 50) {
+                    setSelectedPhotoIndex((selectedPhotoIndex - 1 + filteredPhotos.length) % filteredPhotos.length);
+                  } else if (diff < -50) {
+                    setSelectedPhotoIndex((selectedPhotoIndex + 1) % filteredPhotos.length);
+                  }
+                  setTouchStartX(null);
+                }}
+              >
                 <img
                   src={activePhoto.url}
                   alt={activePhoto.title}
-                  className="max-h-[48vh] sm:max-h-[58vh] max-w-full object-contain rounded-lg shadow-2xl"
+                  className="max-h-full max-w-full object-contain rounded-lg shadow-2xl"
                 />
 
                 {filteredPhotos.length > 1 && (
@@ -635,7 +658,7 @@ export const InteriorGallery: React.FC = () => {
                           (selectedPhotoIndex - 1 + filteredPhotos.length) % filteredPhotos.length
                         )
                       }
-                      className="absolute left-3 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/90 dark:bg-stanley-charcoal/90 border border-zinc-200 dark:border-stanley-steel text-zinc-800 dark:text-slate-100 hover:bg-stanley-yellow hover:text-stanley-black transition-all cursor-pointer shadow-xl"
+                      className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center rounded-full bg-white/90 dark:bg-stanley-charcoal/90 border border-zinc-200 dark:border-stanley-steel text-zinc-800 dark:text-slate-100 hover:bg-stanley-yellow hover:text-stanley-black transition-colors cursor-pointer shadow-xl"
                       aria-label="Photo précédente"
                     >
                       <ChevronLeft className="w-6 h-6" />
@@ -645,7 +668,7 @@ export const InteriorGallery: React.FC = () => {
                       onClick={() =>
                         setSelectedPhotoIndex((selectedPhotoIndex + 1) % filteredPhotos.length)
                       }
-                      className="absolute right-3 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/90 dark:bg-stanley-charcoal/90 border border-zinc-200 dark:border-stanley-steel text-zinc-800 dark:text-slate-100 hover:bg-stanley-yellow hover:text-stanley-black transition-all cursor-pointer shadow-xl"
+                      className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center rounded-full bg-white/90 dark:bg-stanley-charcoal/90 border border-zinc-200 dark:border-stanley-steel text-zinc-800 dark:text-slate-100 hover:bg-stanley-yellow hover:text-stanley-black transition-colors cursor-pointer shadow-xl"
                       aria-label="Photo suivante"
                     >
                       <ChevronRight className="w-6 h-6" />
@@ -655,10 +678,10 @@ export const InteriorGallery: React.FC = () => {
               </div>
 
               {/* Modal Details Footer */}
-              <div className="p-4 sm:p-5 bg-white dark:bg-stanley-charcoal border-t border-zinc-200 dark:border-stanley-steel flex flex-col gap-3 transition-colors">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="p-3 sm:p-4 bg-white dark:bg-stanley-charcoal border-t border-zinc-200 dark:border-stanley-steel flex flex-col gap-2.5 shrink-0 transition-colors">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                   <div className="space-y-1 max-w-2xl">
-                    <div className="flex items-center gap-2 text-xs">
+                    <div className="flex flex-wrap items-center gap-2 text-xs">
                       <span className="font-bold text-stanley-gold dark:text-stanley-yellow">{activePhoto.room}</span>
                       {activePhoto.dimensions && (
                         <>
@@ -667,7 +690,7 @@ export const InteriorGallery: React.FC = () => {
                         </>
                       )}
                     </div>
-                    <p className="text-xs sm:text-sm text-zinc-700 dark:text-slate-200 leading-relaxed">
+                    <p className="text-xs text-zinc-700 dark:text-slate-200 leading-relaxed line-clamp-2 sm:line-clamp-none">
                       {activePhoto.description}
                     </p>
                   </div>
@@ -677,7 +700,7 @@ export const InteriorGallery: React.FC = () => {
                     href={whatsappInquiryUrl(activePhoto.title)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full sm:w-auto px-4 py-2 rounded-xl bg-[#25D366] hover:bg-[#1fb855] text-white font-extrabold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:shadow shrink-0"
+                    className="w-full sm:w-auto px-4 min-h-[42px] rounded-xl bg-[#25D366] hover:bg-[#1fb855] text-white font-extrabold text-xs sm:text-sm transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm shrink-0"
                   >
                     <WhatsAppIcon className="w-4 h-4 fill-white" />
                     <span>Demander sur WhatsApp</span>
@@ -691,9 +714,9 @@ export const InteriorGallery: React.FC = () => {
                       <button
                         key={p.id}
                         onClick={() => setSelectedPhotoIndex(idx)}
-                        className={`w-14 h-11 rounded-lg overflow-hidden border-2 transition-all cursor-pointer shrink-0 ${
+                        className={`w-14 h-11 rounded-lg overflow-hidden border-2 transition-colors cursor-pointer shrink-0 ${
                           idx === selectedPhotoIndex
-                            ? 'border-stanley-yellow scale-105 shadow-md ring-2 ring-stanley-yellow/40'
+                            ? 'border-stanley-yellow shadow-md ring-2 ring-stanley-yellow/40'
                             : 'border-zinc-300 dark:border-stanley-steel opacity-60 hover:opacity-100'
                         }`}
                         title={p.title}
