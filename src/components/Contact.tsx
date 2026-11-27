@@ -1,75 +1,145 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, CheckCircle, AlertCircle, Loader2, Calculator, ArrowRight } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, CheckCircle, AlertCircle, Calculator, ArrowRight } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { calculateEstimate, PROJECT_TYPES } from '../utils/estimator';
 import { ScrollReveal } from './ScrollReveal';
+
+interface ContactFormData {
+  name: string;
+  email: string;
+  phone: string;
+  quartier: string;
+  message: string;
+}
+
+interface ContactFieldConfig {
+  id: string;
+  name: keyof ContactFormData;
+  label: string;
+  type: 'text' | 'tel' | 'email';
+  required?: boolean;
+  autoComplete: string;
+  placeholder: string;
+}
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const Contact: React.FC = () => {
   const [clientProfile, setClientProfile] = useState<'resident' | 'diaspora'>('resident');
   const [projectType, setProjectType] = useState<string>('gros-oeuvre');
   const [surface, setSurface] = useState<number>(120);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ContactFormData>({
     name: '',
     email: '',
     phone: '',
-    whatsapp: '',
     quartier: '',
     message: '',
   });
 
   const estimate = calculateEstimate(projectType, surface);
 
-  const buildWhatsAppMessage = () => {
-    const lines = [
-      '🏗️ *DEMANDE DE DEVIS — STANLEY CONSTRUCTION*',
-      `• *Client* : ${formData.name.trim() || 'Prospect'} (${clientProfile === 'diaspora' ? 'Diaspora Malgache' : 'Résident Tana'})`,
-      `• *Contact* : ${formData.phone.trim() || 'Non renseigné'} | ${formData.email.trim() || 'Non renseigné'}`,
-      `• *Lot / Travaux* : ${estimate.projectType}`,
-      `• *Surface estimée* : ~${surface} m²`,
-      `• *Fourchette indicative* : ${estimate.formattedAr} (soit env. ${estimate.formattedEur})`,
-      formData.quartier.trim() ? `• *Localisation chantier* : ${formData.quartier.trim()}` : '',
-      formData.message.trim() ? `• *Spécificités terrain* : ${formData.message.trim()}` : '',
+  const contactFields: ContactFieldConfig[] = [
+    {
+      id: 'client-name',
+      name: 'name',
+      label: 'Nom & Prénom',
+      type: 'text',
+      required: true,
+      autoComplete: 'name',
+      placeholder: 'Ex: Ravelojaona Hery',
+    },
+    {
+      id: 'client-phone',
+      name: 'phone',
+      label: 'Numéro WhatsApp / Téléphone',
+      type: 'tel',
+      required: true,
+      autoComplete: 'tel',
+      placeholder: clientProfile === 'diaspora' ? '+33 6 12 34 56 78' : '034 00 000 00',
+    },
+    {
+      id: 'client-email',
+      name: 'email',
+      label: 'Adresse Email',
+      type: 'email',
+      required: true,
+      autoComplete: 'email',
+      placeholder: 'votre.email@domaine.com',
+    },
+    {
+      id: 'client-quartier',
+      name: 'quartier',
+      label: 'Localisation du Chantier (Tana / Provinces)',
+      type: 'text',
+      required: false,
+      autoComplete: 'address-level2',
+      placeholder: 'Ex: Ambatobe, Ivato, Itaosy, Antsiranana...',
+    },
+  ];
+
+  const buildSummaryLines = () =>
+    [
+      '🏗️ DEMANDE DE DEVIS — STANLEY CONSTRUCTION',
+      `• Client : ${formData.name.trim() || 'Prospect'} (${clientProfile === 'diaspora' ? 'Diaspora Malgache' : 'Résident Madagascar'})`,
+      `• Contact : ${formData.phone.trim() || 'Non renseigné'} | ${formData.email.trim() || 'Non renseigné'}`,
+      `• Lot / Travaux : ${estimate.projectType}`,
+      `• Surface estimée : ~${surface} m²`,
+      `• Fourchette indicative : ${estimate.formattedAr} (soit env. ${estimate.formattedEur})`,
+      formData.quartier.trim() ? `• Localisation chantier : ${formData.quartier.trim()}` : '',
+      formData.message.trim() ? `• Spécificités terrain : ${formData.message.trim()}` : '',
     ].filter(Boolean);
 
-    return `https://wa.me/261375135964?text=${encodeURIComponent(lines.join('\n'))}`;
+  const buildWhatsAppMessage = () =>
+    `https://wa.me/261375135964?text=${encodeURIComponent(buildSummaryLines().join('\n'))}`;
+
+  const buildMailtoUrl = () => {
+    const subject = `Demande de devis — ${estimate.projectType} (~${surface} m²)`;
+    const body = buildSummaryLines().join('\n');
+    return `mailto:contact@stanley-construction.mg?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
-  const whatsappDirectUrl = "https://wa.me/261375135964?text=Bonjour%20Stanley%20Construction,%20je%20souhaite%20un%20devis%20pour%20mon%20projet%20à%20Antananarivo.";
+  const whatsappDirectUrl = "https://wa.me/261375135964?text=Bonjour%20Stanley%20Construction,%20je%20souhaite%20un%20devis%20pour%20mon%20projet%20à%20Madagascar.";
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.email.trim() || !formData.phone.trim()) {
-      setErrorMessage('Veuillez renseigner votre Nom, Email et Numéro de Téléphone (ou WhatsApp).');
+    const trimmedName = formData.name.trim();
+    const trimmedPhone = formData.phone.trim();
+    const trimmedEmail = formData.email.trim();
+
+    if (!trimmedName || !trimmedPhone || !trimmedEmail) {
+      setErrorMessage('Veuillez renseigner votre Nom, Numéro de Téléphone (ou WhatsApp) et Adresse Email.');
       return;
     }
+
+    if (trimmedPhone.replace(/\D/g, '').length < 6) {
+      setErrorMessage('Veuillez saisir un numéro de téléphone ou WhatsApp valide.');
+      return;
+    }
+
+    if (!EMAIL_REGEX.test(trimmedEmail)) {
+      setErrorMessage('Veuillez saisir une adresse email valide.');
+      return;
+    }
+
     setErrorMessage('');
-    setIsSubmitting(true);
 
     try {
-      // Simulation asynchrone avec persistance locale pour garantir l'historique côté client
-      await new Promise(resolve => setTimeout(resolve, 600));
-      try {
-        const history = JSON.parse(localStorage.getItem('stanley_lead_requests') || '[]');
-        history.push({
-          date: new Date().toISOString(),
-          profile: clientProfile,
-          projectType,
-          surface,
-          estimate,
-          ...formData,
-        });
-        localStorage.setItem('stanley_lead_requests', JSON.stringify(history));
-      } catch (_) {}
+      const history = JSON.parse(localStorage.getItem('stanley_lead_requests') || '[]');
+      history.push({
+        date: new Date().toISOString(),
+        profile: clientProfile,
+        projectType,
+        surface,
+        estimate,
+        ...formData,
+      });
+      localStorage.setItem('stanley_lead_requests', JSON.stringify(history));
+    } catch (_) {}
 
-      setIsSubmitted(true);
-    } catch {
-      setErrorMessage('Une erreur est survenue lors de l\'envoi. Veuillez réessayer ou nous joindre sur WhatsApp.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    window.open(buildWhatsAppMessage(), '_blank', 'noopener,noreferrer');
+    setIsSubmitted(true);
   };
 
   return (
@@ -164,10 +234,10 @@ export const Contact: React.FC = () => {
                     <CheckCircle className="w-8 h-8 stroke-[2.2]" />
                   </div>
                   <h3 className="font-display font-bold text-2xl text-zinc-900 dark:text-slate-50">
-                    Demande de devis enregistrée !
+                    Récapitulatif prêt pour envoi !
                   </h3>
                   <p className="text-zinc-600 dark:text-slate-300 text-sm max-w-md mx-auto leading-relaxed">
-                    Misaotra tompoko, merci <strong className="text-zinc-900 dark:text-slate-50">{formData.name}</strong>. Nos techniciens à Antananarivo analysent votre projet (<span className="text-stanley-yellow font-semibold">{estimate.projectType}</span>, ~{surface} m²).
+                    Misaotra tompoko, <strong className="text-zinc-900 dark:text-slate-50">{formData.name}</strong>. Votre estimation (<span className="text-stanley-yellow font-semibold">{estimate.projectType}</span>, ~{surface} m²) est prête à être transmise sur WhatsApp ou par email.
                   </p>
                   
                   {/* Estimation summary card */}
@@ -179,12 +249,12 @@ export const Contact: React.FC = () => {
                     <div className="text-[11px] text-zinc-500 dark:text-slate-400">
                       Soit environ <strong className="text-zinc-800 dark:text-slate-200">{estimate.formattedEur}</strong> selon les conditions du terrain.
                     </div>
-                    <div><strong>Contact direct :</strong> sous 24h au <span className="text-stanley-gold dark:text-stanley-yellow font-bold">{formData.phone}</span></div>
-                    <div><strong>Suivi :</strong> email envoyé à <span className="text-stanley-gold dark:text-stanley-yellow font-bold">{formData.email}</span></div>
+                    <div><strong>Téléphone / WhatsApp :</strong> <span className="text-stanley-gold dark:text-stanley-yellow font-bold">{formData.phone}</span></div>
+                    <div><strong>Email :</strong> <span className="text-stanley-gold dark:text-stanley-yellow font-bold">{formData.email}</span></div>
                   </div>
 
-                  {/* Immediate WhatsApp transmission button */}
-                  <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center items-center">
+                  {/* Immediate WhatsApp & Mailto transmission buttons */}
+                  <div className="pt-2 flex flex-col sm:flex-row flex-wrap gap-3 justify-center items-center">
                     <a
                       href={buildWhatsAppMessage()}
                       target="_blank"
@@ -192,13 +262,20 @@ export const Contact: React.FC = () => {
                       className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-extrabold text-xs transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#25D366]/25 cursor-pointer uppercase tracking-wider"
                     >
                       <WhatsAppIcon className="w-4 h-4 fill-current text-white shrink-0" />
-                      <span>Transmettre sur WhatsApp (+261 37 51 359 64)</span>
+                      <span>Envoyer sur WhatsApp</span>
+                    </a>
+                    <a
+                      href={buildMailtoUrl()}
+                      className="w-full sm:w-auto px-5 py-3.5 rounded-xl bg-stanley-yellow hover:bg-stanley-gold text-stanley-black font-extrabold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer uppercase tracking-wider"
+                    >
+                      <Mail className="w-4 h-4 stroke-[2.2]" />
+                      <span>Envoyer par Email</span>
                     </a>
                     <button
                       onClick={() => {
                         setIsSubmitted(false);
                         setErrorMessage('');
-                        setFormData({ name: '', email: '', phone: '', whatsapp: '', quartier: '', message: '' });
+                        setFormData({ name: '', email: '', phone: '', quartier: '', message: '' });
                       }}
                       className="w-full sm:w-auto px-5 py-3 rounded-xl bg-zinc-100 dark:bg-stanley-black hover:bg-zinc-200 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-stanley-steel text-zinc-800 dark:text-slate-200 text-xs font-semibold transition-colors cursor-pointer"
                     >
@@ -332,68 +409,25 @@ export const Contact: React.FC = () => {
                       3. Vos Coordonnées &amp; Suivi WhatsApp
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label htmlFor="client-name" className="block text-[11px] text-zinc-600 dark:text-slate-400 mb-1">
-                          Nom &amp; Prénom <span className="text-stanley-yellow">*</span>
-                        </label>
-                        <input
-                          id="client-name"
-                          name="name"
-                          type="text"
-                          required
-                          aria-required="true"
-                          placeholder="Ex: Ravelojaona Hery"
-                          value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          className="w-full px-4 py-3 rounded-xl bg-zinc-50 dark:bg-stanley-black border border-zinc-300 dark:border-stanley-steel text-sm text-zinc-900 dark:text-slate-50 placeholder-zinc-400 dark:placeholder-slate-500 focus:ring-1 focus:ring-stanley-yellow focus:border-stanley-yellow focus:outline-none transition-all"
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor="client-phone" className="block text-[11px] text-zinc-600 dark:text-slate-400 mb-1">
-                          Numéro WhatsApp / Téléphone <span className="text-stanley-yellow">*</span>
-                        </label>
-                        <input
-                          id="client-phone"
-                          name="phone"
-                          type="tel"
-                          required
-                          aria-required="true"
-                          placeholder={clientProfile === 'diaspora' ? '+33 6 12 34 56 78' : '034 00 000 00'}
-                          value={formData.phone}
-                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          className="w-full px-4 py-3 rounded-xl bg-zinc-50 dark:bg-stanley-black border border-zinc-300 dark:border-stanley-steel text-sm text-zinc-900 dark:text-slate-50 placeholder-zinc-400 dark:placeholder-slate-500 focus:ring-1 focus:ring-stanley-yellow focus:border-stanley-yellow focus:outline-none transition-all"
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor="client-email" className="block text-[11px] text-zinc-600 dark:text-slate-400 mb-1">
-                          Adresse Email <span className="text-stanley-yellow">*</span>
-                        </label>
-                        <input
-                          id="client-email"
-                          name="email"
-                          type="email"
-                          required
-                          aria-required="true"
-                          placeholder="votre.email@domaine.com"
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          className="w-full px-4 py-3 rounded-xl bg-zinc-50 dark:bg-stanley-black border border-zinc-300 dark:border-stanley-steel text-sm text-zinc-900 dark:text-slate-50 placeholder-zinc-400 dark:placeholder-slate-500 focus:ring-1 focus:ring-stanley-yellow focus:border-stanley-yellow focus:outline-none transition-all"
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor="client-quartier" className="block text-[11px] text-zinc-600 dark:text-slate-400 mb-1">
-                          Localisation du Chantier à Tana
-                        </label>
-                        <input
-                          id="client-quartier"
-                          name="quartier"
-                          type="text"
-                          placeholder="Ex: Ambatobe, Ivato, Ilafy, By-pass, Itaosy..."
-                          value={formData.quartier}
-                          onChange={(e) => setFormData({ ...formData, quartier: e.target.value })}
-                          className="w-full px-4 py-3 rounded-xl bg-zinc-50 dark:bg-stanley-black border border-zinc-300 dark:border-stanley-steel text-sm text-zinc-900 dark:text-slate-50 placeholder-zinc-400 dark:placeholder-slate-500 focus:ring-1 focus:ring-stanley-yellow focus:border-stanley-yellow focus:outline-none transition-all"
-                        />
-                      </div>
+                      {contactFields.map((field) => (
+                        <div key={field.id}>
+                          <label htmlFor={field.id} className="block text-[11px] text-zinc-600 dark:text-slate-400 mb-1">
+                            {field.label} {field.required && <span className="text-stanley-yellow">*</span>}
+                          </label>
+                          <input
+                            id={field.id}
+                            name={field.name}
+                            type={field.type}
+                            required={field.required}
+                            aria-required={field.required ? 'true' : undefined}
+                            autoComplete={field.autoComplete}
+                            placeholder={field.placeholder}
+                            value={formData[field.name]}
+                            onChange={(e) => setFormData({ ...formData, [field.name]: e.target.value })}
+                            className="w-full px-4 py-3 rounded-xl bg-zinc-50 dark:bg-stanley-black border border-zinc-300 dark:border-stanley-steel text-sm text-zinc-900 dark:text-slate-50 placeholder-zinc-400 dark:placeholder-slate-500 focus:ring-1 focus:ring-stanley-yellow focus:border-stanley-yellow focus:outline-none transition-all"
+                          />
+                        </div>
+                      ))}
                     </div>
                   </div>
 
@@ -418,33 +452,21 @@ export const Contact: React.FC = () => {
                     <button
                       id="submit-quote-btn"
                       type="submit"
-                      disabled={isSubmitting}
-                      className="w-full py-4 rounded-xl bg-stanley-yellow hover:bg-stanley-gold disabled:opacity-75 disabled:cursor-not-allowed text-stanley-black font-extrabold text-base flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/35 transition-all cursor-pointer uppercase tracking-wider"
+                      className="w-full py-4 rounded-xl bg-stanley-yellow hover:bg-stanley-gold text-stanley-black font-extrabold text-base flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/35 transition-all cursor-pointer uppercase tracking-wider"
                     >
-                      {isSubmitting ? (
-                        <>
-                          <Loader2 className="w-5 h-5 animate-spin" />
-                          <span>Transmission de votre demande...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Send className="w-5 h-5 stroke-[2.2]" />
-                          <span>Valider ma demande d'étude gratuite</span>
-                        </>
-                      )}
+                      <Send className="w-5 h-5 stroke-[2.2]" />
+                      <span>Valider et envoyer sur WhatsApp</span>
                     </button>
 
-                    {/* Fast WhatsApp direct dispatch option */}
+                    {/* Mailto fallback option */}
                     <a
-                      href={buildWhatsAppMessage()}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full py-3.5 rounded-xl bg-white dark:bg-stanley-charcoal hover:bg-[#25D366]/10 border border-zinc-300 dark:border-stanley-steel hover:border-[#25D366] text-zinc-800 dark:text-slate-200 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs"
-                      title="Envoyer instantanément les paramètres du devis via WhatsApp"
+                      href={buildMailtoUrl()}
+                      className="w-full py-3.5 rounded-xl bg-white dark:bg-stanley-charcoal hover:bg-amber-500/10 border border-zinc-300 dark:border-stanley-steel hover:border-stanley-yellow text-zinc-800 dark:text-slate-200 font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs"
+                      title="Ouvrir votre messagerie avec les détails du devis"
                     >
-                      <WhatsAppIcon className="w-4 h-4 fill-current text-[#25D366] shrink-0" />
-                      <span>Ou transmettre directement les détails sur WhatsApp</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-[#25D366]" />
+                      <Mail className="w-4 h-4 text-stanley-gold dark:text-stanley-yellow shrink-0" />
+                      <span>Ou préparer l'envoi par Email (contact@stanley-construction.mg)</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-stanley-gold dark:text-stanley-yellow" />
                     </a>
                   </div>
 
