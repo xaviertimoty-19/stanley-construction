@@ -13,7 +13,7 @@ export function ScrollDropList<T>({
   getKey,
   renderItem,
   className = '',
-  staggerMs = 70,
+  staggerMs = 90,
 }: ScrollDropListProps<T>) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [visibleKeys, setVisibleKeys] = useState<Record<string, boolean>>({});
@@ -56,7 +56,7 @@ export function ScrollDropList<T>({
           if (!key) return;
 
           // Décalage progressif calculé par lot visible simultanément
-          const delay = Math.min(batchIndex * staggerMs, 280);
+          const delay = Math.min(batchIndex * staggerMs, 360);
           target.style.transitionDelay = `${delay}ms`;
 
           newlyVisible[key] = true;
@@ -71,8 +71,8 @@ export function ScrollDropList<T>({
       },
       {
         root: null,
-        rootMargin: '0px 0px -10% 0px',
-        threshold: 0.1,
+        rootMargin: '0px 0px -12% 0px',
+        threshold: 0.12,
       }
     );
 
@@ -96,10 +96,10 @@ export function ScrollDropList<T>({
           <div
             key={key}
             data-drop-key={key}
-            className={`transition-[transform,opacity] duration-700 ease-out motion-reduce:transform-none motion-reduce:transition-none ${
+            className={`transition-[transform,opacity] duration-[800ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transform-none motion-reduce:transition-none ${
               isVisible
-                ? 'opacity-100 translate-y-0'
-                : 'transform-gpu opacity-0 -translate-y-6'
+                ? 'opacity-100 translate-y-0 scale-100'
+                : 'transform-gpu opacity-0 -translate-y-10 scale-[0.96]'
             }`}
           >
             {renderItem(item, index)}

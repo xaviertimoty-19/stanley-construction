@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { MapPin, Maximize2, Calendar, ArrowUpRight, Camera, X, ChevronLeft, ChevronRight, CheckCircle2, Layers, ArrowLeft, Calculator } from 'lucide-react';
 import { ScrollDropList } from './ScrollDropList';
 import { ScrollReveal } from './ScrollReveal';
+import { FullscreenPhotoOverlay, useLightboxFullscreen } from './FullscreenPhotoOverlay';
 
 export interface ProjectPhoto {
   url: string;
@@ -59,6 +60,7 @@ export const Portfolio: React.FC = () => {
   const [activePhotoByProject, setActivePhotoByProject] = useState<Record<string, number>>({});
   const [lightbox, setLightbox] = useState<{ project: Project; photoIndex: number } | null>(null);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const { isFullscreen, enterFullscreen, exitFullscreen, toggleFullscreen } = useLightboxFullscreen(Boolean(lightbox));
 
 
   // Keyboard navigation & body scroll lock for Lightbox
@@ -72,7 +74,14 @@ export const Portfolio: React.FC = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!lightbox) return;
       if (e.key === 'Escape') {
-        setLightbox(null);
+        if (isFullscreen) {
+          exitFullscreen();
+        } else {
+          setLightbox(null);
+        }
+      } else if (e.key === 'f' || e.key === 'F') {
+        e.preventDefault();
+        toggleFullscreen();
       } else if (e.key === 'ArrowLeft') {
         const photos = lightbox.project.gallery || [{ url: lightbox.project.image, caption: lightbox.project.title, tag: 'Général' }];
         setLightbox(prev => prev ? {
@@ -93,7 +102,7 @@ export const Portfolio: React.FC = () => {
       document.body.style.overflow = 'unset';
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [lightbox]);
+  }, [lightbox, isFullscreen, exitFullscreen, toggleFullscreen]);
 
   // Preload adjacent photos when lightbox is open
   useEffect(() => {
@@ -852,15 +861,28 @@ export const Portfolio: React.FC = () => {
                 </h4>
               </div>
 
-              <button
-                onClick={() => setLightbox(null)}
-                className="flex items-center gap-1.5 px-3 min-h-[38px] sm:px-4 rounded-xl bg-stanley-yellow hover:bg-stanley-gold text-stanley-black font-extrabold text-xs sm:text-sm transition-colors cursor-pointer shrink-0 shadow-sm"
-                aria-label="Fermer la galerie photo"
-                title="Quitter la galerie"
-              >
-                <X className="w-4 h-4 stroke-[2.5]" />
-                <span className="hidden sm:inline">Fermer</span>
-              </button>
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={enterFullscreen}
+                  className="flex items-center gap-1.5 px-3 min-h-[38px] rounded-xl bg-zinc-200 dark:bg-stanley-steel hover:bg-zinc-300 dark:hover:bg-zinc-700 text-zinc-900 dark:text-slate-100 font-bold text-xs sm:text-sm transition-colors cursor-pointer shrink-0"
+                  aria-label="Afficher la photo en plein écran"
+                  title="Plein écran (F)"
+                >
+                  <Maximize2 className="w-4 h-4" />
+                  <span className="hidden sm:inline">Plein écran</span>
+                </button>
+
+                <button
+                  onClick={() => setLightbox(null)}
+                  className="flex items-center gap-1.5 px-3 min-h-[38px] sm:px-4 rounded-xl bg-stanley-yellow hover:bg-stanley-gold text-stanley-black font-extrabold text-xs sm:text-sm transition-colors cursor-pointer shrink-0 shadow-sm"
+                  aria-label="Fermer la galerie photo"
+                  title="Quitter la galerie"
+                >
+                  <X className="w-4 h-4 stroke-[2.5]" />
+                  <span className="hidden sm:inline">Fermer</span>
+                </button>
+              </div>
             </div>
 
             {/* Modal Body: Active Photo */}
@@ -898,7 +920,9 @@ export const Portfolio: React.FC = () => {
                     <img
                       src={current.url}
                       alt={current.caption}
-                      className="max-h-full max-w-full object-contain rounded-lg shadow-2xl"
+                      onClick={enterFullscreen}
+                      className="max-h-full max-w-full object-contain rounded-lg shadow-2xl cursor-zoom-in"
+                      title="Cliquer pour afficher en plein écran"
                     />
 
                     {photos.length > 1 && (
@@ -983,6 +1007,24 @@ export const Portfolio: React.FC = () => {
                       </div>
                     )}
                   </div>
+
+                  {isFullscreen && (
+                    <FullscreenPhotoOverlay
+                      imageUrl={current.url}
+                      alt={current.caption}
+                      title={`${lightbox.project.title} — ${current.tag}`}
+                      subtitle={current.caption}
+                      counterText={`${lightbox.photoIndex + 1} / ${photos.length}`}
+                      hasMultiple={photos.length > 1}
+                      onPrev={goPrev}
+                      onNext={goNext}
+                      onExitFullscreen={exitFullscreen}
+                      onCloseLightbox={() => {
+                        exitFullscreen();
+                        setLightbox(null);
+                      }}
+                    />
+                  )}
                 </div>
               );
             })()}

@@ -14,6 +14,7 @@ import {
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { ScrollDropList } from './ScrollDropList';
 import { ScrollReveal } from './ScrollReveal';
+import { FullscreenPhotoOverlay, useLightboxFullscreen } from './FullscreenPhotoOverlay';
 
 export interface InteriorPhoto {
   id: string;
@@ -54,6 +55,7 @@ export const InteriorGallery: React.FC = () => {
   const [showAll, setShowAll] = useState<boolean>(false);
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const { isFullscreen, enterFullscreen, exitFullscreen, toggleFullscreen } = useLightboxFullscreen(selectedPhotoIndex !== null);
 
   const photos: InteriorPhoto[] = [
     // 1. Salles de bain & WC (3 photos)
@@ -341,7 +343,14 @@ export const InteriorGallery: React.FC = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (selectedPhotoIndex === null) return;
       if (e.key === 'Escape') {
-        setSelectedPhotoIndex(null);
+        if (isFullscreen) {
+          exitFullscreen();
+        } else {
+          setSelectedPhotoIndex(null);
+        }
+      } else if (e.key === 'f' || e.key === 'F') {
+        e.preventDefault();
+        toggleFullscreen();
       } else if (e.key === 'ArrowLeft') {
         setSelectedPhotoIndex(prev => (prev !== null ? (prev - 1 + filteredPhotos.length) % filteredPhotos.length : 0));
       } else if (e.key === 'ArrowRight') {
@@ -354,7 +363,7 @@ export const InteriorGallery: React.FC = () => {
       document.body.style.overflow = 'unset';
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [selectedPhotoIndex, filteredPhotos.length]);
+  }, [selectedPhotoIndex, filteredPhotos.length, isFullscreen, exitFullscreen, toggleFullscreen]);
 
   // Preload adjacent photos when lightbox is open
   useEffect(() => {
@@ -614,10 +623,20 @@ export const InteriorGallery: React.FC = () => {
                 </h4>
               </div>
 
-              <div className="flex items-center gap-3 shrink-0">
-                <span className="text-zinc-500 dark:text-zinc-400 font-mono text-xs">
+              <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                <span className="text-zinc-500 dark:text-zinc-400 font-mono text-xs hidden sm:inline">
                   {selectedPhotoIndex + 1} / {filteredPhotos.length}
                 </span>
+                <button
+                  type="button"
+                  onClick={enterFullscreen}
+                  className="flex items-center gap-1.5 px-3 min-h-[38px] rounded-xl bg-zinc-200 dark:bg-stanley-steel hover:bg-zinc-300 dark:hover:bg-zinc-700 text-zinc-900 dark:text-slate-100 font-bold text-xs transition-colors cursor-pointer"
+                  aria-label="Afficher la photo en plein écran"
+                  title="Plein écran (F)"
+                >
+                  <Maximize2 className="w-4 h-4" />
+                  <span className="hidden sm:inline">Plein écran</span>
+                </button>
                 <button
                   onClick={() => setSelectedPhotoIndex(null)}
                   className="flex items-center gap-1 px-3 min-h-[38px] rounded-xl bg-stanley-yellow hover:bg-stanley-gold text-stanley-black font-extrabold text-xs transition-colors cursor-pointer shadow-sm"
@@ -648,7 +667,9 @@ export const InteriorGallery: React.FC = () => {
                 <img
                   src={activePhoto.url}
                   alt={activePhoto.title}
-                  className="max-h-full max-w-full object-contain rounded-lg shadow-2xl"
+                  onClick={enterFullscreen}
+                  className="max-h-full max-w-full object-contain rounded-lg shadow-2xl cursor-zoom-in"
+                  title="Cliquer pour afficher en plein écran"
                 />
 
                 {filteredPhotos.length > 1 && (
@@ -729,6 +750,30 @@ export const InteriorGallery: React.FC = () => {
                 )}
               </div>
             </div>
+
+            {isFullscreen && (
+              <FullscreenPhotoOverlay
+                imageUrl={activePhoto.url}
+                alt={activePhoto.title}
+                title={activePhoto.title}
+                subtitle={activePhoto.description}
+                counterText={`${selectedPhotoIndex + 1} / ${filteredPhotos.length}`}
+                hasMultiple={filteredPhotos.length > 1}
+                onPrev={() =>
+                  setSelectedPhotoIndex(
+                    (selectedPhotoIndex - 1 + filteredPhotos.length) % filteredPhotos.length
+                  )
+                }
+                onNext={() =>
+                  setSelectedPhotoIndex((selectedPhotoIndex + 1) % filteredPhotos.length)
+                }
+                onExitFullscreen={exitFullscreen}
+                onCloseLightbox={() => {
+                  exitFullscreen();
+                  setSelectedPhotoIndex(null);
+                }}
+              />
+            )}
           </div>
         </div>
       )}

@@ -32,8 +32,8 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
       },
       {
         root: null,
-        rootMargin: '0px 0px -10% 0px',
-        threshold: 0.1,
+        rootMargin: '0px 0px -15% 0px',
+        threshold: 0.15,
       }
     );
 
@@ -45,10 +45,10 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
     <div
       ref={ref}
       style={delayMs > 0 ? { transitionDelay: `${delayMs}ms` } : undefined}
-      className={`transition-[transform,opacity] duration-700 ease-out motion-reduce:transform-none motion-reduce:transition-none ${
+      className={`transition-[transform,opacity,filter] duration-[850ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transform-none motion-reduce:transition-none motion-reduce:blur-0 ${
         isVisible
-          ? 'opacity-100 translate-y-0'
-          : 'transform-gpu opacity-0 translate-y-6'
+          ? 'opacity-100 translate-y-0 scale-100 blur-0'
+          : 'transform-gpu opacity-0 translate-y-12 scale-[0.97] blur-[2px]'
       } ${className}`}
     >
       {children}
